@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/bg_teal"
+    tools:context=".CreateAccountActivity">
+
+    <EditText
+        android:id="@+id/email_register_textbox"
+        android:layout_width="250dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_corners_textbox_bg"
+        android:ems="10"
+        android:fontFamily="@font/cabin"
+        android:gravity="center_horizontal"
+        android:hint="Email address"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/text_blue"
+        android:textStyle="normal"
+        android:textColorHint="@color/text_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/password_register_textbox"
+        android:layout_width="250dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_corners_textbox_bg"
+        android:ems="10"
+        android:fontFamily="@font/cabin"
+        android:gravity="center_horizontal"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColor="@color/text_blue"
+        android:textStyle="normal"
+        android:textColorHint="@color/text_blue"
+        app:layout_constraintEnd_toEndOf="@+id/email_register_textbox"
+        app:layout_constraintStart_toStartOf="@+id/email_register_textbox"
+        app:layout_constraintTop_toBottomOf="@+id/email_register_textbox" />
+
+    <Button
+        android:id="@+id/create_account_button"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_corners_button_bg"
+        android:fontFamily="@font/cabin"
+        android:text="Create account"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/password_register_textbox"
+        app:layout_constraintStart_toStartOf="@+id/password_register_textbox"
+        app:layout_constraintTop_toBottomOf="@+id/password_register_textbox" />
+
+    <EditText
+        android:id="@+id/create_account_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:ems="10"
+        android:fontFamily="@font/cabin"
+        android:gravity="center_horizontal"
+        android:inputType="textPersonName"
+        android:text="Return to login"
+        android:textColor="@color/text_blue"
+        app:layout_constraintEnd_toEndOf="@+id/password_register_textbox"
+        app:layout_constraintStart_toStartOf="@+id/password_register_textbox"
+        app:layout_constraintTop_toBottomOf="@+id/create_account_button" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
