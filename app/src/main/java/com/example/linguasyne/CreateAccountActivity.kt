@@ -8,6 +8,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 
 class CreateAccountActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,12 +38,24 @@ class CreateAccountActivity : AppCompatActivity() {
                     }
 
                 }
+            val user = User(email)
+            addUserToFirebase(user)
 
         }
 
         findViewById<TextView>(R.id.return_to_login_text).setOnClickListener{
             finish()
         }
+
+    }
+
+    private fun addUserToFirebase(user: User){
+            FirebaseFirestore.getInstance()
+                .collection("users")
+                .add(user)
+                .addOnSuccessListener {
+                    Log.d("CreateAccountActivity", "User added to Firestore")
+                }
 
     }
 
