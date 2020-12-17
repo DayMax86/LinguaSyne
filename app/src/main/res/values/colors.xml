@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="text_blue">#0016E0</color>
     <color name="bg_teal">#3DFDE0</color>
+    <color name="hint_blue">#800016E0</color>
 
     <color name="ivory">#FFFFF0</color>
     <color name="light_yellow">#FFFFE0</color>
