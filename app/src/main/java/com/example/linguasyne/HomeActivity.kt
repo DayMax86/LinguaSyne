@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 
@@ -13,6 +15,11 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
+
+        //TESTING ONLY
+        findViewById<Button>(R.id.logged_in_test_button).setOnClickListener{
+            findViewById<Button>(R.id.logged_in_test_button).text = FirebaseAuth.getInstance().currentUser?.email.toString()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

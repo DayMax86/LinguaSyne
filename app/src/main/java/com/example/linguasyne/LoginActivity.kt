@@ -17,10 +17,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.login_activity)
 
         findViewById<Button>(R.id.login_button).setOnClickListener{
-            val email = findViewById<TextView>(R.id.email_login_textbox).text.toString()
-            val password = findViewById<EditText>(R.id.password_login_textbox).text.toString()
-
-            if (email != null && password != null){ logInUser() }
+            logInUser()
             val intent = Intent(this, HomeActivity::class.java)
             Log.d("LoginActivity", "Attempting to launch HomeActivity")
             startActivity(intent)
@@ -46,8 +43,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun logInUser() {
-        val auth: FirebaseAuth = FirebaseAuth.getInstance()
-        val current_user = auth.currentUser
+        FirebaseAuth.getInstance()
 
         val email = findViewById<TextView>(R.id.email_login_textbox).text.toString()
         val password = findViewById<EditText>(R.id.password_login_textbox).text.toString()
