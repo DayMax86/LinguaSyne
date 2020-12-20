@@ -55,4 +55,9 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth-ktx'
 
+    //CSV file reader library - gradle kotlin DSL
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.14.0")
+    //CSV file reader library - gradle groovy DSL
+    implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.14.0'
+
 }
