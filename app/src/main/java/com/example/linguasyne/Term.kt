@@ -1,16 +1,18 @@
 package com.example.linguasyne
 
-import java.util.*
+open class Term (term_id: String,
+                 term_name: String,
+                 term_unlock_level: Int,
+                 term_translations: List<String>,
+                 term_mnemonics: List<String>){
 
-open class Term (term_name: String, term_unlock_level: Int){
-    var id: String = ""/*UUID.randomUUID().toString()*/
+    var id: String = term_id
     var name: String = term_name
+    var unlock_level: Int = term_unlock_level
+    var translations = term_translations
+    var mnemonics = term_mnemonics
+
     var current_level_term: Int = 0
     var next_review: Int = 0
-    var unlock_level: Int = term_unlock_level
-    var translations = arrayListOf<String>()
-    var mnemonics = arrayListOf<String>()
-
-
 
 }
