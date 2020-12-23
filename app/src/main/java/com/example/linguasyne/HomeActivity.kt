@@ -83,7 +83,7 @@ class HomeActivity : AppCompatActivity() {
                 signOut()
             }
             R.id.menu_test_item -> {
-                //Do something}
+                //Do something
             }
         }
         return super.onOptionsItemSelected(item)

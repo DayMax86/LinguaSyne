@@ -24,8 +24,6 @@ class Vocab(term_id: String,
 
 
 
-
-
     private fun setGenders(term_genders: List<String>) {
         term_genders.forEach{
             when (it) {
