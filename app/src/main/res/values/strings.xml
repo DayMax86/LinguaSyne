@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">LinguaSyne</string>
+    <string name="search_hint">look up a term</string>
+    <string name="app_label">LinguaSyne</string>
 </resources>

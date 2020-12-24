@@ -18,8 +18,6 @@ import java.io.InputStreamReader
 
 class HomeActivity : AppCompatActivity() {
 
-    var all_vocab = mutableListOf<Vocab>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
@@ -30,7 +28,9 @@ class HomeActivity : AppCompatActivity() {
         }
         //TESTING ONLY
         findViewById<Button>(R.id.import_csv_button).setOnClickListener{
-            importVocabCSV()
+            //importVocabCSV()
+            val intent = Intent(this, VocabSearch::class.java)
+            startActivity(intent)
         }
     }
 
@@ -51,7 +51,6 @@ class HomeActivity : AppCompatActivity() {
                         row[5].split("/"),    //gender
                         row[6].split("/")     //types
                 )
-                all_vocab.add(term)
                 addVocabToFirebase(term)
             }
 
@@ -84,6 +83,10 @@ class HomeActivity : AppCompatActivity() {
             }
             R.id.menu_test_item -> {
                 //Do something
+            }
+            R.id.menu_search -> {
+                val intent = Intent(this, VocabSearch::class.java)
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)
