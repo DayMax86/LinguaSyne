@@ -1,28 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/sample_search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/term_search_background_rectangle"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="Rounded rect"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Geoff"
-        />
+        app:srcCompat="@drawable/rounded_corners_button_bg" />
 
     <TextView
-        android:id="@+id/sample_search_textbox"
+        android:id="@+id/term_search_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sample_search_button"
-        tools:text="Great"
-        />
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/cabin"
+        android:textColor="@color/text_blue"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/term_search_background_rectangle"
+        app:layout_constraintStart_toStartOf="@+id/term_search_background_rectangle"
+        app:layout_constraintTop_toTopOf="@+id/term_search_background_rectangle"
+        tools:text="Placeholder text" />
+
+    <TextView
+        android:id="@+id/search_term_type_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/cabin"
+        android:text="placeholder"
+        android:textColor="@color/hint_blue"
+        app:layout_constraintEnd_toEndOf="@+id/term_search_background_rectangle"
+        app:layout_constraintTop_toTopOf="@+id/term_search_background_rectangle" />
+
+    <TextView
+        android:id="@+id/search_term_unlock_level_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/cabin"
+        android:text="Level 10"
+        android:textColor="@color/hint_blue"
+        app:layout_constraintBottom_toBottomOf="@+id/term_search_background_rectangle"
+        app:layout_constraintEnd_toEndOf="@+id/term_search_background_rectangle"
+        app:layout_constraintTop_toBottomOf="@+id/search_term_type_textview" />
+
+    <ProgressBar
+        android:id="@+id/term_search_term_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_corners_textbox_bg"
+        android:progress="50"
+        android:progressTint="@color/text_blue"
+        app:layout_constraintBottom_toBottomOf="@+id/term_search_background_rectangle"
+        app:layout_constraintEnd_toStartOf="@+id/search_term_type_textview"
+        app:layout_constraintStart_toEndOf="@+id/term_search_name"
+        app:layout_constraintTop_toTopOf="@+id/term_search_background_rectangle" />
+
+    <TextView
+        android:id="@+id/term_search_current_level_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cabin"
+        android:text="5"
+        android:textColor="@color/text_blue"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/term_search_term_progressbar"
+        app:layout_constraintStart_toStartOf="@+id/term_search_term_progressbar" />
+
+    <TextView
+        android:id="@+id/term_search_next_level_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cabin"
+        android:text="6"
+        android:textColor="@color/text_blue"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/term_search_term_progressbar"
+        app:layout_constraintEnd_toEndOf="@+id/term_search_term_progressbar" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
