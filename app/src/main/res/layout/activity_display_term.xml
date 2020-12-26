@@ -186,7 +186,7 @@
         app:layout_constraintTop_toBottomOf="@+id/mnemonics_scroll_view" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/term_search_term_progressbar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="24dp"
@@ -201,24 +201,24 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
-        android:id="@+id/current_level_text"
+        android:id="@+id/term_search_current_level_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/cabin"
         android:text="5"
         android:textColor="@color/text_blue"
         app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        app:layout_constraintStart_toStartOf="@+id/progressBar" />
+        app:layout_constraintStart_toStartOf="@+id/term_search_term_progressbar" />
 
     <TextView
-        android:id="@+id/next_level_text"
+        android:id="@+id/term_search_next_level_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/cabin"
         android:text="6"
         android:textColor="@color/text_blue"
         app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        app:layout_constraintEnd_toEndOf="@+id/progressBar" />
+        app:layout_constraintEnd_toEndOf="@+id/term_search_term_progressbar" />
 
     <TextView
         android:id="@+id/next_review_text"
@@ -228,7 +228,7 @@
         android:fontFamily="@font/cabin"
         android:text="Next review:"
         android:textColor="@color/text_blue"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar"
+        app:layout_constraintTop_toBottomOf="@+id/term_search_term_progressbar"
         tools:layout_editor_absoluteX="24dp" />
 
     <EditText

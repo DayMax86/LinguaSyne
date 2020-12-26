@@ -26,7 +26,7 @@ class Vocab(term_id: String,
 
     private fun setGenders(term_genders: List<String>) {
         term_genders.forEach{
-            when (it) {
+            when (it.toLowerCase()) {
                 "no" -> this.genders.add(Gender.NO)
                 "mf" -> this.genders.add(Gender.MF)
                 "m" -> this.genders.add(Gender.M)
@@ -37,7 +37,7 @@ class Vocab(term_id: String,
 
     private fun setTypes(term_types: List<String>){
         term_types.forEach {
-            when (it) {
+            when (it.toLowerCase()) {
                 "n" -> this.types.add(TermTypes.NOUN)
                 "adj" -> this.types.add(TermTypes.ADJ)
                 "adv" -> this.types.add(TermTypes.ADV)
