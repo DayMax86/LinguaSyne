@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LinguaSyne">
-        <activity android:name=".VocabSearch"></activity>
+        <activity android:name=".VocabSearchActivity"></activity>
         <activity
             android:name=".DisplayTerm"
             android:parentActivityName=".HomeActivity" />

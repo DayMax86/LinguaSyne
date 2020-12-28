@@ -6,15 +6,10 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.linguasyne.enums.Gender
-import com.example.linguasyne.enums.TermTypes
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.io.InputStream
-import java.io.InputStreamReader
 
 class HomeActivity : AppCompatActivity() {
 
@@ -29,7 +24,7 @@ class HomeActivity : AppCompatActivity() {
         //TESTING ONLY
         findViewById<Button>(R.id.import_csv_button).setOnClickListener{
             //importVocabCSV()
-            val intent = Intent(this, VocabSearch::class.java)
+            val intent = Intent(this, VocabSearchActivity::class.java)
             startActivity(intent)
         }
     }
@@ -85,7 +80,7 @@ class HomeActivity : AppCompatActivity() {
                 //Do something
             }
             R.id.menu_search -> {
-                val intent = Intent(this, VocabSearch::class.java)
+                val intent = Intent(this, VocabSearchActivity::class.java)
                 startActivity(intent)
             }
         }
