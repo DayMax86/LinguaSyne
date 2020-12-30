@@ -6,35 +6,138 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <Button
-        android:id="@+id/logged_in_test_button"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="28dp"
-        android:text="Logged in test"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal" />
 
     <TextView
-        android:id="@+id/test_csv_data_textbox"
-        android:layout_width="316dp"
-        android:layout_height="558dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="56dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logged_in_test_button" />
-
-    <Button
-        android:id="@+id/import_csv_button"
+        android:id="@+id/vocab_lesson_number_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="24dp"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@+id/test_csv_data_textbox"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="8dp"
+        android:text="50"
+        android:textColor="@color/vocab_text_blue"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:translationZ="90dp"
+        app:layout_constraintBottom_toBottomOf="@+id/vocab_lesson_button"
+        app:layout_constraintEnd_toEndOf="@+id/vocab_lesson_button"
+        app:layout_constraintTop_toTopOf="@+id/vocab_lesson_button" />
+
+    <TextView
+        android:id="@+id/verbs_lesson_number_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="50"
+        android:textColor="@color/verb_text_white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:translationZ="90dp"
+        app:layout_constraintBottom_toBottomOf="@+id/verb_lesson_button"
+        app:layout_constraintEnd_toEndOf="@+id/verb_lesson_button"
+        app:layout_constraintTop_toTopOf="@+id/verb_lesson_button" />
+
+    <TextView
+        android:id="@+id/phrase_lesson_number_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="50"
+        android:textColor="@color/phrase_text_teal"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:translationZ="90dp"
+        app:layout_constraintBottom_toBottomOf="@+id/phrase_lesson_button"
+        app:layout_constraintEnd_toEndOf="@+id/phrase_lesson_button"
+        app:layout_constraintTop_toTopOf="@+id/phrase_lesson_button" />
+
+    <TextView
+        android:id="@+id/home_lessons_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/cabin"
+        android:text="Lessons"
+        android:textColor="@color/hint_blue"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/vocab_lesson_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_corners_button_vocab"
+        android:fontFamily="@font/cabin"
+        android:text="VOCAB"
+        android:textAlignment="viewStart"
+        android:textColor="@color/vocab_text_blue"
+        android:textStyle="bold"
+        app:backgroundTint="@color/vocab_bg_teal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_lessons_textview" />
+
+
+    <Button
+        android:id="@+id/verb_lesson_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/rounded_corners_button_vocab"
+        android:fontFamily="@font/cabin"
+        android:text="VERBS"
+        android:textAlignment="viewStart"
+        android:textColor="@color/verb_text_white"
+        android:textStyle="bold"
+        app:backgroundTint="@color/verb_bg_pink"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vocab_lesson_button" />
+
+
+    <Button
+        android:id="@+id/phrase_lesson_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/rounded_corners_button_vocab"
+        android:fontFamily="@font/cabin"
+        android:text="PHRASES"
+        android:textAlignment="viewStart"
+        android:textColor="@color/phrase_text_teal"
+        android:textStyle="bold"
+        app:backgroundTint="@color/phrase_bg_purple"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/verb_lesson_button" />
+
+    <TextView
+        android:id="@+id/home_user_level_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/cabin"
+        android:text="Level 5"
+        android:textColor="@color/text_blue"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/phrase_lesson_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/phrase_lesson_button" />
+
+    <ImageView
+        android:id="@+id/user_level_imageview"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/round_imageview"
+        app:layout_constraintBottom_toTopOf="@+id/home_user_level_textview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/verb_lesson_button"
+        app:layout_constraintTop_toTopOf="@+id/vocab_lesson_button"
+        app:srcCompat="@android:drawable/sym_def_app_icon" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

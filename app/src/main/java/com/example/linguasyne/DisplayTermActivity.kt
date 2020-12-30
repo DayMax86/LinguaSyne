@@ -2,6 +2,7 @@ package com.example.linguasyne
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.Menu
 import android.widget.TextView
@@ -14,6 +15,9 @@ class DisplayTerm : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display_term)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        findViewById<TextView>(R.id.display_term_translations_textview).movementMethod=ScrollingMovementMethod()
+        findViewById<TextView>(R.id.display_term_mnemonics_textview).movementMethod=ScrollingMovementMethod()
 
         displayVocabData()
 
@@ -32,14 +36,14 @@ class DisplayTerm : AppCompatActivity() {
             findViewById<TextView>(R.id.term_unlock_level_textbox).text =
                 v.unlock_level.toString()
             for (translations in v.translations) {
-                findViewById<TextView>(R.id.translations_scroll_view).text =
-                    (findViewById<TextView>(R.id.translations_scroll_view).text.toString()
-                        .plus(translations.toString()))
+                findViewById<TextView>(R.id.display_term_translations_textview).text =
+                    (findViewById<TextView>(R.id.display_term_translations_textview).text.toString()
+                        .plus("\''$translations', "))
             }
             for (mnemonics in v.mnemonics) {
-                findViewById<TextView>(R.id.mnemonics_scroll_view).text =
-                    (findViewById<TextView>(R.id.mnemonics_scroll_view).text.toString()
-                        .plus(mnemonics.toString()))
+                findViewById<TextView>(R.id.display_term_mnemonics_textview).text =
+                    (findViewById<TextView>(R.id.display_term_mnemonics_textview).text.toString()
+                        .plus("$mnemonics. "))
             }
             findViewById<TextView>(R.id.term_search_current_level_textview).text =
                 v.current_level_term.toString()

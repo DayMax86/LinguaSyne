@@ -6,7 +6,6 @@ import com.google.firebase.firestore.ktx.getField
 
 object FirebaseManager {
 
-//Neither the onSuccessListener nor the onFailureListener are triggering when this method is called from VocabSearchActivity's onCreate method...
     fun loadVocabFromFirebase() {
         val ref = FirebaseFirestore.getInstance()
         ref.collection("vocab")
@@ -32,6 +31,7 @@ object FirebaseManager {
                     results.add(vocab)
                 }
                 Repository.currentVocab = results
+                Repository.allVocab = results
             }
             .addOnFailureListener { exception ->
                 Log.d("VocabSearchActivity", "OnFailureListener triggered!")

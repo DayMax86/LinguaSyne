@@ -10,6 +10,13 @@
     <color name="text_blue">#0016E0</color>
     <color name="bg_teal">#3DFDE0</color>
     <color name="hint_blue">#800016E0</color>
+    <color name="vocab_bg_teal">#3DFDE0</color>
+    <color name="vocab_text_blue">#0016E0</color>
+    <color name="verb_bg_pink">#d817e0</color>
+    <color name="verb_text_white">#FFFFFFFF</color>
+    <color name="phrase_bg_purple">#666bcf</color>
+    <color name="phrase_text_teal">#3DFDE0</color>
+
 
     <color name="ivory">#FFFFF0</color>
     <color name="light_yellow">#FFFFE0</color>

@@ -5,18 +5,24 @@ import android.os.Bundle
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class VocabSearchActivity : AppCompatActivity() {
 
-    val adapter = VocabSearchRecyclerAdapter()
+    lateinit var vocabAdapter: VocabSearchRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_vocab_search)
 
-        initRecyclerView()
+        vocabAdapter = VocabSearchRecyclerAdapter().apply {
+            clickListener = {
+                Repository.filterRepositoryById(it.id)
+                launchTermDisplay()
+            }
+        }
+        findViewById<RecyclerView>(R.id.vocab_search_recycler_view).adapter = vocabAdapter
+
         Repository.listChange = {
             updateAdapter()
         }
@@ -38,24 +44,11 @@ class VocabSearchActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-
-    private fun initRecyclerView() {
-        findViewById<RecyclerView>(R.id.vocab_search_recycler_view).apply {
-            adapter = VocabSearchRecyclerAdapter().apply {
-                clickListener = {
-                    Repository.filterRepositoryById(it.id)
-                    launchTermDisplay()
-                }
-            }
-        }
-    }
-
-
     private fun updateAdapter() {
-        findViewById<RecyclerView>(R.id.vocab_search_recycler_view).adapter = adapter
-        adapter.submitList(Repository.currentVocab
+        findViewById<RecyclerView>(R.id.vocab_search_recycler_view).adapter = vocabAdapter
+        vocabAdapter.submitList(Repository.currentVocab
             .sortedBy { it.name })
-        adapter.notifyDataSetChanged()
+        vocabAdapter.notifyDataSetChanged()
     }
 
 
