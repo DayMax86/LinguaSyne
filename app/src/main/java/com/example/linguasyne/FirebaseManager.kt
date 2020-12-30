@@ -31,7 +31,9 @@ object FirebaseManager {
                     results.add(vocab)
                 }
                 Repository.currentVocab = results
-                Repository.allVocab = results
+                Repository.allVocab = results.sortedBy {
+                    it.name
+                }
             }
             .addOnFailureListener { exception ->
                 Log.d("VocabSearchActivity", "OnFailureListener triggered!")

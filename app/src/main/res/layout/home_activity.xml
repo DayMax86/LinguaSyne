@@ -140,4 +140,13 @@
         app:layout_constraintTop_toTopOf="@+id/vocab_lesson_button"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintBottom_toBottomOf="@+id/user_level_imageview"
+        app:layout_constraintEnd_toEndOf="@+id/user_level_imageview"
+        app:layout_constraintStart_toStartOf="@+id/user_level_imageview"
+        app:layout_constraintTop_toTopOf="@+id/user_level_imageview" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

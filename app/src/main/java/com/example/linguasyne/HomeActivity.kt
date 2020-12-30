@@ -16,17 +16,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
-//
-//        //TESTING ONLY
-//        findViewById<Button>(R.id.logged_in_test_button).setOnClickListener{
-//            findViewById<Button>(R.id.logged_in_test_button).text = FirebaseAuth.getInstance().currentUser?.email.toString()
-//        }
-//        //TESTING ONLY
-//        findViewById<Button>(R.id.import_csv_button).setOnClickListener{
-//            //importVocabCSV()
-//            val intent = Intent(this, VocabSearchActivity::class.java)
-//            startActivity(intent)
-//        }
+
     }
 
     //Ideally this should go in a separate CSV Importer class and be called from there, but that was proving difficult. Added to to-do list.

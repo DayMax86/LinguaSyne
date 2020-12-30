@@ -23,6 +23,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_corners_textbox_bg"
                 android:scrollbars="vertical"
+                android:translationZ="90dp"
                 app:layout_constraintEnd_toEndOf="@+id/display_term_translations_textview"
                 app:layout_constraintStart_toStartOf="@+id/display_term_translations_textview"
                 app:layout_constraintTop_toBottomOf="@+id/display_term_translations_textview">
@@ -36,6 +37,7 @@
                 android:layout_marginStart="32dp"
                 android:background="@drawable/rounded_corners_textbox_bg"
                 android:scrollbars="vertical"
+                android:translationZ="90dp"
                 app:layout_constraintEnd_toEndOf="@+id/right_arrow_image"
                 app:layout_constraintStart_toEndOf="@+id/translations_hardcoded_text"
                 app:layout_constraintTop_toTopOf="@+id/translations_hardcoded_text">
@@ -104,9 +106,10 @@
                 app:srcCompat="@drawable/opaquerightarrow" />
 
             <ImageView
-                android:id="@+id/mars_logo_image"
+                android:id="@+id/display_term_masculine_imageview"
                 android:layout_width="62dp"
                 android:layout_height="78dp"
+                android:scaleType="fitXY"
                 android:layout_marginStart="86dp"
                 android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toStartOf="@+id/term_unlock_level_textbox"
@@ -116,7 +119,7 @@
                 app:srcCompat="@drawable/alphamars" />
 
             <ImageView
-                android:id="@+id/venus_logo_image"
+                android:id="@+id/display_term_feminine_imageview"
                 android:layout_width="73dp"
                 android:layout_height="73dp"
                 android:layout_marginTop="22dp"
@@ -151,7 +154,7 @@
                 android:textColor="@color/text_blue"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/left_arrow_image"
-                app:layout_constraintTop_toBottomOf="@+id/mars_logo_image" />
+                app:layout_constraintTop_toBottomOf="@+id/display_term_masculine_imageview" />
 
             <TextView
                 android:id="@+id/add_synonym_text"
@@ -244,6 +247,7 @@
                 android:inputType="date"
                 android:text="23/01/2021     13:00"
                 android:textColor="@color/text_blue"
+                android:editable="false"
                 app:layout_constraintBottom_toBottomOf="@+id/next_review_text"
                 app:layout_constraintStart_toEndOf="@+id/next_review_text"
                 app:layout_constraintTop_toTopOf="@+id/next_review_text" />
