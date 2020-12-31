@@ -14,13 +14,13 @@ object Repository {
 
     fun filterRepositoryByName(search_term_name: String) {
         currentVocab = allVocab
-            .filter { it.name.contains(search_term_name) }
+            .filter { it.name.contains(search_term_name.toLowerCase()) }
             .sortedBy { it.name }
     }
 
     fun filterRepositoryById(search_term_id: String) {
         currentVocab = allVocab
-            .filter { it.id.contains(search_term_id) }
+            .filter { it.id.contains(search_term_id.toLowerCase()) }
             .sortedBy { it.id }
     }
 }
