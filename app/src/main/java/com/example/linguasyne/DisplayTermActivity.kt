@@ -55,10 +55,6 @@ class DisplayTerm : AppCompatActivity() {
     var r_clickable = false
     var l_clickable = false
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
-    }
-
 
     private fun clearUI() {
         findViewById<TextView>(R.id.term_name_textbox).text =

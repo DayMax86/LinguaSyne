@@ -40,4 +40,16 @@ object FirebaseManager {
                 Log.w("VocabSearchActivity", "Error getting documents: ", exception)
             }
     }
+
+
+    fun addVocabToFirebase(term: Term) {
+        FirebaseFirestore.getInstance()
+            .collection("vocab")
+            .add(term)
+            .addOnSuccessListener {
+                Log.d("HomeActivity", "Vocab item #" + "$term.id" + " added to firebase")
+            }
+    }
+
+
 }

@@ -23,6 +23,11 @@ class CreateAccountActivity : AppCompatActivity() {
             val pBar: ProgressBar = findViewById<ProgressBar>(R.id.password_register_progressbar)
             when (
                 checkPasswordStrength(findViewById<EditText>(R.id.password_register_textbox).text.toString())) {
+                PasswordStrengths.WHITESPACE -> {
+                    pBar.progress = 0
+                    findViewById<TextView>(R.id.password_strength_textview).text =
+                        "password cannot contain spaces!"
+                }
                 PasswordStrengths.SHORT -> {
                     pBar.progress = 0
                     findViewById<TextView>(R.id.password_strength_textview).text =
@@ -78,8 +83,22 @@ class CreateAccountActivity : AppCompatActivity() {
         findViewById<Button>(R.id.create_account_button).setOnClickListener {
             val email = findViewById<TextView>(R.id.email_register_textbox).text.toString()
             val password = findViewById<EditText>(R.id.password_register_textbox).text.toString()
-            if (checkPasswordStrength(password)==PasswordStrengths.SHORT){
-                Toast.makeText(this, "Password must be more than 8 characters in length!",Toast.LENGTH_LONG).show()
+            //Check password is long enough
+            if (checkPasswordStrength(password) == PasswordStrengths.SHORT) {
+                Toast.makeText(
+                    this,
+                    "Password must be more than 8 characters in length!",
+                    Toast.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            }
+            //Check there is no whitespace in the password
+            if (checkPasswordStrength(password) == PasswordStrengths.WHITESPACE) {
+                Toast.makeText(
+                    this,
+                    "Password cannot contain spaces!",
+                    Toast.LENGTH_LONG
+                ).show()
                 return@setOnClickListener
             }
 
@@ -187,6 +206,10 @@ class CreateAccountActivity : AppCompatActivity() {
             score += 20
         }
 
+        if (password.contains(" ")) {
+            return PasswordStrengths.WHITESPACE
+        }
+
         when (score) {
             in 0..4 -> return PasswordStrengths.VERY_WEAK
             in 5..9 -> return PasswordStrengths.WEAK
@@ -205,7 +228,8 @@ class CreateAccountActivity : AppCompatActivity() {
         STRONG,
         VERY_STRONG,
         ERROR,
-        SHORT
+        SHORT,
+        WHITESPACE
     }
 
     private fun addUserToFirebase(user: User) {

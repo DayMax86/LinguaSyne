@@ -19,43 +19,6 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    //Ideally this should go in a separate CSV Importer class and be called from there, but that was proving difficult. Added to to-do list.
-    private fun importVocabCSV() {
-        val inputStream = resources.openRawResource(R.raw.test)
-
-        csvReader().open(inputStream) {
-            readAllAsSequence().forEach { row ->
-                Log.d("HomeActivity", "$row")
-
-                val term = Vocab(
-                        row[0],                          //id
-                        row[1],                          //name
-                        row[2].toInt(),                  //unlock level
-                        row[3].split("/"),    //translations
-                        row[4].split("/"),    //mnemonics
-                        row[5].split("/"),    //gender
-                        row[6].split("/")     //types
-                )
-                addVocabToFirebase(term)
-            }
-
-        }
-
-    }
-
-
-    private fun addVocabToFirebase(term: Term){
-        FirebaseFirestore.getInstance()
-            .collection("vocab")
-            .add(term)
-            .addOnSuccessListener {
-                Log.d("HomeActivity", "Vocab item #" + "$term.id"+ " added to firebase")
-            }
-    }
-
-
-
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -67,7 +30,7 @@ class HomeActivity : AppCompatActivity() {
                 signOut()
             }
             R.id.menu_test_item -> {
-                //Do something
+                CSVManager.importVocabCSV()
             }
             R.id.menu_search -> {
                 val intent = Intent(this, VocabSearchActivity::class.java)

@@ -37,16 +37,11 @@ class VocabSearchRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>
     inner class VocabSearchViewHolder(val itemview: View) : RecyclerView.ViewHolder(itemview) {
 
         fun bind(vocab: Vocab) {
-            itemview.findViewById<TextView>(R.id.term_search_name)
-                .setText(vocab.name)
-            itemview.findViewById<TextView>(R.id.search_term_type_textview)
-                .setText(vocab.types.toString())
-            itemview.findViewById<TextView>(R.id.term_search_current_level_textview)
-                .setText(vocab.current_level_term.toString())
-            itemview.findViewById<TextView>(R.id.term_search_next_level_textview)
-                .setText((vocab.current_level_term + 1).toString())
-            itemview.findViewById<TextView>(R.id.search_term_unlock_level_textview)
-                .setText(vocab.unlock_level.toString())
+            itemview.findViewById<TextView>(R.id.term_search_name).text = vocab.name
+            itemview.findViewById<TextView>(R.id.search_term_type_textview).text = vocab.types.toString()
+            itemview.findViewById<TextView>(R.id.term_search_current_level_textview).text = vocab.current_level_term.toString()
+            itemview.findViewById<TextView>(R.id.term_search_next_level_textview).text = (vocab.current_level_term + 1).toString()
+            itemview.findViewById<TextView>(R.id.search_term_unlock_level_textview).text = vocab.unlock_level.toString()
             // implement progress bar
 
             itemview.findViewById<ImageView>(R.id.term_search_background_rectangle)
