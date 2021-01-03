@@ -109,7 +109,8 @@ class CreateAccountActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d("CreateAccountActivity", "createUserWithEmail:SUCCESS, $email")
-                        val user = auth.currentUser
+                        val user = User(email)
+                        FirebaseManager.current_user = user
                         Toast.makeText(
                             baseContext,
                             "Account successfully created",

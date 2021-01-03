@@ -4,13 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
-import android.view.Menu
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.linguasyne.enums.Gender
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.getField
 
 class DisplayTerm : AppCompatActivity() {
 
@@ -24,7 +20,7 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<TextView>(R.id.display_term_mnemonics_textview).movementMethod =
             ScrollingMovementMethod()
 
-        if (Repository.currentVocab.size == 1) {
+        if (VocabRepository.currentVocab.size == 1) {
             enableLeftRightArrows()
         } else {
             Log.d("DisplayTermActivity", "currentVocab contains more than 1 or no items!")
@@ -34,7 +30,7 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<ImageView>(R.id.left_arrow_image).setOnClickListener {
             if (l_clickable) {
 //                Log.d("DisplayTermActivity", "v_prev is null!")
-                Repository.filterRepositoryById(v_prev?.id.toString())
+                VocabRepository.filterVocabRepositoryById(v_prev?.id.toString())
                 enableLeftRightArrows()
                 displayVocabData()
             }
@@ -42,7 +38,7 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<ImageView>(R.id.right_arrow_image).setOnClickListener {
             if (r_clickable) {
 //                Log.d("DisplayTermActivity", "v_next is null!")
-                Repository.filterRepositoryById(v_next?.id.toString())
+                VocabRepository.filterVocabRepositoryById(v_next?.id.toString())
                 enableLeftRightArrows()
                 displayVocabData()
             }
@@ -75,7 +71,7 @@ class DisplayTerm : AppCompatActivity() {
 
     private fun displayVocabData() {
         clearUI()
-        val v = Repository.currentVocab[0]
+        val v = VocabRepository.currentVocab[0]
 
         findViewById<TextView>(R.id.term_name_textbox).text =
             v.name
@@ -123,7 +119,7 @@ class DisplayTerm : AppCompatActivity() {
     private fun enableLeftRightArrows() {
         //First of all check if there is vocab to the left or right of the sorted allVocab list,
         //if not then alpha version of image should be displayed.
-        val v: Vocab = Repository.currentVocab[0]
+        val v: Vocab = VocabRepository.currentVocab[0]
 
         v_next = null
         v_prev = null
@@ -132,21 +128,21 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<ImageView>(R.id.left_arrow_image).setImageDrawable(null)
 
         //If there is no next element (i.e. reached the end of the list), set image to alpha version and don't allow clickListener.
-        if (Repository.allVocab.indexOf(v) + 1 > Repository.allVocab.size - 1) {
+        if (VocabRepository.allVocab.indexOf(v) + 1 > VocabRepository.allVocab.size - 1) {
             findViewById<ImageView>(R.id.right_arrow_image).setBackgroundResource(R.drawable.alpharightarrow)
             r_clickable = false
         } else {
-            v_next = Repository.allVocab[Repository.allVocab.indexOf(v) + 1]
+            v_next = VocabRepository.allVocab[VocabRepository.allVocab.indexOf(v) + 1]
             findViewById<ImageView>(R.id.right_arrow_image).setBackgroundResource(R.drawable.opaquerightarrow)
             r_clickable = true
         }
 
         //Same check but for previous element (i.e. are we at the start of the list?)
-        if (Repository.allVocab.indexOf(v) - 1 < 0) {
+        if (VocabRepository.allVocab.indexOf(v) - 1 < 0) {
             findViewById<ImageView>(R.id.left_arrow_image).setBackgroundResource(R.drawable.alphaleftarrow)
             l_clickable = false
         } else {
-            v_prev = Repository.allVocab[Repository.allVocab.indexOf(v) - 1]
+            v_prev = VocabRepository.allVocab[VocabRepository.allVocab.indexOf(v) - 1]
             findViewById<ImageView>(R.id.left_arrow_image).setBackgroundResource(R.drawable.opaqueleftarrow)
             l_clickable = true
         }

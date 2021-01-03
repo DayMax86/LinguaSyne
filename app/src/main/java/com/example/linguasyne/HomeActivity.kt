@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.firebase.auth.FirebaseAuth
@@ -16,6 +17,11 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
+
+        findViewById<TextView>(R.id.home_term_base_text).setOnClickListener{
+            val intent = Intent(this, VocabSearchActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 

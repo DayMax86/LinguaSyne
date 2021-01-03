@@ -16,6 +16,7 @@ class Vocab(term_id: String,
     val is_part_of = listOf<String>()
     val constituent_terms = listOf<String>()
 
+    override val class_type: LessonManager.LessonTypes = LessonManager.LessonTypes.VOCAB
 
     init {
         setGenders(term_genders)

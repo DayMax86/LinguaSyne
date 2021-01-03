@@ -6,6 +6,8 @@ import com.google.firebase.firestore.ktx.getField
 
 object FirebaseManager {
 
+    lateinit var current_user: User
+
     fun loadVocabFromFirebase() {
         val ref = FirebaseFirestore.getInstance()
         ref.collection("vocab")
@@ -30,8 +32,8 @@ object FirebaseManager {
                     )
                     results.add(vocab)
                 }
-                Repository.currentVocab = results
-                Repository.allVocab = results.sortedBy {
+                VocabRepository.currentVocab = results
+                VocabRepository.allVocab = results.sortedBy {
                     it.name
                 }
             }

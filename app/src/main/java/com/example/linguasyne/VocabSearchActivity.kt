@@ -17,13 +17,13 @@ class VocabSearchActivity : AppCompatActivity() {
 
         vocabAdapter = VocabSearchRecyclerAdapter().apply {
             clickListener = {
-                Repository.filterRepositoryById(it.id)
+                VocabRepository.filterVocabRepositoryById(it.id)
                 launchTermDisplay()
             }
         }
         findViewById<RecyclerView>(R.id.vocab_search_recycler_view).adapter = vocabAdapter
 
-        Repository.listChange = {
+        VocabRepository.listChange = {
             updateAdapter()
         }
 
@@ -31,7 +31,7 @@ class VocabSearchActivity : AppCompatActivity() {
 
         findViewById<EditText>(R.id.vocab_search_input_edittext)
             .addTextChangedListener {
-                Repository.filterRepositoryByName(
+                VocabRepository.filterVocabRepositoryById(
                     findViewById<EditText>(R.id.vocab_search_input_edittext).text.toString()
                 )
                 //listchange on repository does this on its own
@@ -46,7 +46,7 @@ class VocabSearchActivity : AppCompatActivity() {
 
     private fun updateAdapter() {
         findViewById<RecyclerView>(R.id.vocab_search_recycler_view).adapter = vocabAdapter
-        vocabAdapter.submitList(Repository.currentVocab
+        vocabAdapter.submitList(VocabRepository.currentVocab
             .sortedBy { it.name })
         vocabAdapter.notifyDataSetChanged()
     }

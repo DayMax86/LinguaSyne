@@ -12,6 +12,8 @@ open class Term (term_id: String,
     var translations = term_translations
     var mnemonics = term_mnemonics
 
+    open val class_type: LessonManager.LessonTypes = LessonManager.LessonTypes.TERM
+
     var current_level_term: Int = 0
     var next_review: Int = 0
 
