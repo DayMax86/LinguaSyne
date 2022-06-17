@@ -34,8 +34,6 @@ class VocabSearchActivity : AppCompatActivity() {
                 VocabRepository.filterVocabRepositoryById(
                     findViewById<EditText>(R.id.vocab_search_input_edittext).text.toString()
                 )
-                //listchange on repository does this on its own
-                // updateAdapter()
             }
     }
 

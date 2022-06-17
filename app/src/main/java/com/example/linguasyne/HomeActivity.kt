@@ -23,6 +23,12 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        findViewById<Button>(R.id.vocab_lesson_button).setOnClickListener{
+            LessonManager.createLesson(LessonTypes.VOCAB)
+            val intent = Intent(this, VocabSearchActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
