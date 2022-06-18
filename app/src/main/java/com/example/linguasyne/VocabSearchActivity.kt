@@ -31,8 +31,8 @@ class VocabSearchActivity : AppCompatActivity() {
 
         findViewById<EditText>(R.id.vocab_search_input_edittext)
             .addTextChangedListener {
-                VocabRepository.filterVocabRepositoryById(
-                    findViewById<EditText>(R.id.vocab_search_input_edittext).text.toString()
+                VocabRepository.filterVocabRepositoryByName(
+                findViewById<EditText>(R.id.vocab_search_input_edittext).text.toString()
                 )
             }
     }

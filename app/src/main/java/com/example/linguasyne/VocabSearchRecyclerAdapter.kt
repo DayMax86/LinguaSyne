@@ -34,7 +34,7 @@ class VocabSearchRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>
         items = list
     }
 
-    inner class VocabSearchViewHolder(val itemview: View) : RecyclerView.ViewHolder(itemview) {
+    inner class VocabSearchViewHolder(private val itemview: View) : RecyclerView.ViewHolder(itemview) {
 
         fun bind(vocab: Vocab) {
             itemview.findViewById<TextView>(R.id.term_search_name).text = vocab.name

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.LinguaSyne" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.LinguaSyne" parent="Theme.MaterialComponents.DayNight">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/text_blue</item>
         <item name="colorPrimaryVariant">@color/alice_blue</item>
@@ -13,4 +13,10 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="Theme.LinguaSyne.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.LinguaSyne.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.LinguaSyne.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

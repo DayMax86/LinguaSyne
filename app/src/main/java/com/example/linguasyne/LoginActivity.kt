@@ -12,16 +12,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
 
         findViewById<Button>(R.id.login_button).setOnClickListener{
-            if (logInUser()) {
-                val intent = Intent(this, HomeActivity::class.java)
-                Log.d("LoginActivity", "Attempting to launch HomeActivity")
-                startActivity(intent)
-            }
+            logInUser()
+            val intent = Intent(this, HomeActivity::class.java)
+            Log.d("LoginActivity", "Attempting to launch HomeActivity")
+            startActivity(intent)
         }
 
         findViewById<TextView>(R.id.create_account_text).setOnClickListener{
@@ -43,9 +43,8 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun logInUser(): Boolean {
+    private fun logInUser() {
         FirebaseAuth.getInstance()
-        var successful = false
 
         val email = findViewById<TextView>(R.id.email_login_textbox).text.toString()
         val password = findViewById<EditText>(R.id.password_login_textbox).text.toString()
@@ -54,12 +53,11 @@ class LoginActivity : AppCompatActivity() {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     Log.d("LoginActivity", "User logged in")
-                    successful = true
+                    Toast.makeText(this, "Login successful", Toast.LENGTH_LONG).show()
                 }
                 .addOnFailureListener {
                     Log.d("LoginActivity", "User log in failed")
                     Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show()
-                    successful = false
                 }
 
         }
@@ -67,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
             Log.d("LoginActivity", "Either email or password is null")
             Toast.makeText(this,"Please enter both an email address and password", Toast.LENGTH_LONG).show()
         }
-        return successful
+
     }
 
 
