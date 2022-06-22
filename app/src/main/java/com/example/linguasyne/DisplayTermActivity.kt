@@ -71,6 +71,8 @@ class DisplayTerm : AppCompatActivity() {
 
     private fun displayVocabData() {
         clearUI()
+        //LoadVocabFromFirebase is having the OnFailureListener trigger! Needs investigating.
+        FirebaseManager.loadVocabFromFirebase()
         val v = VocabRepository.currentVocab[0]
 
         findViewById<TextView>(R.id.term_name_textbox).text =

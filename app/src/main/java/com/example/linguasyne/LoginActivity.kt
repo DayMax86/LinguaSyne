@@ -54,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener {
                     Log.d("LoginActivity", "User logged in")
                     Toast.makeText(this, "Login successful", Toast.LENGTH_LONG).show()
+                    FirebaseManager.current_user = User(email)
                 }
                 .addOnFailureListener {
                     Log.d("LoginActivity", "User log in failed")

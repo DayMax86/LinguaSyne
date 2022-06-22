@@ -29,7 +29,7 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.vocab_lesson_button).setOnClickListener{
             LessonManager.createLesson(LessonTypes.VOCAB)
-            val intent = Intent(this, LessonActivity::class.java)
+            val intent = Intent(this, DisplayTerm::class.java)
             startActivity(intent)
         }
 
