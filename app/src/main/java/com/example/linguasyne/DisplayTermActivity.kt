@@ -20,12 +20,18 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<TextView>(R.id.display_term_mnemonics_textview).movementMethod =
             ScrollingMovementMethod()
 
-        if (VocabRepository.currentVocab.size == 1) {
+        FirebaseManager.loadVocabFromFirebase()
+
+        /* if (VocabRepository.currentVocab.size == 1) { //Is this necessary?
             enableLeftRightArrows()
-        } else {
-            Log.d("DisplayTermActivity", "currentVocab contains more than 1 or no items!")
+        } else if (VocabRepository.currentVocab.size > 1) {
+            Log.d("DisplayTermActivity", "currentVocab contains more than 1 item!")
         }
+        else {
+            Log.d("DisplayTermActivity", "currentVocab contains no items!")
+        } */
         displayVocabData()
+        enableLeftRightArrows()
 
         findViewById<ImageView>(R.id.left_arrow_image).setOnClickListener {
             if (l_clickable) {

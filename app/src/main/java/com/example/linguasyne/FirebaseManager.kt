@@ -9,10 +9,12 @@ object FirebaseManager {
     lateinit var current_user: User
 
     fun loadVocabFromFirebase() {
+        Log.d("VocabSearchActivity", "Before attaching listener")
         val ref = FirebaseFirestore.getInstance()
         ref.collection("vocab")
             .get()
             .addOnSuccessListener { documents ->
+                Log.d("VocabSearchActivity", "Inside OnSuccessListener")
                 val results = mutableListOf<Vocab>()
                 Log.d("FirebaseManager", "OnSuccessListener triggered!")
                 for (document in documents) {
@@ -38,9 +40,10 @@ object FirebaseManager {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.d("VocabSearchActivity", "OnFailureListener triggered!")
-                Log.w("VocabSearchActivity", "Error getting documents: ", exception)
+                Log.d("VocabSearchActivity", "Inside OnFailureListener")
+                Log.d("VocabSearchActivity", "Error getting documents: ", exception)
             }
+        Log.d("VocabSearchActivity", "After attaching listener")
     }
 
 

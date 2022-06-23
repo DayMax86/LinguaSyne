@@ -33,6 +33,9 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        //Temporarily loading vocab straight away to see if async error is present
+        FirebaseManager.loadVocabFromFirebase()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

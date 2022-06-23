@@ -36,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
         val auth: FirebaseAuth = FirebaseAuth.getInstance()
         if (auth.currentUser != null) {
             //If user is already logged in, launch go to home screen.
+            FirebaseManager.current_user = User(auth.currentUser!!.email.toString())
             val intent = Intent(this, HomeActivity::class.java)
             Log.d("LoginActivity", "Attempting to launch HomeActivity from onStart()")
             startActivity(intent)
