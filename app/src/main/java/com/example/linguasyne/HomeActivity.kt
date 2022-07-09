@@ -49,7 +49,7 @@ class HomeActivity : AppCompatActivity() {
                 signOut()
             }
             R.id.menu_test_item -> {
-                CSVManager.importVocabCSV()
+                CSVManager.importVocabCSV(this.applicationContext)
             }
             R.id.menu_search -> {
                 val intent = Intent(this, VocabSearchActivity::class.java)

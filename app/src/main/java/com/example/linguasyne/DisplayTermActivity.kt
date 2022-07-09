@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.linguasyne.enums.Gender
+import com.google.firebase.FirebaseCommonRegistrar
 
 class DisplayTerm : AppCompatActivity() {
 
@@ -20,16 +21,11 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<TextView>(R.id.display_term_mnemonics_textview).movementMethod =
             ScrollingMovementMethod()
 
-        FirebaseManager.loadVocabFromFirebase()
+        //This was overriding the filtered list when a lesson is created.
+        //FirebaseManager.loadVocabFromFirebase()
 
-        /* if (VocabRepository.currentVocab.size == 1) { //Is this necessary?
-            enableLeftRightArrows()
-        } else if (VocabRepository.currentVocab.size > 1) {
-            Log.d("DisplayTermActivity", "currentVocab contains more than 1 item!")
-        }
-        else {
-            Log.d("DisplayTermActivity", "currentVocab contains no items!")
-        } */
+        //Need some way of the display data function knowing to take from current_lesson rather than all vocab when activity is started from lesson button
+
         displayVocabData()
         enableLeftRightArrows()
 
@@ -77,8 +73,11 @@ class DisplayTerm : AppCompatActivity() {
 
     private fun displayVocabData() {
         clearUI()
-        //LoadVocabFromFirebase is having the OnFailureListener trigger! Needs investigating.
-        FirebaseManager.loadVocabFromFirebase()
+
+
+        if (!VocabRepository.activeLesson) {
+            FirebaseManager.loadVocabFromFirebase()
+        }
         val v = VocabRepository.currentVocab[0]
 
         findViewById<TextView>(R.id.term_name_textbox).text =

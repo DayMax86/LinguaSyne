@@ -11,6 +11,8 @@ object VocabRepository {
             listChange?.invoke()
         }
 
+    var activeLesson: Boolean = false
+
 
     fun filterVocabRepositoryByName(search_term_name: String) {
         currentVocab = allVocab

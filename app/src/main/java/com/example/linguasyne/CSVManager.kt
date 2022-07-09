@@ -1,7 +1,10 @@
 package com.example.linguasyne
 
 import android.R.raw
+import android.app.Application
+import android.content.Context
 import android.content.res.Resources
+import android.content.res.Resources.getSystem
 import android.util.Log
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,11 +12,11 @@ import java.io.InputStream
 
 object CSVManager {
 
-    fun importVocabCSV() {
-        val inputsstr: InputStream = Resources.getSystem().openRawResource(R.raw.test)
-        csvReader().open(inputsstr) {
+    fun importVocabCSV(context: Context) {
+        val inputstr: InputStream = context.resources.openRawResource(R.raw.vocab_data)
+        csvReader().open(inputstr) {
             readAllAsSequence().forEach { row ->
-                Log.d("HomeActivity", "$row")
+                Log.d("CSVManager", "$row")
 
                 val term = Vocab(
                     row[0],                          //id
