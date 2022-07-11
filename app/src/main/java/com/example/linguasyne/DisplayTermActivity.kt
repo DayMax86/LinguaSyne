@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.linguasyne.enums.Gender
+import com.example.linguasyne.enums.TermTypes
 import com.google.firebase.FirebaseCommonRegistrar
 
 class DisplayTerm : AppCompatActivity() {
@@ -48,8 +49,8 @@ class DisplayTerm : AppCompatActivity() {
 
     }
 
-    var v_prev: Vocab? = null
-    var v_next: Vocab? = null
+    var v_prev: Term? = null
+    var v_next: Term? = null
     var r_clickable = false
     var l_clickable = false
 
@@ -74,11 +75,12 @@ class DisplayTerm : AppCompatActivity() {
     private fun displayVocabData() {
         clearUI()
 
-
-        if (!VocabRepository.activeLesson) {
+        val v: Term = if (VocabRepository.activeLesson) {
+            LessonManager.current_lesson.lesson_list[0]
+        } else {
             FirebaseManager.loadVocabFromFirebase()
+            VocabRepository.currentVocab[0]
         }
-        val v = VocabRepository.currentVocab[0]
 
         findViewById<TextView>(R.id.term_name_textbox).text =
             v.name
@@ -102,6 +104,15 @@ class DisplayTerm : AppCompatActivity() {
             v.next_review.toString()
 
         //Set images for term genders
+        if (v.class_type == LessonTypes.VOCAB) {
+            setGenderImages(v as Vocab)
+        }
+
+
+
+    }
+
+    private fun setGenderImages(v: Vocab) {
         for (gender in v.genders) {
             if (gender == Gender.M) {
                 findViewById<ImageView>(R.id.display_term_masculine_imageview).setImageDrawable(
@@ -119,13 +130,13 @@ class DisplayTerm : AppCompatActivity() {
                 )
             }
         }
-
-
     }
 
     private fun enableLeftRightArrows() {
         //First of all check if there is vocab to the left or right of the sorted allVocab list,
         //if not then alpha version of image should be displayed.
+
+        //THIS NEEDS TO CHANGE DEPENDING ON IF IT'S A LESSON OR JUST THE TERM BASE!
         val v: Vocab = VocabRepository.currentVocab[0]
 
         v_next = null

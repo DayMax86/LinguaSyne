@@ -19,7 +19,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
-        /* Below is a temporary fix, before release the whole app needs to be darkmode compatible */
+        /* Below is a temporary fix, before release the whole app needs to be dark mode compatible */
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         findViewById<TextView>(R.id.home_term_base_text).setOnClickListener{
