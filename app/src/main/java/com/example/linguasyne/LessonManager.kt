@@ -41,11 +41,7 @@ object LessonManager {
         //The manager's current lesson has now been set, so HomeActivity can launch the appropriate activity which will display the right list
     }
 
-/*fun filterById(search_term_id: String) {
-        current_lesson.lesson_list.
-            .sortedBy { it.id }
-    }*/
-
+// the 'activelesson' flag has to be set to false at some point otherwise viewing terms only views lesson terms.
 }
 
 

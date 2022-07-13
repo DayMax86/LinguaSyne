@@ -107,11 +107,11 @@
 
             <ImageView
                 android:id="@+id/display_term_masculine_imageview"
-                android:layout_width="59dp"
-                android:layout_height="63dp"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
                 android:layout_marginStart="86dp"
                 android:layout_marginTop="32dp"
-                android:scaleType="fitXY"
+
                 app:layout_constraintEnd_toStartOf="@+id/term_unlock_level_textbox"
                 app:layout_constraintHorizontal_bias="0.441"
                 app:layout_constraintStart_toStartOf="parent"
@@ -120,10 +120,11 @@
 
             <ImageView
                 android:id="@+id/display_term_feminine_imageview"
-                android:layout_width="59dp"
-                android:layout_height="68dp"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="86dp"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.594"
                 app:layout_constraintStart_toEndOf="@+id/term_unlock_level_textbox"

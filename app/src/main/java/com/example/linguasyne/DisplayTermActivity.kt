@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.toDrawable
 import com.example.linguasyne.enums.Gender
+import kotlin.properties.Delegates
 
 class DisplayTerm : AppCompatActivity() {
 
-    private var r_clickable = false
-    private var l_clickable = false
-
-    private lateinit var v: Term
+    private lateinit var t: Term
+    private var tPos: Int = 0
     private lateinit var vSource: List<Term>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,49 +25,124 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<TextView>(R.id.display_term_mnemonics_textview).movementMethod =
             ScrollingMovementMethod()
 
+    }
+
+    private fun displayTerm() {
+
+        //One function to run them all! Separated from onCreate so it can be called when navigating through items.
+
+        //Determine source of term (i.e. lesson or repo)
+        fetchTermSource()
+
+        //Get current term to be displayed
+        fetchTerm()
+
+        //Populate text fields
+        displayVocabData()
+
+        //Load and display images (depends on list position as to which get displayed)
+        //Enable navigation between terms (loadNext() and loadPrev())
+        displayImages()
+
+    }
+
+
+    private fun fetchTermSource(): List<Term> {
         vSource =
-            if (LessonManager.activeLesson) { //this is used in multiple methods so is in onCreate
-                //set source to lesson
+            if (LessonManager.activeLesson) { //Source of term is lesson
                 LessonManager.current_lesson.lesson_list
-            } else { //otherwise take from the normal term base
-                //set source to all vocab
+            } else { //Source must be normal repo
                 VocabRepository.allVocab
             }
+        return vSource
+    }
 
-        //if the data to display is for a lesson, then take from the repo's lesson list
-        v = if (LessonManager.activeLesson) {
-            LessonManager.current_lesson.lesson_list[0]
-        } else { //otherwise take from the normal term base
-            FirebaseManager.loadVocabFromFirebase()
-            VocabRepository.currentVocab[0]
+    private fun fetchTerm(): Term {
+        t = fetchTermSource().elementAt(tPos)
+        return t
+    }
+
+    private fun displayVocabData() {
+        clearUI()
+
+        //populate the text fields with the term's data
+        findViewById<TextView>(R.id.term_name_textbox).text =
+            t.name
+
+        findViewById<TextView>(R.id.term_unlock_level_textbox).text =
+            t.unlock_level.toString()
+
+        for (translations in t.translations) {
+            findViewById<TextView>(R.id.display_term_translations_textview).text =
+                (findViewById<TextView>(R.id.display_term_translations_textview).text.toString()
+                    .plus("\''$translations', "))
         }
 
-        displayVocabData()
-        enableLeftRightArrows()
-
-        findViewById<ImageView>(R.id.left_arrow_image).setOnClickListener {
-            if (l_clickable) {
-                if (!LessonManager.activeLesson) {
-                    VocabRepository.filterById(vSource[vSource.indexOf(v) - 1].id.toString())
-                } else {
-                    v = LessonManager.current_lesson.lesson_list[vSource.indexOf(v) - 1]
-                }
-                enableLeftRightArrows()
-                displayVocabData()
-            }
-        }
-        findViewById<ImageView>(R.id.right_arrow_image).setOnClickListener {
-            if (r_clickable) {
-                if (!LessonManager.activeLesson) {
-                    VocabRepository.filterById(vSource[vSource.indexOf(v) + 1].id.toString())
-                } else {
-                    v = LessonManager.current_lesson.lesson_list[vSource.indexOf(v) + 1]
-                }
-                enableLeftRightArrows()
-                displayVocabData()
-            }
+        for (mnemonics in t.mnemonics) {
+            findViewById<TextView>(R.id.display_term_mnemonics_textview).text =
+                (findViewById<TextView>(R.id.display_term_mnemonics_textview).text.toString()
+                    .plus("$mnemonics. "))
         }
 
+        findViewById<TextView>(R.id.term_search_current_level_textview).text =
+            t.current_level_term.toString()
+
+        findViewById<TextView>(R.id.term_search_next_level_textview).text =
+            (t.current_level_term + 1).toString()
+
+        findViewById<TextView>(R.id.next_review_date).text =
+            t.next_review.toString()
+    }
+
+    private fun displayImages() {
+        var firstInList: Boolean = false
+        var lastInList: Boolean = false
+
+        //If this is the first element in the list then the previous term navigating image should be hidden/disabled
+        if (tPos == 0) {
+            firstInList = true
+        }
+        if (tPos == vSource.size) {
+            lastInList = true
+        }
+
+        //Cache the ImageView references
+        val leftArrowImageView = findViewById<ImageView>(R.id.left_arrow_image)
+        val rightArrowImageView = findViewById<ImageView>(R.id.right_arrow_image)
+
+        if (firstInList) {
+            //Disable left arrow ImageView onClickListener
+            leftArrowImageView.setOnClickListener(null)
+            leftArrowImageView.setBackgroundResource(0)
+        } else if (lastInList) {
+            //Disable right arrow ImageView onClickListener
+            rightArrowImageView.setOnClickListener(null)
+            rightArrowImageView.setBackgroundResource(0)
+        } else {
+            //must be somewhere away from the ends of the list so both can be enabled
+
+            leftArrowImageView.setOnClickListener { loadPrev() }
+            leftArrowImageView.setBackgroundResource(R.drawable.opaqueleftarrow)
+
+            rightArrowImageView.setOnClickListener { loadNext() }
+            rightArrowImageView.setBackgroundResource(R.drawable.opaquerightarrow)
+        }
+
+        //Set the gender images
+        if (t.class_type == LessonTypes.VOCAB) {
+            //Go through all the genders...
+        }
+    }
+
+
+    private fun loadPrev() {
+        tPos--
+        DisplayTerm()
+    }
+
+    private fun loadNext() {
+        tPos++
+        DisplayTerm()
     }
 
     private fun clearUI() {
@@ -80,92 +155,20 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<TextView>(R.id.next_review_date).text = ""
     }
 
-    private fun displayVocabData() {
-        clearUI()
-
-        //populate the text fields with the term's data
-        findViewById<TextView>(R.id.term_name_textbox).text =
-            v.name
-        findViewById<TextView>(R.id.term_unlock_level_textbox).text =
-            v.unlock_level.toString()
-        for (translations in v.translations) {
-            findViewById<TextView>(R.id.display_term_translations_textview).text =
-                (findViewById<TextView>(R.id.display_term_translations_textview).text.toString()
-                    .plus("\''$translations', "))
-        }
-        for (mnemonics in v.mnemonics) {
-            findViewById<TextView>(R.id.display_term_mnemonics_textview).text =
-                (findViewById<TextView>(R.id.display_term_mnemonics_textview).text.toString()
-                    .plus("$mnemonics. "))
-        }
-        findViewById<TextView>(R.id.term_search_current_level_textview).text =
-            v.current_level_term.toString()
-        findViewById<TextView>(R.id.term_search_next_level_textview).text =
-            (v.current_level_term + 1).toString()
-        findViewById<TextView>(R.id.next_review_date).text =
-            v.next_review.toString()
-
-        //Set images for term genders - only applicable for nouns (vocab)
-        if (v.class_type == LessonTypes.VOCAB) {
-            setGenderImages(v as Vocab)
-        }
+    private fun hideGenderImages() {
+        findViewById<ImageView>(R.id.display_term_masculine_imageview).setBackgroundResource(
+            R.drawable.alphamars
+        )
+        findViewById<ImageView>(R.id.display_term_feminine_imageview).setBackgroundResource(
+            R.drawable.alphavenus
+        )
     }
 
-    private fun setGenderImages(v: Vocab) { //this needs to be fixed so that the images line up properly
-        for (gender in v.genders) {
-            if (gender == Gender.M) {
-                findViewById<ImageView>(R.id.display_term_masculine_imageview).setImageDrawable(
-                    null
-                )
-                findViewById<ImageView>(R.id.display_term_masculine_imageview).setBackgroundResource(
-                    R.drawable.opaquemars
-                )
-            } else if (gender == Gender.F) {
-                findViewById<ImageView>(R.id.display_term_masculine_imageview).setImageDrawable(
-                    null
-                )
-                findViewById<ImageView>(R.id.display_term_feminine_imageview).setBackgroundResource(
-                    R.drawable.opaquevenus
-                )
-            }
-        }
-    }
 
-    private fun enableLeftRightArrows() {
-        //First of all check if there is vocab to the left or right of the sorted allVocab list,
-        //if not then alpha version of image should be displayed.
-
-        //
-
-        //v_next = null
-        //v_prev = null
-
-        findViewById<ImageView>(R.id.right_arrow_image).setImageDrawable(null)
-        findViewById<ImageView>(R.id.left_arrow_image).setImageDrawable(null)
-
-        //If there is no next element (i.e. reached the end of the list), set image to alpha version and don't allow clickListener.
-        if (vSource.indexOf(v) + 1 > vSource.size - 1) {
-            findViewById<ImageView>(R.id.right_arrow_image).setBackgroundResource(R.drawable.alpharightarrow)
-            r_clickable = false
-        } else {
-            //v_next = vSource[vSource.indexOf(v) + 1]
-            findViewById<ImageView>(R.id.right_arrow_image).setBackgroundResource(R.drawable.opaquerightarrow)
-            r_clickable = true
-        }
-
-        //Same check but for previous element (i.e. are we at the start of the list?)
-        if (vSource.indexOf(v) - 1 < 0) {
-            findViewById<ImageView>(R.id.left_arrow_image).setBackgroundResource(R.drawable.alphaleftarrow)
-            l_clickable = false
-        } else {
-            //v_prev = vSource[vSource.indexOf(v) - 1]
-            findViewById<ImageView>(R.id.left_arrow_image).setBackgroundResource(R.drawable.opaqueleftarrow)
-            l_clickable = true
-        }
-
-
+    override fun onDestroy() {
+        super.onDestroy()
+        LessonManager.activeLesson = false
     }
 }
-
 
 
