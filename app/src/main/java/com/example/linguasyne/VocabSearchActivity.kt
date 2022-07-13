@@ -17,7 +17,7 @@ class VocabSearchActivity : AppCompatActivity() {
 
         vocabAdapter = VocabSearchRecyclerAdapter().apply {
             clickListener = {
-                VocabRepository.filterVocabRepositoryById(it.id)
+                VocabRepository.filterById(it.id)
                 launchTermDisplay()
             }
         }
@@ -31,7 +31,7 @@ class VocabSearchActivity : AppCompatActivity() {
 
         findViewById<EditText>(R.id.vocab_search_input_edittext)
             .addTextChangedListener {
-                VocabRepository.filterVocabRepositoryByName(
+                VocabRepository.filterByName(
                 findViewById<EditText>(R.id.vocab_search_input_edittext).text.toString()
                 )
             }

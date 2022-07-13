@@ -21,11 +21,20 @@ class ExampleUnitTest {
 class CreateLessonTest {
     @Test
     fun createLesson_isCorrect() {
-        val lt: LessonTypes = LessonTypes.VOCAB
-        val u = User("test@test.com")
-        FirebaseManager.current_user = u
-        LessonManager.createLesson(lt)
         //assertThat("Current vocab should have size 5", VocabRepository.currentVocab.size,5)
         assertEquals(5, LessonManager.current_lesson.lesson_list.size)
     }
 }
+
+/*@RunWith(JUnit4::class)
+class SortLessonTest {
+    @Test
+    fun sortLesson_isCorrect() {
+        val lt: LessonTypes = LessonTypes.VOCAB
+        val u = User("test@test.com")
+        FirebaseManager.current_user = u
+        LessonManager.createLesson(lt)
+        LessonManager.sortById()
+        }
+    }
+}*/
