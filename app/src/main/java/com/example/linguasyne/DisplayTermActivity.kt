@@ -1,5 +1,6 @@
 package com.example.linguasyne
 
+import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -25,9 +26,10 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<TextView>(R.id.display_term_mnemonics_textview).movementMethod =
             ScrollingMovementMethod()
 
+        display()
     }
 
-    private fun displayTerm() {
+    private fun display() {
 
         //One function to run them all! Separated from onCreate so it can be called when navigating through items.
 
@@ -102,7 +104,7 @@ class DisplayTerm : AppCompatActivity() {
         if (tPos == 0) {
             firstInList = true
         }
-        if (tPos == vSource.size) {
+        if (tPos == vSource.size -1) {
             lastInList = true
         }
 
@@ -113,36 +115,75 @@ class DisplayTerm : AppCompatActivity() {
         if (firstInList) {
             //Disable left arrow ImageView onClickListener
             leftArrowImageView.setOnClickListener(null)
-            leftArrowImageView.setBackgroundResource(0)
+            leftArrowImageView.setImageResource(R.drawable.alphaleftarrow)
+            rightArrowImageView.setOnClickListener { loadNext() }
+            rightArrowImageView.setImageResource(R.drawable.opaquerightarrow)
         } else if (lastInList) {
             //Disable right arrow ImageView onClickListener
             rightArrowImageView.setOnClickListener(null)
-            rightArrowImageView.setBackgroundResource(0)
+            rightArrowImageView.setImageResource(R.drawable.alpharightarrow)
+            leftArrowImageView.setOnClickListener{ loadPrev() }
+            leftArrowImageView.setImageResource(R.drawable.opaqueleftarrow)
         } else {
             //must be somewhere away from the ends of the list so both can be enabled
 
             leftArrowImageView.setOnClickListener { loadPrev() }
-            leftArrowImageView.setBackgroundResource(R.drawable.opaqueleftarrow)
+            leftArrowImageView.setImageResource(R.drawable.opaqueleftarrow)
 
             rightArrowImageView.setOnClickListener { loadNext() }
-            rightArrowImageView.setBackgroundResource(R.drawable.opaquerightarrow)
+            rightArrowImageView.setImageResource(R.drawable.opaquerightarrow)
         }
 
         //Set the gender images
-        if (t.class_type == LessonTypes.VOCAB) {
-            //Go through all the genders...
+        setGenderImages()
+    }
+
+    private fun setGenderImages() {
+        if (t is Vocab) {
+            //Go through all the genders
+            for (g: Gender in (t as Vocab).genders) {
+                when (g) {
+                    Gender.NO -> {
+                        //No gender so leave alpha versions of images. Explicitly set to avoid empty case, but default should be alpha anyway.
+                        findViewById<ImageView>(R.id.display_term_masculine_imageview).setImageResource(
+                            R.drawable.alphamars
+                        )
+                        findViewById<ImageView>(R.id.display_term_feminine_imageview).setImageResource(
+                            R.drawable.alphavenus
+                        )
+                    }
+                    Gender.F -> {
+                        findViewById<ImageView>(R.id.display_term_feminine_imageview).setImageResource(
+                            R.drawable.opaquevenus
+                        )
+                    }
+                    Gender.M -> {
+                        findViewById<ImageView>(R.id.display_term_masculine_imageview).setImageResource(
+                            R.drawable.opaquemars
+                        )
+                    }
+                    Gender.MF -> {
+                        findViewById<ImageView>(R.id.display_term_masculine_imageview).setImageResource(
+                            R.drawable.opaquemars
+                        )
+                        findViewById<ImageView>(R.id.display_term_feminine_imageview).setImageResource(
+                            R.drawable.opaquevenus
+                        )
+                    }
+                }
+            }
         }
     }
 
 
     private fun loadPrev() {
         tPos--
-        DisplayTerm()
+        display()
     }
 
     private fun loadNext() {
         tPos++
-        DisplayTerm()
+        display()
     }
 
     private fun clearUI() {
@@ -153,17 +194,13 @@ class DisplayTerm : AppCompatActivity() {
         findViewById<TextView>(R.id.term_search_current_level_textview).text = ""
         findViewById<TextView>(R.id.term_search_next_level_textview).text = ""
         findViewById<TextView>(R.id.next_review_date).text = ""
+        //Set gender images to alpha versions as default
+        findViewById<ImageView>(R.id.display_term_masculine_imageview).setImageResource(R.drawable.alphamars)
+        findViewById<ImageView>(R.id.display_term_feminine_imageview).setImageResource(R.drawable.alphavenus)
+        //Left and right arrows should also be set to alpha version as default
+        findViewById<ImageView>(R.id.left_arrow_image).setImageResource(R.drawable.alphaleftarrow)
+        findViewById<ImageView>(R.id.right_arrow_image).setImageResource(R.drawable.alpharightarrow)
     }
-
-    private fun hideGenderImages() {
-        findViewById<ImageView>(R.id.display_term_masculine_imageview).setBackgroundResource(
-            R.drawable.alphamars
-        )
-        findViewById<ImageView>(R.id.display_term_feminine_imageview).setBackgroundResource(
-            R.drawable.alphavenus
-        )
-    }
-
 
     override fun onDestroy() {
         super.onDestroy()
