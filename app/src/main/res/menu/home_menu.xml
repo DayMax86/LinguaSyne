@@ -9,6 +9,10 @@
         android:title="Sign out"
         />
     <item
+        android:id="@+id/menu_csv_import"
+        android:title="CSV import"
+        />
+    <item
         android:id="@+id/menu_test_item"
         android:title="Test item"
         />

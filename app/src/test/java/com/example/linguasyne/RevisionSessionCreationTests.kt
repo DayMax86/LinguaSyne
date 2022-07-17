@@ -1,21 +1,18 @@
 package com.example.linguasyne
 
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class RevisionSessionCreationTests {
 
     class ExampleUnitTest {
         @Test
-        fun getAllVocabForUserLevel() {
-            val user: User = FirebaseManager.current_user
-            var tempList: MutableList<Term> = mutableListOf<Term>()
-            //Find all the terms that are unlocked on or below the user's level
-            var ul: Int = user.user_level
-            for (i: Int in ul downTo 0) {
-                VocabRepository.filterByUnlockLevel(i)
-                tempList.addAll(VocabRepository.currentVocab)
-            }
+        fun createRevisionSessionTest() {
+            FirebaseManager.current_user = User("test@test.com")
+            //When user level is 0 and first 3/21 terms in vocab have unlock level changed to > 0
+            RevisionSessionManager.createSession()
+            assertEquals(18,RevisionSessionManager.current_session.session_list.size)
         }
     }
 }

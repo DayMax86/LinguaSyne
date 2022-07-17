@@ -33,6 +33,12 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        findViewById<Button>(R.id.home_revision_button).setOnClickListener{
+            RevisionSessionManager.createSession()
+            val intent = Intent(this,ReviewTermActivity::class.java)
+            startActivity(intent)
+        }
+
         //Temporarily loading vocab straight away to see if async error is present
         FirebaseManager.loadVocabFromFirebase()
 
@@ -48,12 +54,15 @@ class HomeActivity : AppCompatActivity() {
             R.id.menu_sign_out -> {
                 signOut()
             }
-            R.id.menu_test_item -> {
+            R.id.menu_csv_import -> {
                 CSVManager.importVocabCSV(this.applicationContext)
             }
             R.id.menu_search -> {
                 val intent = Intent(this, VocabSearchActivity::class.java)
                 startActivity(intent)
+            }
+            R.id.menu_test_item -> {
+                RevisionSessionManager.createSession()
             }
         }
         return super.onOptionsItemSelected(item)
