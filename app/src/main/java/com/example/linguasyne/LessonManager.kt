@@ -24,6 +24,8 @@ object LessonManager {
                             //5 items (or the maximum number of items possible if < 5 in vocab list) added to new lesson object
                             current_lesson = Lesson(temp_list, LessonTypes.VOCAB)
                             i = 0
+                            //Mark the learnt terms as unlocked for the user
+                            v.isUnlocked = true
                             //make sure the below is set to false again when the lesson ends.
                             LessonManager.activeLesson = true
                             //need to exit out of the for loop!
@@ -41,7 +43,6 @@ object LessonManager {
         //The manager's current lesson has now been set, so HomeActivity can launch the appropriate activity which will display the right list
     }
 
-// the 'activelesson' flag has to be set to false at some point otherwise viewing terms only views lesson terms.
 }
 
 

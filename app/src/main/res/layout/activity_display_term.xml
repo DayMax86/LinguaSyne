@@ -9,7 +9,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -180,7 +181,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/mnemonics_hardcoded_text" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/your_progress_hardocded_text"
                 android:layout_width="94dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="16dp"
@@ -205,7 +206,7 @@
                 android:progressTint="@color/text_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                app:layout_constraintTop_toBottomOf="@+id/your_progress_hardocded_text" />
 
             <TextView
                 android:id="@+id/term_search_current_level_textview"
@@ -214,7 +215,7 @@
                 android:fontFamily="@font/cabin"
                 android:text="5"
                 android:textColor="@color/text_blue"
-                app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                app:layout_constraintBottom_toBottomOf="@+id/your_progress_hardocded_text"
                 app:layout_constraintStart_toStartOf="@+id/term_search_term_progressbar" />
 
             <TextView
@@ -224,7 +225,7 @@
                 android:fontFamily="@font/cabin"
                 android:text="6"
                 android:textColor="@color/text_blue"
-                app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                app:layout_constraintBottom_toBottomOf="@+id/your_progress_hardocded_text"
                 app:layout_constraintEnd_toEndOf="@+id/term_search_term_progressbar" />
 
             <TextView

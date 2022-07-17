@@ -10,7 +10,7 @@ import androidx.core.graphics.drawable.toDrawable
 import com.example.linguasyne.enums.Gender
 import kotlin.properties.Delegates
 
-class DisplayTerm : AppCompatActivity() {
+open class DisplayTerm : AppCompatActivity() {
 
     private lateinit var t: Term
     private var tPos: Int = 0
