@@ -18,7 +18,12 @@
         <activity
             android:name=".DisplayTerm"
             android:parentActivityName=".HomeActivity" />
+
         <activity android:name=".HomeActivity" />
+
+        <activity android:name=".ReviewTermActivity"
+            android:parentActivityName=".HomeActivity" />
+
         <activity android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>

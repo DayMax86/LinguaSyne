@@ -22,5 +22,8 @@ open class Term (term_id: String,
     var next_review: LocalDateTime = LocalDateTime.of(2022, Month.JULY,1,12,30,30)
 
     var isUnlocked: Boolean = false
+
+    var engAnswered: Boolean = false
+    var transAnswered: Boolean = false
 }
 

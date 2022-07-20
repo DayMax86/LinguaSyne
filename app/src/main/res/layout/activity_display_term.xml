@@ -40,8 +40,8 @@
                 android:scrollbars="vertical"
                 android:translationZ="90dp"
                 app:layout_constraintEnd_toEndOf="@+id/right_arrow_image"
-                app:layout_constraintStart_toEndOf="@+id/translations_hardcoded_text"
-                app:layout_constraintTop_toTopOf="@+id/translations_hardcoded_text">
+                app:layout_constraintStart_toEndOf="@+id/translation_text"
+                app:layout_constraintTop_toTopOf="@+id/translation_text">
 
             </TextView>
 
@@ -147,7 +147,7 @@
                 app:layout_constraintGuide_begin="204dp" />
 
             <TextView
-                android:id="@+id/translations_hardcoded_text"
+                android:id="@+id/translation_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -166,8 +166,8 @@
                 android:fontFamily="@font/cabin"
                 android:text="add synonym +"
                 android:textColor="@color/hint_blue"
-                app:layout_constraintStart_toStartOf="@+id/translations_hardcoded_text"
-                app:layout_constraintTop_toBottomOf="@+id/translations_hardcoded_text" />
+                app:layout_constraintStart_toStartOf="@+id/translation_text"
+                app:layout_constraintTop_toBottomOf="@+id/translation_text" />
 
             <TextView
                 android:id="@+id/add_mnemonic_text"

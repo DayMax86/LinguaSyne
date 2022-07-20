@@ -14,10 +14,10 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/display_term_translation_edittext"
+                android:id="@+id/answerbox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -27,11 +27,13 @@
                 android:fontFamily="@font/cabin"
                 android:gravity="center_horizontal"
                 android:hint="Enter translation"
+                android:inputType="text"
                 android:scrollbars="vertical"
                 android:translationZ="90dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/translations_hardcoded_text" />
+                app:layout_constraintTop_toBottomOf="@+id/translation_text"
+                android:autofillHints="" />
 
             <TextView
                 android:id="@+id/term_name_textbox"
@@ -58,7 +60,7 @@
 
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/display_term_translation_edittext"
+                app:layout_constraintTop_toBottomOf="@+id/answerbox"
                 app:srcCompat="@drawable/alphamars" />
 
             <ImageView
@@ -69,12 +71,12 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="86dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/display_term_translation_edittext"
+                app:layout_constraintTop_toBottomOf="@+id/answerbox"
                 app:srcCompat="@drawable/alphavenus" />
 
 
             <TextView
-                android:id="@+id/translations_hardcoded_text"
+                android:id="@+id/translation_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -83,8 +85,7 @@
                 android:text="Translation:"
                 android:textColor="@color/text_blue"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/display_term_translations_textview"
-                app:layout_constraintStart_toStartOf="@+id/display_term_translation_edittext"
+                app:layout_constraintStart_toStartOf="@+id/answerbox"
                 app:layout_constraintTop_toBottomOf="@+id/term_name_textbox" />
 
             <TextView
