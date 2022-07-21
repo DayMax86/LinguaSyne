@@ -24,6 +24,9 @@
         <activity android:name=".ReviewTermActivity"
             android:parentActivityName=".HomeActivity" />
 
+        <activity android:name=".RevisionSummaryActivity"
+            android:parentActivityName=".HomeActivity" />
+
         <activity android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>

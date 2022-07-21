@@ -16,25 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/answerbox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
-                android:background="@drawable/rounded_corners_textbox_bg"
-                android:fontFamily="@font/cabin"
-                android:gravity="center_horizontal"
-                android:hint="Enter translation"
-                android:inputType="text"
-                android:scrollbars="vertical"
-                android:translationZ="90dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/translation_text"
-                android:autofillHints="" />
-
             <TextView
                 android:id="@+id/summary_textbox"
                 android:layout_width="209dp"
@@ -42,7 +23,7 @@
                 android:layout_marginTop="24dp"
                 android:color="@color/text_blue"
                 android:fontFamily="@font/cabin"
-                android:text="TextView"
+                android:text="Summary"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/text_blue"
@@ -52,41 +33,85 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/display_term_masculine_imageview"
-                android:layout_width="60dp"
-                android:layout_height="70dp"
-                android:layout_marginStart="86dp"
-
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/answerbox"
-                app:srcCompat="@drawable/alphamars" />
-
-            <ImageView
-                android:id="@+id/display_term_feminine_imageview"
-                android:layout_width="60dp"
-                android:layout_height="70dp"
-
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="86dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/answerbox"
-                app:srcCompat="@drawable/alphavenus" />
-
 
             <TextView
-                android:id="@+id/translation_text"
+                android:id="@+id/number_correct_hardcoded_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="24dp"
+                android:color="@color/text_blue"
                 android:fontFamily="@font/cabin"
-                android:text="Translation:"
+                android:text="Total correct:"
+                android:textAllCaps="false"
                 android:textColor="@color/text_blue"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="@+id/answerbox"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/summary_textbox" />
+
+            <TextView
+                android:id="@+id/number_wrong_hardcoded_text"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:color="@color/text_blue"
+                android:fontFamily="@font/cabin"
+                android:text="Total incorrect:"
+                android:textAllCaps="false"
+                android:textColor="@color/text_blue"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/number_correct_hardcoded_text" />
+
+            <TextView
+                android:id="@+id/total_correct_number"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="24dp"
+                android:color="@color/text_blue"
+                android:fontFamily="@font/cabin"
+                android:text="x"
+                android:textAllCaps="false"
+                android:textColor="@color/text_blue"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/number_correct_hardcoded_text"
+                app:layout_constraintStart_toEndOf="@+id/number_correct_hardcoded_text" />
+
+            <TextView
+                android:id="@+id/total_wrong_number"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="24dp"
+                android:color="@color/text_blue"
+                android:fontFamily="@font/cabin"
+                android:text="x"
+                android:textAllCaps="false"
+                android:textColor="@color/text_blue"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/number_wrong_hardcoded_text"
+                app:layout_constraintStart_toEndOf="@+id/number_wrong_hardcoded_text" />
+
+            <Button
+                android:id="@+id/continue_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="48dp"
+                android:background="@drawable/rounded_corners_button_bg"
+                android:fontFamily="@font/cabin"
+                android:text="Continue"
+                android:textColor="@color/exam_text_white"
+                app:iconTint="@color/text_blue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/number_wrong_hardcoded_text" />
 
             <TextView
                 android:id="@+id/your_progress_hardcoded_text"
@@ -136,22 +161,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/your_progress_hardcoded_text"
                 app:layout_constraintEnd_toEndOf="@+id/user_level_progressbar" />
 
-            <Button
-                android:id="@+id/continue_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="48dp"
-                android:background="@drawable/rounded_corners_button_bg"
-                android:fontFamily="@font/cabin"
-                android:text="Submit"
-                android:textColor="@color/exam_text_white"
-                app:iconTint="@color/text_blue"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/display_term_feminine_imageview" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

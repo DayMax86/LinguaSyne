@@ -1,5 +1,6 @@
 package com.example.linguasyne
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -21,31 +22,36 @@ class ReviewTermActivity : AppCompatActivity() {
         //Start by displaying the first term in the session, and default to asking for the English
         displayTerm(RevisionSessionManager.current_session.currentTerm, RevisionSessionManager.current_session.currentStep)
 
-        findViewById<Button>(R.id.submit_translation_button).setOnClickListener {
+        findViewById<Button>(R.id.continue_button).setOnClickListener {
             if (checkAnswer(RevisionSessionManager.current_session.currentTerm)) {
                 //The user got the answer right
-                displayTerm(
-                    RevisionSessionManager.advanceSession(),
-                    RevisionSessionManager.current_session.currentStep
-                )
+                val t: Term? = RevisionSessionManager.advanceSession()
+                if (t == null) {
+                    //Must be the end of the session, so launch summary activity
+                    val intent = Intent(this, RevisionSummaryActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    displayTerm(t, RevisionSessionManager.current_session.currentStep)
+                }
             }
         }
     }
 
     private fun checkAnswer(t: Term): Boolean {
+        val answerBox = findViewById<EditText>(R.id.answerbox)
         when (RevisionSessionManager.current_session.currentStep) {
             //Check answer according to whether it's an ENG or TRANS step being tested
-            (RevisionSession.AnswerTypes.ENG) -> {
-                if (findViewById<EditText>(R.id.answerbox).text.toString() == t.name) {
-                    RevisionSessionManager.current_session.engStepComplete = true
+            (RevisionSession.AnswerTypes.TRANS) -> {
+                if (answerBox.text.toString() == t.name) {
+                    RevisionSessionManager.current_session.transStepComplete = true
                     return true
                 }
             }
-            (RevisionSession.AnswerTypes.TRANS) -> {
+            (RevisionSession.AnswerTypes.ENG) -> {
                 //Need to check for each of the translations in the list
                 for (trans in t.translations) {
-                    if (findViewById<EditText>(R.id.answerbox).text.toString() == trans) {
-                        RevisionSessionManager.current_session.transStepComplete = true
+                    if (answerBox.text.toString() == trans) {
+                        RevisionSessionManager.current_session.engStepComplete = true
                         return true
                     }
                 }
@@ -60,9 +66,7 @@ class ReviewTermActivity : AppCompatActivity() {
         //Depending on whether it's the ENG or TRANS answer that's required, the layout will change accordingly
         //   Use colours to differentiate between the two.
 
-        //cache references to views
-        val termText = findViewById<TextView>(R.id.term_name_textbox)
-        val answerBox = findViewById<EditText>(R.id.answerbox)
+        val termText = findViewById<TextView>(R.id.summary_textbox)
 
         if (t == null) { //The session is complete!
         } else {

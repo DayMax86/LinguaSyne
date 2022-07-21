@@ -1,13 +1,18 @@
 package com.example.linguasyne
 
+import android.content.Intent
 import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
+import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDateTime
 
 object RevisionSessionManager {
 
-    var current_session: RevisionSession = RevisionSession(emptyList<Term>())
+    lateinit var current_session: RevisionSession
 
     fun createSession() {
+
         //Find all the terms the user has unlocked from their Firebase data
         val user: User = FirebaseManager.current_user
         val tempList: MutableList<Term> = mutableListOf<Term>()
@@ -46,18 +51,12 @@ object RevisionSessionManager {
 
         //Sort the results (randomly by default but could be oldest first etc. etc.)
         //Set manager's current list
-        current_session.session_list = sortSessionBy(tempList, SortOrder.RANDOM)
+        current_session = RevisionSession(sortSessionBy(tempList, SortOrder.RANDOM))
 
-        /* ----- FOR TESTING ----- */
-        for (t: Term in tempList) {
-            Log.d("SessionCreation", t.id + ", " + t.name)
-        }
-        /* ----------------------- */
     }
 
     fun advanceSession(): Term? {
         //This method is used to loop through the terms in the current revision session
-        var nextTerm: Term? = null
         if (current_session.engStepComplete && current_session.transStepComplete) {
             //Both steps are now complete so it can be removed from the list
             current_session.session_list.minus(current_session.currentTerm)
@@ -65,22 +64,23 @@ object RevisionSessionManager {
 
         //Determine what the next term should be based on how many terms are left in the session
         if (current_session.sessionList.size >= 2) {
-            nextTerm = current_session.session_list.elementAt(
+            current_session.currentTerm = current_session.session_list.elementAt(
                 current_session.sessionList.indexOf(
                     current_session.currentTerm) + 1)
             //For now swap steps every time
             swapSteps()
         } else if (current_session.sessionList.size == 1) {
             //Must be the last term in the review session
-            nextTerm = current_session.currentTerm
+            //Just swap steps, no need to set current term
             swapSteps()
         } else {
             //There must be no terms left in the session so it can be ended!
-            nextTerm = null
+            //Launch summary activity
+            return null
         }
 
         //Return the term to display
-        return nextTerm
+        return current_session.currentTerm
     }
 
     private fun swapSteps() {

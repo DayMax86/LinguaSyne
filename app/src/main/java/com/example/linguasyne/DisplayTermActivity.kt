@@ -1,14 +1,11 @@
 package com.example.linguasyne
 
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.drawable.toDrawable
 import com.example.linguasyne.enums.Gender
-import kotlin.properties.Delegates
 
 open class DisplayTerm : AppCompatActivity() {
 
@@ -68,7 +65,7 @@ open class DisplayTerm : AppCompatActivity() {
         clearUI()
 
         //populate the text fields with the term's data
-        findViewById<TextView>(R.id.term_name_textbox).text =
+        findViewById<TextView>(R.id.summary_textbox).text =
             t.name
 
         findViewById<TextView>(R.id.term_unlock_level_textbox).text =
@@ -187,7 +184,7 @@ open class DisplayTerm : AppCompatActivity() {
     }
 
     private fun clearUI() {
-        findViewById<TextView>(R.id.term_name_textbox).text = ""
+        findViewById<TextView>(R.id.summary_textbox).text = ""
         findViewById<TextView>(R.id.term_unlock_level_textbox).text = ""
         findViewById<TextView>(R.id.display_term_translations_textview).text = ""
         findViewById<TextView>(R.id.display_term_mnemonics_textview).text = ""

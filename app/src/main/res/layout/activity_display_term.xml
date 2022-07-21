@@ -58,7 +58,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/display_term_translations_textview" />
 
             <TextView
-                android:id="@+id/term_name_textbox"
+                android:id="@+id/summary_textbox"
                 android:layout_width="209dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="24dp"
@@ -82,18 +82,18 @@
                 android:fontFamily="@font/cabin"
                 android:text="TextView"
                 android:textColor="@color/hint_blue"
-                app:layout_constraintEnd_toEndOf="@+id/term_name_textbox"
-                app:layout_constraintStart_toStartOf="@+id/term_name_textbox"
-                app:layout_constraintTop_toBottomOf="@+id/term_name_textbox" />
+                app:layout_constraintEnd_toEndOf="@+id/summary_textbox"
+                app:layout_constraintStart_toStartOf="@+id/summary_textbox"
+                app:layout_constraintTop_toBottomOf="@+id/summary_textbox" />
 
             <ImageView
                 android:id="@+id/left_arrow_image"
                 android:layout_width="55dp"
                 android:layout_height="94dp"
                 android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/term_name_textbox"
+                app:layout_constraintEnd_toStartOf="@+id/summary_textbox"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/term_name_textbox"
+                app:layout_constraintTop_toTopOf="@+id/summary_textbox"
                 app:srcCompat="@drawable/opaqueleftarrow" />
 
             <ImageView
@@ -102,8 +102,8 @@
                 android:layout_height="95dp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/term_name_textbox"
-                app:layout_constraintTop_toTopOf="@+id/term_name_textbox"
+                app:layout_constraintStart_toEndOf="@+id/summary_textbox"
+                app:layout_constraintTop_toTopOf="@+id/summary_textbox"
                 app:srcCompat="@drawable/opaquerightarrow" />
 
             <ImageView
@@ -181,7 +181,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/mnemonics_hardcoded_text" />
 
             <TextView
-                android:id="@+id/your_progress_hardocded_text"
+                android:id="@+id/your_progress_hardcoded_text"
                 android:layout_width="94dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="16dp"
@@ -194,7 +194,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/display_term_mnemonics_textview" />
 
             <ProgressBar
-                android:id="@+id/term_search_term_progressbar"
+                android:id="@+id/user_level_progressbar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dp"
                 android:layout_height="24dp"
@@ -206,7 +206,7 @@
                 android:progressTint="@color/text_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/your_progress_hardocded_text" />
+                app:layout_constraintTop_toBottomOf="@+id/your_progress_hardcoded_text" />
 
             <TextView
                 android:id="@+id/term_search_current_level_textview"
@@ -215,8 +215,8 @@
                 android:fontFamily="@font/cabin"
                 android:text="5"
                 android:textColor="@color/text_blue"
-                app:layout_constraintBottom_toBottomOf="@+id/your_progress_hardocded_text"
-                app:layout_constraintStart_toStartOf="@+id/term_search_term_progressbar" />
+                app:layout_constraintBottom_toBottomOf="@+id/your_progress_hardcoded_text"
+                app:layout_constraintStart_toStartOf="@+id/user_level_progressbar" />
 
             <TextView
                 android:id="@+id/term_search_next_level_textview"
@@ -225,8 +225,8 @@
                 android:fontFamily="@font/cabin"
                 android:text="6"
                 android:textColor="@color/text_blue"
-                app:layout_constraintBottom_toBottomOf="@+id/your_progress_hardocded_text"
-                app:layout_constraintEnd_toEndOf="@+id/term_search_term_progressbar" />
+                app:layout_constraintBottom_toBottomOf="@+id/your_progress_hardcoded_text"
+                app:layout_constraintEnd_toEndOf="@+id/user_level_progressbar" />
 
             <TextView
                 android:id="@+id/next_review_text"
@@ -236,8 +236,8 @@
                 android:fontFamily="@font/cabin"
                 android:text="Next review:"
                 android:textColor="@color/text_blue"
-                app:layout_constraintStart_toStartOf="@+id/term_search_term_progressbar"
-                app:layout_constraintTop_toBottomOf="@+id/term_search_term_progressbar" />
+                app:layout_constraintStart_toStartOf="@+id/user_level_progressbar"
+                app:layout_constraintTop_toBottomOf="@+id/user_level_progressbar" />
 
             <EditText
                 android:id="@+id/next_review_date"

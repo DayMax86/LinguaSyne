@@ -60,7 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/search_term_type_textview" />
 
     <ProgressBar
-        android:id="@+id/term_search_term_progressbar"
+        android:id="@+id/user_level_progressbar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="24dp"
@@ -83,8 +83,8 @@
         android:text="5"
         android:textColor="@color/text_blue"
         android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/term_search_term_progressbar"
-        app:layout_constraintStart_toStartOf="@+id/term_search_term_progressbar" />
+        app:layout_constraintBottom_toTopOf="@+id/user_level_progressbar"
+        app:layout_constraintStart_toStartOf="@+id/user_level_progressbar" />
 
     <TextView
         android:id="@+id/term_search_next_level_textview"
@@ -94,7 +94,7 @@
         android:text="6"
         android:textColor="@color/text_blue"
         android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/term_search_term_progressbar"
-        app:layout_constraintEnd_toEndOf="@+id/term_search_term_progressbar" />
+        app:layout_constraintBottom_toTopOf="@+id/user_level_progressbar"
+        app:layout_constraintEnd_toEndOf="@+id/user_level_progressbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
