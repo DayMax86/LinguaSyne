@@ -97,7 +97,7 @@
                 app:layout_constraintStart_toEndOf="@+id/number_wrong_hardcoded_text" />
 
             <Button
-                android:id="@+id/continue_button"
+                android:id="@+id/submit_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="48dp"

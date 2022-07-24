@@ -11,7 +11,7 @@ class RevisionSummaryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_revision_summary)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        findViewById<Button>(R.id.continue_button).setOnClickListener{
+        findViewById<Button>(R.id.submit_button).setOnClickListener{
             this.finish()
         }
     }
