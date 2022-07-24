@@ -6,15 +6,16 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.text.Layout
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.lang.Thread.sleep
 
 class ReviewTermActivity : AppCompatActivity() {
 
     private var termList: List<Term> = RevisionSessionManager.current_session.session_list
-    var animationComplete: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,8 @@ class ReviewTermActivity : AppCompatActivity() {
                 } else {
                     displayTerm(t, RevisionSessionManager.current_session.currentStep)
                 }
+                findViewById<EditText>(R.id.answerbox).setBackgroundResource(R.drawable.rounded_corners_textbox_bg)
+
             }
         }
     }
@@ -76,36 +79,11 @@ class ReviewTermActivity : AppCompatActivity() {
 
     private fun animateAnswer(correct: Boolean) {
         val edittext = findViewById<EditText>(R.id.answerbox)
-        val animator: ValueAnimator
         if (correct) {
-        /*    animator = ValueAnimator.ofArgb(
-                edittext.shadowColor,
-                R.color.text_blue,
-                R.color.green
-            )
-            animator.setDuration(500) */
+            edittext.setBackgroundResource(R.drawable.rounded_corners_textbox_bg_green)
         } else {
-        /*    animator = ValueAnimator.ofArgb(
-                edittext.shadowColor,
-                R.color.text_blue,
-                R.color.red
-            )
-            animator.setDuration(500) */
+            edittext.setBackgroundResource(R.drawable.rounded_corners_textbox_bg_red)
         }
-
-        /* animator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator?) {
-                findViewById<Button>(R.id.submit_button).isClickable = false
-                animationComplete = false
-            } */
-
-        /*    override fun onAnimationEnd(animation: Animator?) {
-                findViewById<Button>(R.id.submit_button).isClickable = true
-                animationComplete = true
-            }
-        }) */
-
-        //animator.start()
     }
 
     private fun displayTerm(t: Term?, answerType: RevisionSession.AnswerTypes) {
