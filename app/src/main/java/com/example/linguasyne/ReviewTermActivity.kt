@@ -7,17 +7,24 @@ import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.text.Layout
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.addListener
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.lang.Thread.sleep
 
 class ReviewTermActivity : AppCompatActivity() {
 
     private var termList: List<Term> = RevisionSessionManager.current_session.session_list
+    var animationInProgress: Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) = runBlocking {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_review_term)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -34,22 +41,37 @@ class ReviewTermActivity : AppCompatActivity() {
         findViewById<Button>(R.id.submit_button).isClickable = true
 
         findViewById<Button>(R.id.submit_button).setOnClickListener {
-            if (checkAnswer(RevisionSessionManager.current_session.currentTerm)) {
-                //The user got the answer right
-                findViewById<EditText>(R.id.answerbox).text.clear()
-                val t: Term? = RevisionSessionManager.advanceSession()
-                if (t == null) {
-                    //Must be the end of the session, so launch summary activity
-                    val intent = Intent(this, RevisionSummaryActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    displayTerm(t, RevisionSessionManager.current_session.currentStep)
+            suspend fun answerValidation() = coroutineScope {
+                launch {
+                    delay(1000L)
+                    if (checkAnswer(RevisionSessionManager.current_session.currentTerm)) {
+                        //The user got the answer right
+                        findViewById<EditText>(R.id.answerbox).text.clear()
+                        findViewById<EditText>(R.id.answerbox).setBackgroundResource(R.drawable.rounded_corners_textbox_bg)
+                    }
                 }
-                findViewById<EditText>(R.id.answerbox).setBackgroundResource(R.drawable.rounded_corners_textbox_bg)
+            }
 
+            fun submitAnswer() = runBlocking {
+                answerValidation() //This happens first, then when it's done...
+                loadNextTerm()//... this happens
             }
         }
+
+
     }
+
+    private fun loadNextTerm() {
+        val t: Term? = RevisionSessionManager.advanceSession()
+        if (t == null) {
+            //Must be the end of the session, so launch summary activity
+            val intent = Intent(this@ReviewTermActivity, RevisionSummaryActivity::class.java)
+            startActivity(intent)
+        } else {
+            displayTerm(t, RevisionSessionManager.current_session.currentStep)
+        }
+    }
+
 
     private fun checkAnswer(t: Term): Boolean {
         val answerBox = findViewById<EditText>(R.id.answerbox)
@@ -79,12 +101,33 @@ class ReviewTermActivity : AppCompatActivity() {
 
     private fun animateAnswer(correct: Boolean) {
         val edittext = findViewById<EditText>(R.id.answerbox)
+        var animator: ObjectAnimator? = null
         if (correct) {
-            edittext.setBackgroundResource(R.drawable.rounded_corners_textbox_bg_green)
+            animator = ObjectAnimator.ofInt(
+                edittext,
+                "backgroundResource",
+                R.drawable.rounded_corners_textbox_bg_green
+            )
         } else {
-            edittext.setBackgroundResource(R.drawable.rounded_corners_textbox_bg_red)
+            animator = ObjectAnimator.ofInt(
+                edittext,
+                "backgroundResource",
+                R.drawable.rounded_corners_textbox_bg_red
+            )
+        }
+
+        animator?.apply {
+            duration = 1000
+            addListener(onStart = {
+                animationInProgress = true
+            })
+            addListener(onEnd = {
+                animationInProgress = false
+            })
+            start()
         }
     }
+
 
     private fun displayTerm(t: Term?, answerType: RevisionSession.AnswerTypes) {
         //Depending on whether it's the ENG or TRANS answer that's required, the layout will change accordingly
@@ -107,7 +150,8 @@ class ReviewTermActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
-
 }
+
+
+
