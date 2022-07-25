@@ -13,79 +13,44 @@ import kotlinx.coroutines.Dispatchers.IO
 
 class ReviewTermActivity : AppCompatActivity() {
 
-    private var termList: List<Term> = RevisionSessionManager.current_session.session_list
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_review_term)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        //Initiate the first term, defaulting to the ENG step for it
         RevisionSessionManager.current_session.currentStep = RevisionSession.AnswerTypes.ENG
-        RevisionSessionManager.current_session.currentTerm = termList[0]
-
-        //Start by displaying the first term in the session, and default to asking for the English
-        displayTerm(
-            RevisionSessionManager.current_session.currentTerm,
-            RevisionSessionManager.current_session.currentStep
-        )
+        RevisionSessionManager.current_session.currentTerm = TermDisplayManager.termList[0]
+        displayTerm()
 
         findViewById<Button>(R.id.submit_button).setOnClickListener {
 
             //Check if the answer is right
-            //* Show appropriate animation, clear text if correct, reset to blue box for next term
-            //Load the next term
-            //* Display next term
-
-            //A * denotes visual tasks, otherwise purely logic tasks
-
-        }
-    }
-
-    private fun loadNextTerm() {
-        val t: Term? = RevisionSessionManager.advanceSession()
-        if (t == null) {
-            //Must be the end of the session, so launch summary activity
-            val intent = Intent(this@ReviewTermActivity, RevisionSummaryActivity::class.java)
-            startActivity(intent)
-        } else {
-            displayTerm(t, RevisionSessionManager.current_session.currentStep)
-        }
-    }
-
-    private fun answerValidation() {
-        if (checkAnswer(RevisionSessionManager.current_session.currentTerm)) {
-            //The user got the answer right
-            findViewById<EditText>(R.id.answerbox).text.clear()
-            findViewById<EditText>(R.id.answerbox).setBackgroundResource(R.drawable.rounded_corners_textbox_bg)
-        }
-    }
-
-
-    private fun checkAnswer(t: Term): Boolean {
-        val answerBox = findViewById<EditText>(R.id.answerbox)
-        when (RevisionSessionManager.current_session.currentStep) {
-            //Check answer according to whether it's an ENG or TRANS step being tested
-            (RevisionSession.AnswerTypes.TRANS) -> {
-                if (answerBox.text.toString() == t.name) {
-                    RevisionSessionManager.current_session.transStepComplete = true
-                    animateAnswer(true)
-                    return true
-                }
-            }
-            (RevisionSession.AnswerTypes.ENG) -> {
-                //Need to check for each of the translations in the list
-                for (trans in t.translations) {
-                    if (answerBox.text.toString() == trans) {
-                        RevisionSessionManager.current_session.engStepComplete = true
-                        animateAnswer(true)
-                        return true
-                    }
-                }
+            if (TermDisplayManager.checkAnswer(
+                    findViewById<EditText>(R.id.answerbox).text.toString()
+                )
+            ) {
+                //User got the answer correct so show appropriate animation
+                animateAnswer(true)
+                //Animation needs to complete before the UI is reset!
+                //Load the next term
+                TermDisplayManager.loadNextTerm()
+                resetUI()
+                //* Display next term
+                displayTerm()
+            } else {
+                //User got the answer wrong so show appropriate animation
+                animateAnswer(false)
             }
         }
-        animateAnswer(false)
-        return false
     }
+
+    private fun resetUI() {
+        //Put the edittext drawable back to the default blue
+        //Empty the contents of the edittext
+    }
+
 
     private fun animateAnswer(correct: Boolean) {
         val edittext = findViewById<EditText>(R.id.answerbox)
@@ -93,51 +58,44 @@ class ReviewTermActivity : AppCompatActivity() {
         if (correct) {
             animator = ObjectAnimator.ofInt(
                 edittext,
-                "backgroundResource",
+                "background",
                 R.drawable.rounded_corners_textbox_bg_green
             )
         } else {
             animator = ObjectAnimator.ofInt(
                 edittext,
-                "backgroundResource",
+                "background",
                 R.drawable.rounded_corners_textbox_bg_red
             )
         }
 
-        animator?.apply {
-            duration = 1000
-            addListener(onStart = {
-            })
-            addListener(onEnd = {
-            })
-            start()
-        }
+        animator.start()
+        edittext.invalidate()
     }
 
 
-    private fun displayTerm(t: Term?, answerType: RevisionSession.AnswerTypes) {
+    private fun displayTerm() {
         //Depending on whether it's the ENG or TRANS answer that's required, the layout will change accordingly
-        //   Use colours to differentiate between the two.
+        //TODO() Use colours/another visual element to differentiate between the two.
 
         val termText = findViewById<TextView>(R.id.term_textbox)
+        val ct = RevisionSessionManager.current_session.currentTerm
 
-        if (t == null) { //The session is complete!
-        } else {
-            when (answerType) {
-                (RevisionSession.AnswerTypes.ENG) -> {
-                    termText.text = t.name
-                    //answerBox.hint = "enter English translation"      NOT WORKING
-                }
-                (RevisionSession.AnswerTypes.TRANS) -> {
-                    termText.text = t.translations[0]
-                    //answerBox.hint = "enter French translation"       NOT WORKING
-                }
-                else -> {/*--error!--*/
-                }
+        when (RevisionSessionManager.current_session.currentStep) {
+            (RevisionSession.AnswerTypes.ENG) -> {
+                termText.text = ct.name
+                //answerBox.hint = "enter English translation"      NOT WORKING
+            }
+            (RevisionSession.AnswerTypes.TRANS) -> {
+                termText.text = ct.translations[0]
+                //answerBox.hint = "enter French translation"       NOT WORKING
+            }
+            else -> {/*--error!--*/
             }
         }
     }
 }
+
 
 
 
