@@ -36,7 +36,7 @@
                 android:autofillHints="" />
 
             <TextView
-                android:id="@+id/summary_textbox"
+                android:id="@+id/term_textbox"
                 android:layout_width="209dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="24dp"
@@ -86,7 +86,7 @@
                 android:textColor="@color/text_blue"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/answerbox"
-                app:layout_constraintTop_toBottomOf="@+id/summary_textbox" />
+                app:layout_constraintTop_toBottomOf="@+id/term_textbox" />
 
             <TextView
                 android:id="@+id/your_progress_hardcoded_text"

@@ -58,7 +58,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/display_term_translations_textview" />
 
             <TextView
-                android:id="@+id/summary_textbox"
+                android:id="@+id/term_textbox"
                 android:layout_width="209dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="24dp"
@@ -82,18 +82,18 @@
                 android:fontFamily="@font/cabin"
                 android:text="TextView"
                 android:textColor="@color/hint_blue"
-                app:layout_constraintEnd_toEndOf="@+id/summary_textbox"
-                app:layout_constraintStart_toStartOf="@+id/summary_textbox"
-                app:layout_constraintTop_toBottomOf="@+id/summary_textbox" />
+                app:layout_constraintEnd_toEndOf="@+id/term_textbox"
+                app:layout_constraintStart_toStartOf="@+id/term_textbox"
+                app:layout_constraintTop_toBottomOf="@+id/term_textbox" />
 
             <ImageView
                 android:id="@+id/left_arrow_image"
                 android:layout_width="55dp"
                 android:layout_height="94dp"
                 android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/summary_textbox"
+                app:layout_constraintEnd_toStartOf="@+id/term_textbox"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/summary_textbox"
+                app:layout_constraintTop_toTopOf="@+id/term_textbox"
                 app:srcCompat="@drawable/opaqueleftarrow" />
 
             <ImageView
@@ -102,8 +102,8 @@
                 android:layout_height="95dp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/summary_textbox"
-                app:layout_constraintTop_toTopOf="@+id/summary_textbox"
+                app:layout_constraintStart_toEndOf="@+id/term_textbox"
+                app:layout_constraintTop_toTopOf="@+id/term_textbox"
                 app:srcCompat="@drawable/opaquerightarrow" />
 
             <ImageView

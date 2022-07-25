@@ -59,7 +59,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/display_term_translations_textview" />
 
             <TextView
-                android:id="@+id/summary_textbox"
+                android:id="@+id/term_textbox"
                 android:layout_width="209dp"
                 android:layout_height="wrap_content"
                 android:color="@color/text_blue"
@@ -82,7 +82,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/summary_textbox"
+                app:layout_constraintEnd_toStartOf="@+id/term_textbox"
                 app:layout_constraintHorizontal_bias="0.347"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/display_term_mnemonics_textview"
@@ -98,7 +98,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.342"
-                app:layout_constraintStart_toEndOf="@+id/summary_textbox"
+                app:layout_constraintStart_toEndOf="@+id/term_textbox"
                 app:layout_constraintTop_toBottomOf="@+id/display_term_mnemonics_textview"
                 app:srcCompat="@drawable/opaquerightarrow" />
 

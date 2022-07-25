@@ -1,30 +1,21 @@
 package com.example.linguasyne
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.text.Layout
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.addListener
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.lang.Thread.sleep
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 
 class ReviewTermActivity : AppCompatActivity() {
 
     private var termList: List<Term> = RevisionSessionManager.current_session.session_list
-    var animationInProgress: Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) = runBlocking {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_review_term)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -38,27 +29,16 @@ class ReviewTermActivity : AppCompatActivity() {
             RevisionSessionManager.current_session.currentStep
         )
 
-        findViewById<Button>(R.id.submit_button).isClickable = true
-
         findViewById<Button>(R.id.submit_button).setOnClickListener {
-            suspend fun answerValidation() = coroutineScope {
-                launch {
-                    delay(1000L)
-                    if (checkAnswer(RevisionSessionManager.current_session.currentTerm)) {
-                        //The user got the answer right
-                        findViewById<EditText>(R.id.answerbox).text.clear()
-                        findViewById<EditText>(R.id.answerbox).setBackgroundResource(R.drawable.rounded_corners_textbox_bg)
-                    }
-                }
-            }
 
-            fun submitAnswer() = runBlocking {
-                answerValidation() //This happens first, then when it's done...
-                loadNextTerm()//... this happens
-            }
+            //Check if the answer is right
+            //* Show appropriate animation, clear text if correct, reset to blue box for next term
+            //Load the next term
+            //* Display next term
+
+            //A * denotes visual tasks, otherwise purely logic tasks
+
         }
-
-
     }
 
     private fun loadNextTerm() {
@@ -69,6 +49,14 @@ class ReviewTermActivity : AppCompatActivity() {
             startActivity(intent)
         } else {
             displayTerm(t, RevisionSessionManager.current_session.currentStep)
+        }
+    }
+
+    private fun answerValidation() {
+        if (checkAnswer(RevisionSessionManager.current_session.currentTerm)) {
+            //The user got the answer right
+            findViewById<EditText>(R.id.answerbox).text.clear()
+            findViewById<EditText>(R.id.answerbox).setBackgroundResource(R.drawable.rounded_corners_textbox_bg)
         }
     }
 
@@ -119,10 +107,8 @@ class ReviewTermActivity : AppCompatActivity() {
         animator?.apply {
             duration = 1000
             addListener(onStart = {
-                animationInProgress = true
             })
             addListener(onEnd = {
-                animationInProgress = false
             })
             start()
         }
@@ -133,7 +119,7 @@ class ReviewTermActivity : AppCompatActivity() {
         //Depending on whether it's the ENG or TRANS answer that's required, the layout will change accordingly
         //   Use colours to differentiate between the two.
 
-        val termText = findViewById<TextView>(R.id.summary_textbox)
+        val termText = findViewById<TextView>(R.id.term_textbox)
 
         if (t == null) { //The session is complete!
         } else {
