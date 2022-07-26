@@ -49,6 +49,13 @@ object RevisionSessionManager {
             tempList.remove(t)
         }
 
+        /*-----TESTING ONLY-----*/
+        tempList.clear()
+        for (i: Int in 0..3) {
+            tempList.add(VocabRepository.allVocab[i])
+        }
+         /*---------------------*/
+
         //Sort the results (randomly by default but could be oldest first etc. etc.)
         //Set manager's current list
         current_session = RevisionSession(sortSessionBy(tempList, SortOrder.RANDOM))
@@ -63,13 +70,13 @@ object RevisionSessionManager {
         }
 
         //Determine what the next term should be based on how many terms are left in the session
-        if (current_session.sessionList.size >= 2) {
-            current_session.currentTerm = current_session.session_list.elementAt(
-                current_session.sessionList.indexOf(
-                    current_session.currentTerm) + 1)
+        val sl = current_session.session_list
+        val ct = current_session.currentTerm
+        if (sl.size >= 2 && sl.indexOf(ct) < sl.size) {
+            current_session.currentTerm = sl.elementAt(sl.indexOf(ct) + 1)
             //For now swap steps every time
             swapSteps()
-        } else if (current_session.sessionList.size == 1) {
+        } else if (sl.size == 1) {
             //Must be the last term in the review session
             //Just swap steps, no need to set current term
             swapSteps()

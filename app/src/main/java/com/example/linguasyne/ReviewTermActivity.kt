@@ -69,7 +69,7 @@ class ReviewTermActivity : AppCompatActivity() {
 
     private suspend fun advance() = coroutineScope {
         delay(1000L)
-        TermDisplayManager.loadNextTerm()
+        TermDisplayManager.loadNextTerm(this@ReviewTermActivity)
     }
 
     private fun resetUI() {
