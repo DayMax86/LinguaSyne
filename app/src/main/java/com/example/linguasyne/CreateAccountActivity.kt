@@ -126,7 +126,6 @@ class CreateAccountActivity : AppCompatActivity() {
                         )
                         Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_LONG)
                             .show()
-                        //updateUI(null)
                     }
 
                 }

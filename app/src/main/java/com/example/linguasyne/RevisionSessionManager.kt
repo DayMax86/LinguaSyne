@@ -1,10 +1,6 @@
 package com.example.linguasyne
 
-import android.content.Intent
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
-import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDateTime
 
 object RevisionSessionManager {
@@ -51,10 +47,10 @@ object RevisionSessionManager {
 
         /*-----TESTING ONLY-----*/
         tempList.clear()
-        for (i: Int in 0..3) {
+        for (i: Int in 0..2) {
             tempList.add(VocabRepository.allVocab[i])
         }
-         /*---------------------*/
+        /*---------------------*/
 
         //Sort the results (randomly by default but could be oldest first etc. etc.)
         //Set manager's current list
@@ -64,23 +60,36 @@ object RevisionSessionManager {
 
     fun advanceSession(): Term? {
         //This method is used to loop through the terms in the current revision session
-        if (current_session.engStepComplete && current_session.transStepComplete) {
+        if (current_session.currentTerm.engAnswered && current_session.currentTerm.transAnswered) {
             //Both steps are now complete so it can be removed from the list
-            current_session.session_list.minus(current_session.currentTerm)
+
+            val tl: MutableList<Term> = mutableListOf<Term>()
+            tl.add(current_session.currentTerm)
+            for (t: Term in tl) {
+                current_session.sessionList.remove(t)
+                Log.d("RevisionSessionManager", current_session.sessionList.size.toString())
+            }
         }
 
         //Determine what the next term should be based on how many terms are left in the session
-        val sl = current_session.session_list
+        val sl = current_session.sessionList
         val ct = current_session.currentTerm
-        if (sl.size >= 2 && sl.indexOf(ct) < sl.size) {
-            current_session.currentTerm = sl.elementAt(sl.indexOf(ct) + 1)
-            //For now swap steps every time
-            swapSteps()
-        } else if (sl.size == 1) {
-            //Must be the last term in the review session
-            //Just swap steps, no need to set current term
-            swapSteps()
-        } else {
+
+        var endOfList = false
+        if (sl.indexOf(ct) == (sl.size - 1)) {
+            endOfList = true
+        }
+
+        swapSteps()
+
+        if (sl.size >= 1) {
+            if (endOfList) {
+                current_session.currentTerm = sl.elementAt(0)
+            } else {
+                current_session.currentTerm = sl.elementAt(sl.indexOf(ct) + 1)
+                //For now swap steps every time
+            }
+        } else if (sl.isEmpty()) {
             //There must be no terms left in the session so it can be ended!
             //Launch summary activity
             return null

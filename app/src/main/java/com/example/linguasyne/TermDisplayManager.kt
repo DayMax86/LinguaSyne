@@ -2,12 +2,10 @@ package com.example.linguasyne
 
 import android.content.Context
 import android.content.Intent
-import android.widget.EditText
-import androidx.core.content.ContextCompat.startActivity
 
 object TermDisplayManager {
 
-    var termList: List<Term> = RevisionSessionManager.current_session.session_list
+    var termList: List<Term> = RevisionSessionManager.current_session.sl
 
     fun loadNextTerm(context: Context) {
         val t: Term? = RevisionSessionManager.advanceSession()
@@ -29,7 +27,7 @@ object TermDisplayManager {
             //Check answer according to whether it's an ENG or TRANS step being tested
             (RevisionSession.AnswerTypes.TRANS) -> {
                 if (answer == ct.name) {
-                    RevisionSessionManager.current_session.transStepComplete = true
+                    RevisionSessionManager.current_session.currentTerm.transAnswered = true
                     return true
                 }
             }
@@ -37,7 +35,7 @@ object TermDisplayManager {
                 //Need to check for each of the translations in the list
                 for (trans in ct.translations) {
                     if (answer == trans.lowercase()) {
-                        RevisionSessionManager.current_session.engStepComplete = true
+                        RevisionSessionManager.current_session.currentTerm.engAnswered = true
                         return true
                     }
                 }
