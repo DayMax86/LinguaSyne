@@ -58,8 +58,8 @@ object RevisionSessionManager {
 
     }
 
-    fun advanceSession(): Term? {
-        //This method is used to loop through the terms in the current revision session
+    fun advanceSession(): Term? { //Returns null if the session list has been exhausted
+        //Has the term already had both steps completed?
         if (current_session.currentTerm.engAnswered && current_session.currentTerm.transAnswered) {
             //Both steps are now complete so it can be removed from the list
 
@@ -67,7 +67,6 @@ object RevisionSessionManager {
             tl.add(current_session.currentTerm)
             for (t: Term in tl) {
                 current_session.sessionList.remove(t)
-                Log.d("RevisionSessionManager", current_session.sessionList.size.toString())
             }
         }
 
@@ -75,27 +74,29 @@ object RevisionSessionManager {
         val sl = current_session.sessionList
         val ct = current_session.currentTerm
 
+        //Are we at the end of the list and therefore need to loop back to the start?
         var endOfList = false
         if (sl.indexOf(ct) == (sl.size - 1)) {
             endOfList = true
         }
 
+        //Make sure to swap steps each time, so both steps can be completed
         swapSteps()
 
         if (sl.size >= 1) {
             if (endOfList) {
+                //Loop back to start because the end of the list has been reached the first time around
                 current_session.currentTerm = sl.elementAt(0)
             } else {
+                //Move to the next term in the list
                 current_session.currentTerm = sl.elementAt(sl.indexOf(ct) + 1)
-                //For now swap steps every time
             }
         } else if (sl.isEmpty()) {
-            //There must be no terms left in the session so it can be ended!
-            //Launch summary activity
+            //There must be no terms left in the session so it can be ended and the summary screen shown
             return null
         }
 
-        //Return the term to display
+        //Return the term to display, or null if the session is complete
         return current_session.currentTerm
     }
 
@@ -114,8 +115,6 @@ object RevisionSessionManager {
             }
             SortOrder.TIME -> {
                 session.sortBy { it.next_review }
-            }
-            else -> {/* Most likely incorrect 'order' parameter */
             }
         }
         return session
