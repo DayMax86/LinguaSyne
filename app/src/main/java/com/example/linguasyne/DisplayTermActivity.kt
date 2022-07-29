@@ -6,12 +6,18 @@ import android.text.method.ScrollingMovementMethod
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.linguasyne.enums.Gender
+import javax.xml.transform.Source
 
 open class DisplayTerm : AppCompatActivity() {
 
     private lateinit var t: Term
     private var tPos: Int = 0
-    private lateinit var vSource: List<Term>
+    private lateinit var vSource: Sources
+
+    private enum class Sources {
+        LESSON,
+        SEARCH
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,20 +52,30 @@ open class DisplayTerm : AppCompatActivity() {
     }
 
 
-    private fun fetchTermSource(): List<Term> {
+    private fun fetchTermSource(): Sources {
         vSource =
-            if (LessonManager.activeLesson) { //Source of term is lesson
-                LessonManager.current_lesson.lesson_list
-            } else { //Source must be normal repo
-                VocabRepository.allVocab
+            if (LessonManager.activeLesson) {
+                Sources.LESSON
+            } else {
+                Sources.SEARCH
             }
         return vSource
     }
 
     private fun fetchTerm(): Term {
-        t = fetchTermSource().elementAt(tPos)
+        val src = fetchTermSource()
+        when (src) {
+            (Sources.LESSON) -> {
+                t = LessonManager.current_lesson.lesson_list.elementAt(tPos)
+            }
+            (Sources.SEARCH) -> {
+                t = VocabRepository.currentVocab.elementAt(0)
+            }
+        }
+
         return t
     }
+
 
     private fun displayVocabData() {
         clearUI()
@@ -98,11 +114,23 @@ open class DisplayTerm : AppCompatActivity() {
         var lastInList: Boolean = false
 
         //If this is the first element in the list then the previous term navigating image should be hidden/disabled
-        if (tPos == 0) {
-            firstInList = true
-        }
-        if (tPos == vSource.size -1) {
-            lastInList = true
+
+        when (vSource) {
+            (Sources.LESSON) -> {
+                if (tPos == LessonManager.current_lesson.lesson_list.size - 1) {
+                    lastInList = true
+                } else if (tPos == 0) {
+                    firstInList = true
+                }
+            }
+            (Sources.SEARCH) -> {
+                if (VocabRepository.currentVocab.indexOf(t) == 0) {
+                    firstInList = true
+                } else if (VocabRepository.currentVocab.indexOf(t) == VocabRepository.currentVocab.size -1) {
+                    lastInList = true
+                }
+            }
+            else -> {/**/}
         }
 
         //Cache the ImageView references
@@ -119,7 +147,7 @@ open class DisplayTerm : AppCompatActivity() {
             //Disable right arrow ImageView onClickListener
             rightArrowImageView.setOnClickListener(null)
             rightArrowImageView.setImageResource(R.drawable.alpharightarrow)
-            leftArrowImageView.setOnClickListener{ loadPrev() }
+            leftArrowImageView.setOnClickListener { loadPrev() }
             leftArrowImageView.setImageResource(R.drawable.opaqueleftarrow)
         } else {
             //must be somewhere away from the ends of the list so both can be enabled

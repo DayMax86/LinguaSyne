@@ -44,7 +44,7 @@ class VocabSearchActivity : AppCompatActivity() {
 
     private fun updateAdapter() {
         findViewById<RecyclerView>(R.id.vocab_search_recycler_view).adapter = vocabAdapter
-        vocabAdapter.submitList(VocabRepository.currentVocab
+        vocabAdapter.submitList(VocabRepository.allVocab
             .sortedBy { it.name })
         vocabAdapter.notifyDataSetChanged()
     }
