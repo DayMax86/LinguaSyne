@@ -25,5 +25,7 @@ open class Term (term_id: String,
 
     var engAnswered: Boolean = false
     var transAnswered: Boolean = false
+
+    var answeredPerfectly: Boolean = true
 }
 

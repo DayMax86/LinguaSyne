@@ -55,13 +55,15 @@ object RevisionSessionManager {
         //Sort the results (randomly by default but could be oldest first etc. etc.)
         //Set manager's current list
         current_session = RevisionSession(sortSessionBy(tempList, SortOrder.RANDOM))
-
+        current_session.totalCorrect = 0
+        current_session.totalIncorrect = 0
     }
 
     fun advanceSession(): Term? { //Returns null if the session list has been exhausted
         //Has the term already had both steps completed?
         if (current_session.currentTerm.engAnswered && current_session.currentTerm.transAnswered) {
             //Both steps are now complete so it can be removed from the list
+            updateSessionTotals()
 
             val tl: MutableList<Term> = mutableListOf<Term>()
             tl.add(current_session.currentTerm)
@@ -105,6 +107,15 @@ object RevisionSessionManager {
             current_session.currentStep = RevisionSession.AnswerTypes.TRANS
         else if (current_session.currentStep == RevisionSession.AnswerTypes.TRANS) {
             current_session.currentStep = RevisionSession.AnswerTypes.ENG
+        }
+    }
+
+    private fun updateSessionTotals() {
+        //Take number answered perfectly from sessionSize
+        if (current_session.currentTerm.answeredPerfectly) {
+            current_session.totalCorrect++
+        } else {
+            current_session.totalIncorrect++
         }
     }
 

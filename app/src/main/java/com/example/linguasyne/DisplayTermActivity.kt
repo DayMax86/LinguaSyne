@@ -133,7 +133,7 @@ open class DisplayTerm : AppCompatActivity() {
                 } */
                 arrowsEnabled = false
             }
-            else -> {/**/
+            else -> {/*-----*/
             }
         }
 

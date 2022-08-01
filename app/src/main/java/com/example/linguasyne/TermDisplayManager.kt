@@ -41,9 +41,11 @@ object TermDisplayManager {
                 }
             }
             else -> {
+                RevisionSessionManager.current_session.currentTerm.answeredPerfectly = false
                 return false
             }
         }
+        RevisionSessionManager.current_session.currentTerm.answeredPerfectly = false
         return false
     }
 }
