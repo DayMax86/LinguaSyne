@@ -3,6 +3,7 @@ package com.example.linguasyne
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.linguasyne.enums.Gender
@@ -112,6 +113,7 @@ open class DisplayTerm : AppCompatActivity() {
     private fun displayImages() {
         var firstInList: Boolean = false
         var lastInList: Boolean = false
+        var arrowsEnabled: Boolean = true
 
         //If this is the first element in the list then the previous term navigating image should be hidden/disabled
 
@@ -124,39 +126,48 @@ open class DisplayTerm : AppCompatActivity() {
                 }
             }
             (Sources.SEARCH) -> {
-                if (VocabRepository.currentVocab.indexOf(t) == 0) {
+                /* if (VocabRepository.currentVocab.indexOf(t) == 0) {
                     firstInList = true
-                } else if (VocabRepository.currentVocab.indexOf(t) == VocabRepository.currentVocab.size -1) {
+                } else if (VocabRepository.currentVocab.indexOf(t) == VocabRepository.currentVocab.size - 1) {
                     lastInList = true
-                }
+                } */
+                arrowsEnabled = false
             }
-            else -> {/**/}
+            else -> {/**/
+            }
         }
 
         //Cache the ImageView references
         val leftArrowImageView = findViewById<ImageView>(R.id.left_arrow_image)
+        leftArrowImageView.visibility = View.VISIBLE
         val rightArrowImageView = findViewById<ImageView>(R.id.right_arrow_image)
+        rightArrowImageView.visibility = View.VISIBLE
 
-        if (firstInList) {
-            //Disable left arrow ImageView onClickListener
-            leftArrowImageView.setOnClickListener(null)
-            leftArrowImageView.setImageResource(R.drawable.alphaleftarrow)
-            rightArrowImageView.setOnClickListener { loadNext() }
-            rightArrowImageView.setImageResource(R.drawable.opaquerightarrow)
-        } else if (lastInList) {
-            //Disable right arrow ImageView onClickListener
-            rightArrowImageView.setOnClickListener(null)
-            rightArrowImageView.setImageResource(R.drawable.alpharightarrow)
-            leftArrowImageView.setOnClickListener { loadPrev() }
-            leftArrowImageView.setImageResource(R.drawable.opaqueleftarrow)
+        if (arrowsEnabled) {
+            if (firstInList) {
+                //Disable left arrow ImageView onClickListener
+                leftArrowImageView.setOnClickListener(null)
+                leftArrowImageView.setImageResource(R.drawable.alphaleftarrow)
+                rightArrowImageView.setOnClickListener { loadNext() }
+                rightArrowImageView.setImageResource(R.drawable.opaquerightarrow)
+            } else if (lastInList) {
+                //Disable right arrow ImageView onClickListener
+                rightArrowImageView.setOnClickListener(null)
+                rightArrowImageView.setImageResource(R.drawable.alpharightarrow)
+                leftArrowImageView.setOnClickListener { loadPrev() }
+                leftArrowImageView.setImageResource(R.drawable.opaqueleftarrow)
+            } else {
+                //must be somewhere away from the ends of the list so both can be enabled
+
+                leftArrowImageView.setOnClickListener { loadPrev() }
+                leftArrowImageView.setImageResource(R.drawable.opaqueleftarrow)
+
+                rightArrowImageView.setOnClickListener { loadNext() }
+                rightArrowImageView.setImageResource(R.drawable.opaquerightarrow)
+            }
         } else {
-            //must be somewhere away from the ends of the list so both can be enabled
-
-            leftArrowImageView.setOnClickListener { loadPrev() }
-            leftArrowImageView.setImageResource(R.drawable.opaqueleftarrow)
-
-            rightArrowImageView.setOnClickListener { loadNext() }
-            rightArrowImageView.setImageResource(R.drawable.opaquerightarrow)
+            leftArrowImageView.visibility = View.INVISIBLE
+            rightArrowImageView.visibility = View.INVISIBLE
         }
 
         //Set the gender images
