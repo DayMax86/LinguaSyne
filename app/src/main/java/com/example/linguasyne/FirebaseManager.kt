@@ -1,8 +1,14 @@
 package com.example.linguasyne
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
+import android.widget.ImageView
+import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
+import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
 
 object FirebaseManager {
 
@@ -46,7 +52,6 @@ object FirebaseManager {
         Log.d("VocabSearchActivity", "After attaching listener")
     }
 
-
     fun addVocabToFirebase(term: Term) {
         FirebaseFirestore.getInstance()
             .collection("vocab")
@@ -56,5 +61,26 @@ object FirebaseManager {
             }
     }
 
+    fun uploadUserImageToFirebase(iv: ImageView) {
+        val storageRef = FirebaseStorage.getInstance().reference
+        val imageRef = storageRef.child("image.jpg")
+        val imagesRef = storageRef.child("images/image.jpg")
+
+        // Get the data from an ImageView as bytes
+        iv.isDrawingCacheEnabled = true
+        iv.buildDrawingCache()
+        val bitmap = (iv.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        var uploadTask = imageRef.putBytes(data)
+        uploadTask.addOnFailureListener {
+            // Handle unsuccessful uploads
+        }.addOnSuccessListener { taskSnapshot ->
+            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+            // ...
+        }
+    }
 
 }
