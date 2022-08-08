@@ -1,5 +1,7 @@
 package com.example.linguasyne
 
+import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 
@@ -7,13 +9,16 @@ object TermDisplayManager {
 
     var termList: List<Term> = RevisionSessionManager.current_session.sl
 
-    fun loadNextTerm(context: Context) {
+    fun loadNextTerm(context: Context): Boolean {
         val t: Term? = RevisionSessionManager.advanceSession()
+
         if (t == null) {
             //Must be the end of the session, so launch summary activity
             val intent: Intent = Intent(context, RevisionSummaryActivity::class.java)
             context.startActivity(intent)
+            return false
         }
+        return true
     }
 
     fun checkAnswer(userAnswer: String): Boolean { //Returns true if answer correct, false if incorrect

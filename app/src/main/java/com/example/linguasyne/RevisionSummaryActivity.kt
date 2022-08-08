@@ -12,12 +12,14 @@ class RevisionSummaryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_revision_summary)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        findViewById<Button>(R.id.submit_button).setOnClickListener{
+        findViewById<Button>(R.id.submit_button).setOnClickListener {
             this.finish()
         }
 
-        findViewById<TextView>(R.id.total_correct_number).text = RevisionSessionManager.current_session.totalCorrect.toString()
-        findViewById<TextView>(R.id.total_wrong_number).text = RevisionSessionManager.current_session.totalIncorrect.toString()
+        findViewById<TextView>(R.id.total_correct_number).text =
+            RevisionSessionManager.current_session.totalCorrect.toString()
+        findViewById<TextView>(R.id.total_wrong_number).text =
+            RevisionSessionManager.current_session.totalIncorrect.toString()
     }
 
 }

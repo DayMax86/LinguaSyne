@@ -15,17 +15,46 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.linguasyne.databinding.HomeActivityBinding
 
 class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.home_activity)
+
+        val binding = HomeActivityBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        /*--------------------------------------------------------------------------------
+
+        val model: HomeViewModel by viewModels()
+
+        model.userProfileImageview.observe(
+            this
+        ) {
+            binding.userProfileImageview.setImageDrawable()
+        }
+
+        model.geoff.observe(
+            this
+        ) {
+            binding.geoff.text = "Geoff is ${it ?: "not sure"}"
+        }
+
+        binding.submit.setOnClickListener {
+            model.handleSubmit()
+        }
+
+        --------------------------------------------------------------------------------*/
+
+
         /* Below is a temporary fix, before release the whole app needs to be dark mode compatible */
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 

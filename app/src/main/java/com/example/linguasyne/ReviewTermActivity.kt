@@ -6,6 +6,7 @@ import android.graphics.Path
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -14,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.addListener
 import androidx.core.widget.doAfterTextChanged
 import kotlinx.coroutines.*
@@ -47,7 +49,7 @@ class ReviewTermActivity : AppCompatActivity() {
         }
     }
 
-    private fun ReviewTermActivity.validateAnswer() = runBlocking {
+    private fun validateAnswer() = runBlocking {
         //Check if the answer is right
         if (TermDisplayManager.checkAnswer(
                 findViewById<EditText>(R.id.answerbox).text.toString()
@@ -69,30 +71,32 @@ class ReviewTermActivity : AppCompatActivity() {
 
     private suspend fun advance() = coroutineScope {
         delay(1000L)
-        TermDisplayManager.loadNextTerm(this@ReviewTermActivity)
+        if (!TermDisplayManager.loadNextTerm(this@ReviewTermActivity)) {
+            //false means that there is no next term to be loaded
+            this@ReviewTermActivity.finish()
+        }
     }
 
     private fun resetUI() {
         findViewById<EditText>(R.id.answerbox).text.clear()
     }
 
-
     private fun animateAnswer(correct: Boolean) {
         val edittext = findViewById<EditText>(R.id.answerbox)
-            if (correct) {
-                edittext.setBackgroundResource(R.drawable.rounded_corners_textbox_bg_green)
-            } else {
-                edittext.setBackgroundResource(R.drawable.rounded_corners_textbox_bg_red)
-                val shake: Animation =
-                    AnimationUtils.loadAnimation(this@ReviewTermActivity, R.anim.shake)
-                edittext.startAnimation(shake)
-            }
+        if (correct) {
+            edittext.setBackgroundResource(R.drawable.rounded_corners_textbox_bg_green)
+        } else {
+            edittext.setBackgroundResource(R.drawable.rounded_corners_textbox_bg_red)
+            val shake: Animation =
+                AnimationUtils.loadAnimation(this@ReviewTermActivity, R.anim.shake)
+            edittext.startAnimation(shake)
+        }
     }
 
 
     private fun displayTerm() {
         //Depending on whether it's the ENG or TRANS answer that's required, the layout will change accordingly
-        //TODO() Use colours/another visual element to differentiate between the two.
+        //TODO() Use colours/another visual element to differentiate between the two - emoji flag?
 
         val termText = findViewById<TextView>(R.id.term_textbox)
         val ct = RevisionSessionManager.current_session.currentTerm
@@ -109,6 +113,10 @@ class ReviewTermActivity : AppCompatActivity() {
             else -> {/*--error!--*/
             }
         }
+    }
+
+    fun endReviewActivity() {
+        this.finish()
     }
 }
 

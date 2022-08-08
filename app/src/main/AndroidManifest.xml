@@ -25,7 +25,7 @@
             android:parentActivityName=".HomeActivity" />
 
         <activity android:name=".RevisionSummaryActivity"
-            android:parentActivityName=".HomeActivity" />
+            android:parentActivityName=".DisplayTerm" />
 
         <activity android:name=".LoginActivity"
             android:exported="true">
