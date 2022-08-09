@@ -94,6 +94,7 @@ object FirebaseManager {
                 Log.d("HomeActivity", "Current user's image has been set")
 
             }.addOnFailureListener {
+                //TODO() Currently the onFailureListener is always triggering
                 Log.d("HomeActivity", "Failed to get byte data from image")
             }
         } else {
