@@ -27,32 +27,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val binding = HomeActivityBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-
-        /*--------------------------------------------------------------------------------
-
-        val model: HomeViewModel by viewModels()
-
-        model.userProfileImageview.observe(
-            this
-        ) {
-            binding.userProfileImageview.setImageDrawable()
-        }
-
-        model.geoff.observe(
-            this
-        ) {
-            binding.geoff.text = "Geoff is ${it ?: "not sure"}"
-        }
-
-        binding.submit.setOnClickListener {
-            model.handleSubmit()
-        }
-
-        --------------------------------------------------------------------------------*/
+        setContentView(R.layout.home_activity)
 
 
         /* Below is a temporary fix, before release the whole app needs to be dark mode compatible */
@@ -86,6 +61,9 @@ class HomeActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error launching camera", Toast.LENGTH_LONG)
             }
         }
+
+        findViewById<ImageView>(R.id.user_profile_imageview).setImageBitmap(FirebaseManager.current_user.user_image)
+
         //Temporarily loading vocab straight away to see if async error is present
         FirebaseManager.loadVocabFromFirebase()
 
@@ -102,6 +80,7 @@ class HomeActivity : AppCompatActivity() {
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
             findViewById<ImageView>(R.id.user_profile_imageview).setImageDrawable(BitmapDrawable(bitmap))
 
+            FirebaseManager.uploadUserImageToFirebase(uri)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

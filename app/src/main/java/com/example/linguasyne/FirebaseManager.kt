@@ -1,14 +1,22 @@
 package com.example.linguasyne
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
 import com.google.android.gms.auth.api.signin.internal.Storage
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 object FirebaseManager {
 
@@ -61,26 +69,51 @@ object FirebaseManager {
             }
     }
 
-    fun uploadUserImageToFirebase(iv: ImageView) {
-        val storageRef = FirebaseStorage.getInstance().reference
-        val imageRef = storageRef.child("image.jpg")
-        val imagesRef = storageRef.child("images/image.jpg")
+    fun uploadUserImageToFirebase(uri: Uri?) {
+        val filename = "profileImage"
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        val storageRef =
+            FirebaseStorage.getInstance()
+                .getReference("/users/${firebaseUser?.uid}/image/$filename")
+        if (uri != null) {
+            storageRef.putFile(uri)
+                .addOnSuccessListener {
+                    Log.d("HomeActivity", "User image successfully uploaded to Firebase")
+                    Log.d("HomeActivity", "User image uri = $uri")
+                    Log.d(
+                        "HomeActivity",
+                        "User image path = /users/${firebaseUser?.uid}/image/$filename"
+                    )
+                }
+            val imageRef = storageRef.child("/users/${firebaseUser?.uid}/image/$filename")
+            val ONE_MEGABYTE: Long = 1024 * 1024
+            imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
 
-        // Get the data from an ImageView as bytes
-        iv.isDrawingCacheEnabled = true
-        iv.buildDrawingCache()
-        val bitmap = (iv.drawable as BitmapDrawable).bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
+                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                current_user.user_image = bitmap
+                Log.d("HomeActivity", "Current user's image has been set")
 
-        var uploadTask = imageRef.putBytes(data)
-        uploadTask.addOnFailureListener {
-            // Handle unsuccessful uploads
-        }.addOnSuccessListener { taskSnapshot ->
-            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-            // ...
+            }.addOnFailureListener {
+                Log.d("HomeActivity", "Failed to get byte data from image")
+            }
+        } else {
+            Log.d("HomeActivity", "Imagine upload to Firebase UNSUCCESSFUL - uri == null")
         }
+
     }
+
+    /*fun getUserImageFromFirebase(): Bitmap? {
+        val filename = "profileImage"
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        val storageRef =
+            FirebaseStorage.getInstance()
+                .getReference("/users/${firebaseUser?.uid}/image/$filename")
+        if (firebaseUser != null) {
+            storageRef.downloadUrl.addOnSuccessListener {
+                Log.d("HomeActivity", "User image URL: $it")
+            }
+        }
+        return null
+    }*/
 
 }
