@@ -72,6 +72,7 @@ open class DisplayTerm : AppCompatActivity() {
             (Sources.SEARCH) -> {
                 t = VocabRepository.currentVocab.elementAt(0)
             }
+            else -> {/**/}
         }
 
         return t

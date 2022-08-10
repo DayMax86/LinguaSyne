@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/maday/StudioProjects/LinguaSyne/app/src/main/res/drawable/rounded_corners_button_bg.xml" value="0.1425" />
+        <entry key="..\:/Users/maday/StudioProjects/LinguaSyne/app/src/main/res/drawable/rounded_corners_button_vocab.xml" value="0.1425" />
         <entry key="..\:/Users/maday/StudioProjects/LinguaSyne/app/src/main/res/drawable/rounded_corners_textbox_bg.xml" value="0.143" />
         <entry key="..\:/Users/maday/StudioProjects/LinguaSyne/app/src/main/res/drawable/rounded_corners_textbox_bg_green.xml" value="0.142" />
         <entry key="..\:/Users/maday/StudioProjects/LinguaSyne/app/src/main/res/drawable/rounded_corners_textbox_bg_red.xml" value="0.142" />
