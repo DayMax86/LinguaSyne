@@ -116,6 +116,7 @@ class CreateAccountActivity : AppCompatActivity() {
                             "Account successfully created",
                             Toast.LENGTH_LONG
                         ).show()
+                        addUserToFirebase(user)
                         finish()
                     } else {
                         // If sign in fails, display a message to the user.
@@ -130,7 +131,6 @@ class CreateAccountActivity : AppCompatActivity() {
 
                 }
             val user = User(email)
-            addUserToFirebase(user)
 
         }
 
@@ -238,6 +238,9 @@ class CreateAccountActivity : AppCompatActivity() {
             .add(user)
             .addOnSuccessListener {
                 Log.d("CreateAccountActivity", "User added to Firestore")
+            }
+            .addOnFailureListener{
+                Log.e("CreateAccountActivity", it.toString())
             }
 
     }

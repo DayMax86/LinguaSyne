@@ -50,6 +50,7 @@ class ReviewTermActivity : AppCompatActivity() {
         val viewModel = ReviewTermViewModel()
 
         setContent {
+            LaunchSummary(needsLaunching = viewModel.launchSummary)
             LinguaSyneTheme(
                 false,
             ) {
@@ -59,7 +60,8 @@ class ReviewTermActivity : AppCompatActivity() {
                     ViewTerm(
                         viewModel.currentTermName,
                         viewModel.userInput,
-                        onClick = viewModel::handleSubmit
+                        onClick = viewModel::handleSubmit,
+                        handleChange = viewModel::handleInput,
                     )
                 }
             }
@@ -69,9 +71,17 @@ class ReviewTermActivity : AppCompatActivity() {
     }
 
     @Composable
+    fun LaunchSummary(
+        needsLaunching: Boolean,
+    ) {
+        // Create Intent, startActivity
+    }
+
+    @Composable
     fun ViewTerm(
         termName: String,
         userInput: String,
+        handleChange: (String) -> Unit,
         onClick: () -> Unit
     ) {
 
@@ -119,7 +129,7 @@ class ReviewTermActivity : AppCompatActivity() {
                 modifier = Modifier
                     .fillMaxWidth(),
                 value = userInput,
-                onValueChange = { userInput = it },
+                onValueChange = { handleChange(it) },
                 label = { Text("Enter translation") },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.body1
@@ -175,6 +185,7 @@ class ReviewTermActivity : AppCompatActivity() {
                 ViewTerm(
                     "example",
                     onClick = viewModel::handleSubmit,
+                    handleChange = viewModel::handleInput,
                     userInput = viewModel.userInput
                 )
             }

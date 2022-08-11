@@ -24,17 +24,21 @@ class RevisionSummaryActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val viewModel = ReviewTermViewModel()
+
         setContent {
+
             LinguaSyneTheme(
                 false,
             ) {
                 Surface(
-
+                    modifier = Modifier.background(MaterialTheme.colors.background)
                 ) {
                     Summary(
                         SummaryValues(
-                            RevisionSessionManager.current_session.totalCorrect,
-                            RevisionSessionManager.current_session.totalIncorrect
+                            viewModel.summaryTotalCorrect,
+                            viewModel.summaryTotalIncorrect
                         )
                     )
                 }
@@ -44,12 +48,13 @@ class RevisionSummaryActivity : ComponentActivity() {
 
     data class SummaryValues(val totalCorrect: Int, val totalIncorrect: Int)
 
+
     @Composable
     fun Summary(sv: SummaryValues) {
         Column(
             modifier = Modifier
                 .padding(all = 10.dp)
-                .background(MaterialTheme.colors.background)
+                //.background(MaterialTheme.colors.background)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -83,14 +88,14 @@ class RevisionSummaryActivity : ComponentActivity() {
         }
     }
 
-    @Preview(showBackground = true)
+    @Preview
     @Composable
     fun PreviewSummary() {
         LinguaSyneTheme(
             darkTheme = false
         ) {
             Surface(
-
+                modifier = Modifier.background(Color.Red)
             ) {
                 Summary(SummaryValues(10, 10))
             }

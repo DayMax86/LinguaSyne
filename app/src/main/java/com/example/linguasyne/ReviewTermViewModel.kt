@@ -14,6 +14,10 @@ class ReviewTermViewModel : ViewModel() {
 
     var currentTermName: String by mutableStateOf("")
     var userInput: String by mutableStateOf("")
+    var launchSummary by mutableStateOf(false)
+
+    var summaryTotalCorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalCorrect)
+    var summaryTotalIncorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalIncorrect)
 
     fun immediate() {
         currentTermName = RevisionSessionManager.current_session.currentTerm.name
@@ -27,18 +31,23 @@ class ReviewTermViewModel : ViewModel() {
         //Check if the user input matches the current term's name
         if (checkAnswer()) {
             //User got the answer correct so show appropriate animation
-            animateAnswer(true)
+            //animateAnswer(true)
 
             //Load the next term
+            launchSummary = true
             advance()
 
             // Display next term
             //displayTerm()
         } else {
             //User got the answer wrong so show appropriate animation
-            animateAnswer(false)
+            //animateAnswer(false)
         }
 
+    }
+
+    fun handleInput(text: String) {
+        userInput = text
     }
 
     private fun advance() {
