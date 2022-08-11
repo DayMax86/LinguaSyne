@@ -29,8 +29,7 @@ class RevisionSummaryActivity : ComponentActivity() {
                 false,
             ) {
                 Surface(
-                    modifier = Modifier
-                        .background(MaterialTheme.colors.background)
+
                 ) {
                     Summary(
                         SummaryValues(
@@ -50,6 +49,7 @@ class RevisionSummaryActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .padding(all = 10.dp)
+                .background(MaterialTheme.colors.background)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -90,8 +90,7 @@ class RevisionSummaryActivity : ComponentActivity() {
             darkTheme = false
         ) {
             Surface(
-                modifier = Modifier
-                    .background(MaterialTheme.colors.background)
+
             ) {
                 Summary(SummaryValues(10, 10))
             }
