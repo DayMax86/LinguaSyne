@@ -1,14 +1,9 @@
 package com.example.linguasyne
 
-import android.animation.ObjectAnimator
 import android.content.Intent
-import android.graphics.Path
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -17,29 +12,18 @@ import android.widget.TextView
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.animation.addListener
-import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.ViewModel
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import coil.compose.AsyncImage
-import coil.transform.CircleCropTransformation
 
 class ReviewTermActivity : AppCompatActivity() {
 
@@ -51,49 +35,54 @@ class ReviewTermActivity : AppCompatActivity() {
 
         setContent {
             LaunchSummary(needsLaunching = viewModel.launchSummary)
+            viewModel.initiateSession()
             LinguaSyneTheme(
                 false,
             ) {
-                Surface(
-
+                Surface(modifier = Modifier
+                    .background(MaterialTheme.colors.background)
                 ) {
                     ViewTerm(
-                        viewModel.currentTermName,
+                        viewModel.currentTermTitle,
                         viewModel.userInput,
                         onClick = viewModel::handleSubmit,
                         handleChange = viewModel::handleInput,
+                        outlineColour = viewModel.outlineColour,
                     )
                 }
             }
         }
 
-        oldOnCreate()
     }
 
     @Composable
     fun LaunchSummary(
         needsLaunching: Boolean,
     ) {
-        // Create Intent, startActivity
+        if (needsLaunching) {
+            this.finish()
+            val intent = Intent(this, RevisionSummaryActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     @Composable
     fun ViewTerm(
-        termName: String,
+        termName: String?,
         userInput: String,
         handleChange: (String) -> Unit,
-        onClick: () -> Unit
+        onClick: () -> Unit,
+        outlineColour: Color,
     ) {
 
         Column(
             modifier = Modifier
                 .padding(top = 20.dp)
-                .background(MaterialTheme.colors.background)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = termName,
+                text = termName.toString(),
                 color = MaterialTheme.colors.primary,
                 style = MaterialTheme.typography.h1
             )
@@ -127,12 +116,13 @@ class ReviewTermActivity : AppCompatActivity() {
 
             OutlinedTextField(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .border(width = 5.dp, outlineColour),
                 value = userInput,
                 onValueChange = { handleChange(it) },
                 label = { Text("Enter translation") },
                 singleLine = true,
-                textStyle = MaterialTheme.typography.body1
+                textStyle = MaterialTheme.typography.body1,
             )
 
             Spacer(modifier = Modifier.height(50.dp))
@@ -171,7 +161,7 @@ class ReviewTermActivity : AppCompatActivity() {
 
     }
 
-
+    //------------------------------PREVIEW---------------------------------------------
     @Preview(showBackground = true)
     @Composable
     fun PreviewSummary() {
@@ -186,7 +176,8 @@ class ReviewTermActivity : AppCompatActivity() {
                     "example",
                     onClick = viewModel::handleSubmit,
                     handleChange = viewModel::handleInput,
-                    userInput = viewModel.userInput
+                    userInput = viewModel.userInput,
+                    outlineColour = viewModel.outlineColour
                 )
             }
         }

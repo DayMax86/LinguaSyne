@@ -1,12 +1,15 @@
 package com.example.linguasyne
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import java.time.LocalDateTime
 
 object RevisionSessionManager {
 
     lateinit var current_session: RevisionSession
 
+    @RequiresApi(Build.VERSION_CODES.O) //This is needed for the time references
     fun createSession() {
 
         //Find all the terms the user has unlocked from their Firebase data
@@ -57,6 +60,9 @@ object RevisionSessionManager {
         current_session = RevisionSession(sortSessionBy(tempList, SortOrder.RANDOM))
         current_session.totalCorrect = 0
         current_session.totalIncorrect = 0
+
+        current_session.currentStep = RevisionSession.AnswerTypes.ENG
+        current_session.currentTerm = TermDisplayManager.termList[0]
     }
 
     fun advanceSession(): Term? { //Returns null if the session list has been exhausted

@@ -17,5 +17,6 @@ val LsVocabTextBlue = Color(0x0016E0)
 val LsVerbBackgroundPink = Color(0xd817e0)
 val LsPhraseBackgroundPurple = Color(0x666bcf)
 val LsExamBackgroundBlue = Color(0x00388b)
-val LsErrorRed = Color(0xFF0000)
+val LsErrorRed = Color(0xFFFF0000)
+val LsCorrectGreen = Color(0xFF00FF00)
 
