@@ -112,17 +112,19 @@ class ReviewTermActivity : AppCompatActivity() {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(modifier = Modifier.height(100.dp))
+            Spacer(modifier = Modifier.height(110.dp))
 
             OutlinedTextField(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .border(width = 5.dp, outlineColour),
+                    .fillMaxWidth(),
                 value = userInput,
                 onValueChange = { handleChange(it) },
                 label = { Text("Enter translation") },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.body1,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = outlineColour
+                ),
             )
 
             Spacer(modifier = Modifier.height(50.dp))

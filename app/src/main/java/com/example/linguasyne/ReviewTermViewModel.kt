@@ -13,6 +13,9 @@ import com.example.linguasyne.ui.theme.LsPurple500
 class ReviewTermViewModel : ViewModel() {
 
     var currentTermTitle: String? by mutableStateOf("")
+    private var ctName: String = ""
+    private var ctTrans: String = ""
+
     var userInput: String by mutableStateOf("")
     var launchSummary by mutableStateOf(false)
     var outlineColour by mutableStateOf(Color(0x3F0F0F0F))
@@ -21,19 +24,21 @@ class ReviewTermViewModel : ViewModel() {
     var summaryTotalIncorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalIncorrect)
 
     fun initiateSession() {
-        //Always starts with ENG but leaving it open to future change
-        if (RevisionSessionManager.current_session.currentStep == RevisionSession.AnswerTypes.ENG) {
-            currentTermTitle = RevisionSessionManager.current_session.currentTerm.name
-        } else {
-            Log.e("ReviewTermViewModel", "Starting step is not ENG!")
-        }
+        updateTermTitle(RevisionSessionManager.current_session.currentStep)
     }
 
-    private fun updateTermTitle() {
-        if (RevisionSessionManager.current_session.currentStep == RevisionSession.AnswerTypes.ENG) {
-            currentTermTitle = RevisionSessionManager.current_session.currentTerm.name
-        } else if (RevisionSessionManager.current_session.currentStep == RevisionSession.AnswerTypes.TRANS) {
-            currentTermTitle = RevisionSessionManager.current_session.currentTerm.translations[0]
+    private fun updateTermTitle(cs: RevisionSession.AnswerTypes) {
+
+        ctName = RevisionSessionManager.current_session.currentTerm.name
+        ctTrans = RevisionSessionManager.current_session.currentTerm.translations[0]
+
+        currentTermTitle = when (cs) {
+            RevisionSession.AnswerTypes.ENG -> {
+                ctName
+            }
+            RevisionSession.AnswerTypes.TRANS -> {
+                ctTrans
+            }
         }
     }
 
@@ -47,20 +52,15 @@ class ReviewTermViewModel : ViewModel() {
             //User got the answer correct so show appropriate animation
             outlineColour = LsCorrectGreen
 
-            // Make sure the activity is displaying either the term name or translation
-            updateTermTitle()
-
             //Load the next term
-            if (!advance()) {
-                //No more terms left so summary can be launched
-                launchSummary = true
-            }
+            advance()
 
         } else {
             //User got the answer wrong so show appropriate animation
             outlineColour = LsErrorRed
         }
-
+        // Make sure the activity is displaying either the term name or translation
+        updateTermTitle(RevisionSessionManager.current_session.currentStep)
     }
 
     fun handleInput(text: String) {
@@ -68,13 +68,12 @@ class ReviewTermViewModel : ViewModel() {
         outlineColour = LsPurple500
     }
 
-    private fun advance(): Boolean {
+    private fun advance() {
         currentTermTitle = RevisionSessionManager.advanceSession()?.name.toString()
-        if (currentTermTitle == "" || currentTermTitle == null) {
+        if (currentTermTitle == "" || currentTermTitle == null || currentTermTitle == "null") {
             //There is no next term (reached end of list) so activity should end and summary be launched
-            return false
+            launchSummary = true
         }
-        return true
     }
 
     private fun checkAnswer(): Boolean {
@@ -84,7 +83,7 @@ class ReviewTermViewModel : ViewModel() {
         when (RevisionSessionManager.current_session.currentStep) {
             //Check answer according to whether it's an ENG or TRANS step being tested
             (RevisionSession.AnswerTypes.TRANS) -> {
-                if (answer == currentTermTitle) {
+                if (answer == RevisionSessionManager.current_session.currentTerm.name) {
                     RevisionSessionManager.current_session.currentTerm.transAnswered = true
                     return true
                 }
