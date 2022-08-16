@@ -117,4 +117,43 @@ object FirebaseManager {
         return null
     }*/
 
+    fun createNewAccount(email: String, password: String): Boolean {
+
+        val auth: FirebaseAuth = FirebaseAuth.getInstance()
+        var success = false
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d("CreateAccountActivity", "createUserWithEmail:SUCCESS, $email")
+                val user = User(email)
+                current_user = user
+                addUserToFirebase(user)
+                // Let the source of the function call know if the account has been made successfully or not
+                // so it can update the ui accordingly
+                success = true
+            }
+            .addOnFailureListener {
+                // If sign in fails, display a message to the user.
+                Log.e(
+                    "CreateAccountActivity",
+                    "createUserWithEmail:FAILURE",
+                )
+                success = false
+            }
+        return success
+    }
+
+    fun addUserToFirebase(user: User) {
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .add(user)
+            .addOnSuccessListener {
+                Log.d("CreateAccountActivity", "User added to Firestore")
+            }
+            .addOnFailureListener {
+                Log.e("CreateAccountActivity", it.toString())
+            }
+    }
+
 }

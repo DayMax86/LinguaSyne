@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/bg_teal"
-            tools:context=".LessonActivity">
+            tools:context=".activities.LessonActivity">
 
             <TextView
                 android:id="@+id/display_term_mnemonics_textview"

@@ -1,9 +1,8 @@
 package com.example.linguasyne
 
-import android.app.Activity
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.example.linguasyne.activities.RevisionSummaryActivity
 
 object TermDisplayManager {
 

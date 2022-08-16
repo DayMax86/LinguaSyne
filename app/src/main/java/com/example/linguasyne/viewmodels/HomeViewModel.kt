@@ -1,4 +1,4 @@
-package com.example.linguasyne
+package com.example.linguasyne.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData

@@ -10,24 +10,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LinguaSyne">
         <activity
-            android:name=".LessonActivity"
+            android:name=".activities.LessonActivity"
             android:exported="false"
             android:label="@string/title_activity_lesson"
             android:theme="@style/Theme.LinguaSyne.NoActionBar" />
-        <activity android:name=".VocabSearchActivity" />
+        <activity android:name=".activities.VocabSearchActivity" />
         <activity
-            android:name=".DisplayTerm"
-            android:parentActivityName=".HomeActivity" />
+            android:name=".activities.DisplayTerm"
+            android:parentActivityName=".activities.HomeActivity" />
 
-        <activity android:name=".HomeActivity" />
+        <activity android:name=".activities.HomeActivity" />
 
-        <activity android:name=".ReviewTermActivity"
-            android:parentActivityName=".HomeActivity" />
+        <activity android:name=".activities.ReviewTermActivity"
+            android:parentActivityName=".activities.HomeActivity" />
 
-        <activity android:name=".RevisionSummaryActivity"
-            android:parentActivityName=".DisplayTerm" />
+        <activity android:name=".activities.RevisionSummaryActivity"
+            android:parentActivityName=".activities.DisplayTerm" />
 
-        <activity android:name=".LoginActivity"
+        <activity android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateAccountActivity" />
+        <activity android:name=".activities.CreateAccountActivity" />
     </application>
 
 </manifest>

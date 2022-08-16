@@ -1,4 +1,4 @@
-package com.example.linguasyne
+package com.example.linguasyne.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -8,8 +8,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.linguasyne.FirebaseManager
+import com.example.linguasyne.R
+import com.example.linguasyne.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity() {
 

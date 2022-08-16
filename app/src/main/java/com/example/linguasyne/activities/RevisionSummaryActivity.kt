@@ -1,12 +1,8 @@
-package com.example.linguasyne
+package com.example.linguasyne.activities
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
-import org.intellij.lang.annotations.JdkConstants
+import com.example.linguasyne.viewmodels.ReviewTermViewModel
 
 class RevisionSummaryActivity : ComponentActivity() {
 

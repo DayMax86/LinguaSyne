@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/bg_teal"
-    tools:context=".CreateAccountActivity">
+    tools:context=".activities.CreateAccountActivity">
 
     <ProgressBar
         android:id="@+id/password_register_progressbar"

@@ -1,8 +1,9 @@
-package com.example.linguasyne
+package com.example.linguasyne.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
+import com.example.linguasyne.R
 
 class LessonActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,22 +1,231 @@
-package com.example.linguasyne
+package com.example.linguasyne.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doOnTextChanged
+import com.example.linguasyne.FirebaseManager
+import com.example.linguasyne.R
+import com.example.linguasyne.User
+import com.example.linguasyne.ui.theme.LinguaSyneTheme
+import com.example.linguasyne.viewmodels.AccountsViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.*
+import kotlin.reflect.KFunction0
 
 class CreateAccountActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.create_account_activity)
 
+        val viewModel = AccountsViewModel()
+
+        setContent {
+            TogglePasswordStrengthIndicator(showProgressBar = viewModel.showProgressBar)
+            ReturnToLogin(toReturn = viewModel.returnToLogin)
+            LinguaSyneTheme(darkTheme = false) {
+                Surface(
+                    modifier = Modifier
+                        .background(MaterialTheme.colors.background)
+                )
+                {
+                    DisplayLogin(
+                        viewModel.userEmailInput,
+                        viewModel.userPasswordInput,
+                        handleEmailChange = viewModel::handleEmailChange,
+                        handlePasswordChange = viewModel::handlePasswordChange,
+                        outlineColour = viewModel.outlineColour,
+                        buttonOnClick = viewModel::handleButtonPress,
+                        textOnClick = viewModel::handleTextPress,
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun ReturnToLogin(toReturn: Boolean) {
+        if (toReturn) {
+            this.finish()
+        }
+    }
+
+    @Composable
+    fun TogglePasswordStrengthIndicator(
+        showProgressBar: Boolean,
+    ) {
+        val viewModel = AccountsViewModel()
+        if (showProgressBar) {
+            DisplayPasswordStrength(
+                passwordStrength = viewModel.passwordStrength,
+                progressBarValue = viewModel.progressBarValue,
+            )
+        }
+    }
+
+    @Composable
+    fun DisplayPasswordStrength(
+        passwordStrength: String,
+        progressBarValue: Float,
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(all = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(400.dp))
+
+            Row(
+                modifier = Modifier
+                    .padding(all = 10.dp),
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    text = "Password strength:",
+                )
+
+                Spacer(modifier = Modifier.width(40.dp))
+
+                Text(
+                    text = passwordStrength,
+                )
+
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                color = MaterialTheme.colors.secondary,
+                backgroundColor = MaterialTheme.colors.onBackground,
+                progress = progressBarValue,
+            )
+
+
+        }
+    }
+
+    @Composable
+    fun DisplayLogin(
+        userEmailInput: String,
+        userPasswordInput: String,
+        handleEmailChange: (String) -> Unit,
+        handlePasswordChange: (String) -> Unit,
+        outlineColour: Color,
+        buttonOnClick: KFunction0<Unit>,
+        textOnClick: (Int) -> Unit,
+    ) {
+
+        Column(
+            modifier = Modifier
+                .padding(all = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(110.dp))
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = userEmailInput,
+                onValueChange = { handleEmailChange(it) },
+                label = { Text("Email address") },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.body1,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = outlineColour
+                ),
+            )
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = userPasswordInput,
+                onValueChange = { handlePasswordChange(it) },
+                label = { Text("Password") },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.body1,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = outlineColour
+                ),
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            )
+
+
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(250.dp))
+
+            Button(
+                onClick = { buttonOnClick() },
+                shape = RoundedCornerShape(100),
+                modifier = Modifier.size(200.dp, 45.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+            )
+            {
+                Text("Create account")
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ClickableText(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = AnnotatedString("Return to login"),
+                onClick = textOnClick
+            )
+
+        }
+
+
+    }
+
+    /*
+    ---------------------- PREVIEW ---------------------------
+     */
+
+    @Preview
+    @Composable
+    fun PreviewDisplayLogin(
+
+    ) {
+
+    }
+
+    /*
+    ---------------------------------- OLD ----------------------------
+     */
+
+    private fun oldCreate() {
         findViewById<EditText>(R.id.password_register_textbox).addTextChangedListener {
             //Check the strength of the user's proposed password without ever showing it in plaintext, then indicate the strength in the UI.
 
@@ -137,7 +346,6 @@ class CreateAccountActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.return_to_login_text).setOnClickListener {
             finish()
         }
-
     }
 
     private fun ShowHidePasswordStrength(show: Boolean) {
@@ -233,15 +441,6 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     private fun addUserToFirebase(user: User) {
-        FirebaseFirestore.getInstance()
-            .collection("users")
-            .add(user)
-            .addOnSuccessListener {
-                Log.d("CreateAccountActivity", "User added to Firestore")
-            }
-            .addOnFailureListener{
-                Log.e("CreateAccountActivity", it.toString())
-            }
 
     }
 

@@ -1,13 +1,11 @@
-package com.example.linguasyne
+package com.example.linguasyne.activities
 
-import android.app.Activity
-import android.app.UiModeManager.MODE_NIGHT_NO
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -15,16 +13,16 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.example.linguasyne.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.example.linguasyne.databinding.HomeActivityBinding
 
 class HomeActivity : AppCompatActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -87,6 +85,7 @@ class HomeActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_sign_out -> {

@@ -1,4 +1,4 @@
-package com.example.linguasyne
+package com.example.linguasyne.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,10 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
+import com.example.linguasyne.FirebaseManager
+import com.example.linguasyne.R
+import com.example.linguasyne.VocabRepository
+import com.example.linguasyne.VocabSearchRecyclerAdapter
 
 class VocabSearchActivity : AppCompatActivity() {
 
@@ -32,7 +36,7 @@ class VocabSearchActivity : AppCompatActivity() {
         findViewById<EditText>(R.id.vocab_search_input_edittext)
             .addTextChangedListener {
                 VocabRepository.filterByName(
-                findViewById<EditText>(R.id.vocab_search_input_edittext).text.toString()
+                    findViewById<EditText>(R.id.vocab_search_input_edittext).text.toString()
                 )
             }
     }
@@ -44,7 +48,8 @@ class VocabSearchActivity : AppCompatActivity() {
 
     private fun updateAdapter() {
         findViewById<RecyclerView>(R.id.vocab_search_recycler_view).adapter = vocabAdapter
-        vocabAdapter.submitList(VocabRepository.allVocab
+        vocabAdapter.submitList(
+            VocabRepository.allVocab
             .sortedBy { it.name })
         vocabAdapter.notifyDataSetChanged()
     }
