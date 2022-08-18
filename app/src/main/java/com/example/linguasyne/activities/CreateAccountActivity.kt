@@ -1,5 +1,6 @@
 package com.example.linguasyne.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -22,9 +23,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.widget.addTextChangedListener
-import com.example.linguasyne.FirebaseManager
+import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.R
-import com.example.linguasyne.User
+import com.example.linguasyne.classes.User
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.CreateAccountViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -63,6 +64,8 @@ class CreateAccountActivity : AppCompatActivity() {
     fun ReturnToLogin(toReturn: Boolean) {
         if (toReturn) {
             this.finish()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 

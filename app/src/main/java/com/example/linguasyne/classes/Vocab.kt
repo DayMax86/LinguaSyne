@@ -1,7 +1,8 @@
-package com.example.linguasyne
+package com.example.linguasyne.classes
 
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.enums.TermTypes
+import com.example.linguasyne.managers.LessonTypes
 
 class Vocab(term_id: String,
             term_name: String,

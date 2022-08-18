@@ -1,4 +1,4 @@
-package com.example.linguasyne
+package com.example.linguasyne.classes
 
 class Verb(term_id: String,
            term_name: String,

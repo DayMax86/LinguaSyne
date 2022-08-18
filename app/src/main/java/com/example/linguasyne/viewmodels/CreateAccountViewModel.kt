@@ -1,17 +1,12 @@
 package com.example.linguasyne.viewmodels
 
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
-import com.example.linguasyne.FirebaseManager
-import com.example.linguasyne.User
-import com.google.firebase.auth.FirebaseAuth
+import com.example.linguasyne.managers.FirebaseManager
 
 class CreateAccountViewModel : ViewModel() {
 

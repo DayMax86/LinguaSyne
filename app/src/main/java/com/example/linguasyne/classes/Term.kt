@@ -1,7 +1,6 @@
-package com.example.linguasyne
-import java.time.LocalDate
+package com.example.linguasyne.classes
+import com.example.linguasyne.managers.LessonTypes
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.Month
 
 open class Term (term_id: String,

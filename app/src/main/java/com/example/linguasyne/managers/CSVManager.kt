@@ -1,13 +1,10 @@
-package com.example.linguasyne
+package com.example.linguasyne.managers
 
-import android.R.raw
-import android.app.Application
 import android.content.Context
-import android.content.res.Resources
-import android.content.res.Resources.getSystem
 import android.util.Log
+import com.example.linguasyne.R
+import com.example.linguasyne.classes.Vocab
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import com.google.firebase.firestore.FirebaseFirestore
 import java.io.InputStream
 
 object CSVManager {

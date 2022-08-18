@@ -1,7 +1,9 @@
-package com.example.linguasyne
+package com.example.linguasyne.managers
 
 import android.content.Context
 import android.content.Intent
+import com.example.linguasyne.classes.RevisionSession
+import com.example.linguasyne.classes.Term
 import com.example.linguasyne.activities.RevisionSummaryActivity
 
 object TermDisplayManager {

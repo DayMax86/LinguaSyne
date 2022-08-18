@@ -1,4 +1,4 @@
-package com.example.linguasyne
+package com.example.linguasyne.classes
 
 import android.graphics.Bitmap
 import java.util.*

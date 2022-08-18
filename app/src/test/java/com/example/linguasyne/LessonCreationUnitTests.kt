@@ -1,5 +1,6 @@
 package com.example.linguasyne
 
+import com.example.linguasyne.managers.LessonManager
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

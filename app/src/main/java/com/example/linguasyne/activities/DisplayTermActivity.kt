@@ -7,9 +7,13 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.linguasyne.*
+import com.example.linguasyne.classes.Term
+import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.Gender
+import com.example.linguasyne.managers.LessonManager
+import com.example.linguasyne.managers.VocabRepository
 
-open class DisplayTerm : AppCompatActivity() {
+open class DisplayTermActivity : AppCompatActivity() {
 
     private lateinit var t: Term
     private var tPos: Int = 0

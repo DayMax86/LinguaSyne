@@ -1,4 +1,6 @@
-package com.example.linguasyne
+package com.example.linguasyne.classes
+
+import com.example.linguasyne.managers.LessonTypes
 
 data class Lesson(val l_l: List<Term>, val l_t: LessonTypes) {
     val lesson_list = l_l

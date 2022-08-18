@@ -1,4 +1,6 @@
-package com.example.linguasyne
+package com.example.linguasyne.managers
+
+import com.example.linguasyne.classes.Vocab
 
 object VocabRepository {
     var listChange: (() -> Unit)? = null

@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.example.linguasyne.RevisionSession
-import com.example.linguasyne.RevisionSessionManager
+import com.example.linguasyne.classes.RevisionSession
+import com.example.linguasyne.managers.RevisionSessionManager
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsErrorRed
 import com.example.linguasyne.ui.theme.LsPurple500

@@ -1,4 +1,7 @@
-package com.example.linguasyne
+package com.example.linguasyne.managers
+
+import com.example.linguasyne.classes.Lesson
+import com.example.linguasyne.classes.Vocab
 
 
 object LessonManager {
@@ -14,7 +17,7 @@ object LessonManager {
                 var i = 0
                 for (v: Vocab in VocabRepository.currentVocab) {
                     //If 5 items have been added to the temp list, create lesson data object and set to current lesson
-                    if (!LessonManager.activeLesson) {
+                    if (!activeLesson) {
                         //5 by default but this shouldn't be hardcoded!!
                         if (i < 5 && i <= VocabRepository.currentVocab.size) {
                             temp_list.add(v)
@@ -27,7 +30,7 @@ object LessonManager {
                             //Mark the learnt terms as unlocked for the user
                             v.isUnlocked = true
                             //make sure the below is set to false again when the lesson ends.
-                            LessonManager.activeLesson = true
+                            activeLesson = true
                             //need to exit out of the for loop!
                             return
                         }

@@ -15,7 +15,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".activities.DisplayTerm">
+            tools:context=".activities.DisplayTermActivity">
 
             <TextView
                 android:id="@+id/display_term_mnemonics_textview"

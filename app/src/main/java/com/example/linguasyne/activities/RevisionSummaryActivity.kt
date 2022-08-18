@@ -84,17 +84,4 @@ class RevisionSummaryActivity : ComponentActivity() {
         }
     }
 
-    @Preview
-    @Composable
-    fun PreviewSummary() {
-        LinguaSyneTheme(
-            darkTheme = false
-        ) {
-            Surface(
-                modifier = Modifier.background(Color.Red)
-            ) {
-                Summary(SummaryValues(10, 10))
-            }
-        }
-    }
 }

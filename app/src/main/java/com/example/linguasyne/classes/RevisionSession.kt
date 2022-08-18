@@ -1,4 +1,4 @@
-package com.example.linguasyne
+package com.example.linguasyne.classes
 
 class RevisionSession(var sl: MutableList<Term>) {
     var sessionList = sl

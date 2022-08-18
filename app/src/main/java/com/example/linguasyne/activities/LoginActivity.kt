@@ -22,11 +22,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.linguasyne.FirebaseManager
+import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.R
-import com.example.linguasyne.User
+import com.example.linguasyne.classes.User
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
-import com.example.linguasyne.viewmodels.CreateAccountViewModel
 import com.example.linguasyne.viewmodels.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlin.reflect.KFunction0
@@ -40,6 +39,7 @@ class LoginActivity : AppCompatActivity() {
 
         setContent {
             GoToCreateAccount(goToCreateAccount = viewModel.goToCreateAccount)
+            GoToHome(goToHome = viewModel.goToHome)
             LinguaSyneTheme(darkTheme = false) {
                 Surface(
                     modifier = Modifier
@@ -64,9 +64,21 @@ class LoginActivity : AppCompatActivity() {
     fun GoToCreateAccount(goToCreateAccount: Boolean) {
         if (goToCreateAccount) {
             // Launch the create account screen
+            this.finish()
+            val intent = Intent(this, CreateAccountActivity::class.java)
+            startActivity(intent)
         }
     }
 
+    @Composable
+    fun GoToHome(goToHome: Boolean) {
+        if (goToHome) {
+            // Launch the home screen
+            this.finish()
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+        }
+    }
 
     @Composable
     fun DisplayLogin(

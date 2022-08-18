@@ -1,22 +1,15 @@
-package com.example.linguasyne
+package com.example.linguasyne.managers
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
-import android.widget.ImageView
-import android.widget.Toast
-import com.google.android.gms.auth.api.signin.internal.Storage
+import com.example.linguasyne.classes.Term
+import com.example.linguasyne.classes.User
+import com.example.linguasyne.classes.Vocab
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.storage.FirebaseStorage
-import java.io.ByteArrayOutputStream
-import java.util.*
 
 object FirebaseManager {
 
@@ -157,7 +150,7 @@ object FirebaseManager {
     }
 
     fun logInUser(email: String, password: String): Boolean {
-        var success = false
+        var success = true
 
         if (email != "" && password != "") {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
@@ -168,7 +161,7 @@ object FirebaseManager {
                 }
                 .addOnFailureListener {
                     success = false
-                    Log.d("LoginActivity", "User log in failed")
+                    Log.e("LoginActivity", "User log in failed: $it")
                 }
         }
         else {

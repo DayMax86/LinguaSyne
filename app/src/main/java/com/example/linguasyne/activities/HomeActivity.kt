@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.linguasyne.*
 import com.google.firebase.auth.FirebaseAuth
 import com.example.linguasyne.databinding.HomeActivityBinding
+import com.example.linguasyne.managers.*
 
 class HomeActivity : AppCompatActivity() {
 
@@ -41,7 +42,7 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.vocab_lesson_button).setOnClickListener {
             LessonManager.createLesson(LessonTypes.VOCAB)
-            val intent = Intent(this, DisplayTerm::class.java)
+            val intent = Intent(this, DisplayTermActivity::class.java)
             startActivity(intent)
         }
 

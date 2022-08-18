@@ -1,8 +1,10 @@
-package com.example.linguasyne
+package com.example.linguasyne.managers
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
+import com.example.linguasyne.classes.RevisionSession
+import com.example.linguasyne.classes.Term
+import com.example.linguasyne.classes.User
 import java.time.LocalDateTime
 
 object RevisionSessionManager {

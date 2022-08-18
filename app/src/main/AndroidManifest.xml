@@ -16,7 +16,7 @@
             android:theme="@style/Theme.LinguaSyne.NoActionBar" />
         <activity android:name=".activities.VocabSearchActivity" />
         <activity
-            android:name=".activities.DisplayTerm"
+            android:name=".activities.DisplayTermActivity"
             android:parentActivityName=".activities.HomeActivity" />
 
         <activity android:name=".activities.HomeActivity" />
@@ -25,7 +25,7 @@
             android:parentActivityName=".activities.HomeActivity" />
 
         <activity android:name=".activities.RevisionSummaryActivity"
-            android:parentActivityName=".activities.DisplayTerm" />
+            android:parentActivityName=".activities.DisplayTermActivity" />
 
         <activity android:name=".activities.LoginActivity"
             android:exported="true">
