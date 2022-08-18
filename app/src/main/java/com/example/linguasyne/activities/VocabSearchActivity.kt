@@ -19,6 +19,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.linguasyne.classes.Vocab
@@ -38,12 +39,13 @@ class VocabSearchActivity : AppCompatActivity() {
             VocabCardPress(lTV = viewModel.launchTermView)
             LinguaSyneTheme(darkTheme = false) {
                 Surface(
-                    modifier = Modifier
-                        .background(MaterialTheme.colors.background)
+                    //modifier = Modifier
+                      //  .background(Color.Red)
                 )
                 {
                     DisplayVocab(
                         vocabItems = viewModel.vocabList,
+                        onClick = viewModel::handlePress,
                     )
                 }
             }
@@ -65,6 +67,7 @@ class VocabSearchActivity : AppCompatActivity() {
     @Composable
     fun DisplayVocab(
         vocabItems: MutableList<Vocab>,
+        onClick: (Vocab) -> Unit,
     ) {
         LazyColumn(
             contentPadding = PaddingValues(all = 10.dp)
@@ -72,7 +75,7 @@ class VocabSearchActivity : AppCompatActivity() {
             items(
                 items = vocabItems,
                 itemContent = {
-                    VocabItem(vocab = it)
+                    VocabItem(vocab = it, onClick = onClick)
                 }
             )
         }
@@ -81,20 +84,18 @@ class VocabSearchActivity : AppCompatActivity() {
     @Composable
     fun VocabItem(
         vocab: Vocab,
+        onClick: (Vocab) -> Unit,
     ) {
-        //TODO() check if this is good practice or not
-        val vm = VocabSearchViewModel()
-
         Card(
             modifier = Modifier
                 .padding(all = 10.dp)
                 .fillMaxWidth()
                 .clickable {
-                    vm.handlePress(item = vocab)
+                    onClick(vocab)
                     Log.e("VocabSearch", "within .clickable")
                            },
             elevation = 5.dp,
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = Color.Blue,
             shape = RoundedCornerShape(corner = CornerSize(10.dp)),
             )
         {

@@ -13,14 +13,14 @@ private val LightThemeColors = lightColors(
     primary = LsTextBlue,
     primaryVariant = LsPurple500,
     onPrimary = Black,
-    secondary = LsTeal700,
+    secondary = LsVocabTextBlue,
     secondaryVariant = LsTeal200,
     onSecondary = Black,
     error = LsErrorRed,
     onError = LsErrorRed,
     background = LsBackgroundTeal,
     onBackground = Black,
-    surface = White,
+    surface = LsBackgroundTeal,
     onSurface = Black
 )
 
@@ -28,14 +28,14 @@ private val DarkThemeColors = lightColors(
     primary = LsPurple200,
     primaryVariant = LsPurple500,
     onPrimary = Black,
-    secondary = LsTeal700,
+    secondary = LsVocabTextBlue,
     secondaryVariant = LsTeal200,
     onSecondary = Black,
     error = LsErrorRed,
     onError = LsErrorRed,
     background = LsBackgroundTeal,
     onBackground = Black,
-    surface = White,
+    surface = LsBackgroundTeal,
     onSurface = Black
 )
 
@@ -47,13 +47,8 @@ fun LinguaSyneTheme(
 ) {
     MaterialTheme(
         colors = if (darkTheme) DarkThemeColors else LightThemeColors,
-    ) {
-        content()
-    }
-    MaterialTheme(
-        colors = colors,
         typography = Typography,
-        content = content
+        content = content,
     )
 }
 
