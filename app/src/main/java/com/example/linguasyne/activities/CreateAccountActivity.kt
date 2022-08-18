@@ -1,6 +1,5 @@
 package com.example.linguasyne.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,8 +13,6 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,16 +26,15 @@ import com.example.linguasyne.FirebaseManager
 import com.example.linguasyne.R
 import com.example.linguasyne.User
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
-import com.example.linguasyne.viewmodels.AccountsViewModel
+import com.example.linguasyne.viewmodels.CreateAccountViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.reflect.KFunction0
 
 class CreateAccountActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel = AccountsViewModel()
+        val viewModel = CreateAccountViewModel()
 
         setContent {
             TogglePasswordStrengthIndicator(showProgressBar = viewModel.showProgressBar)
@@ -74,7 +70,7 @@ class CreateAccountActivity : AppCompatActivity() {
     fun TogglePasswordStrengthIndicator(
         showProgressBar: Boolean,
     ) {
-        val viewModel = AccountsViewModel()
+        val viewModel = CreateAccountViewModel()
         if (showProgressBar) {
             DisplayPasswordStrength(
                 passwordStrength = viewModel.passwordStrength,

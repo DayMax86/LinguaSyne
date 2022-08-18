@@ -156,4 +156,26 @@ object FirebaseManager {
             }
     }
 
+    fun logInUser(email: String, password: String): Boolean {
+        var success = false
+
+        if (email != "" && password != "") {
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener {
+                    Log.d("LoginActivity", "User logged in")
+                    success = true
+                    current_user = User(email)
+                }
+                .addOnFailureListener {
+                    success = false
+                    Log.d("LoginActivity", "User log in failed")
+                }
+        }
+        else {
+            Log.e("LoginActivity", "Either email or password is null")
+        }
+
+        return success
+    }
+
 }

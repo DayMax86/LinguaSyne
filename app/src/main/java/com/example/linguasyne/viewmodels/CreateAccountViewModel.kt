@@ -13,7 +13,7 @@ import com.example.linguasyne.FirebaseManager
 import com.example.linguasyne.User
 import com.google.firebase.auth.FirebaseAuth
 
-class AccountsViewModel : ViewModel() {
+class CreateAccountViewModel : ViewModel() {
 
     var userEmailInput: String by mutableStateOf("")
     var userPasswordInput: String by mutableStateOf("")

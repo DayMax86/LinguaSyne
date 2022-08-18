@@ -4,20 +4,154 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
 import com.example.linguasyne.FirebaseManager
 import com.example.linguasyne.R
 import com.example.linguasyne.User
+import com.example.linguasyne.ui.theme.LinguaSyneTheme
+import com.example.linguasyne.viewmodels.CreateAccountViewModel
+import com.example.linguasyne.viewmodels.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
+import kotlin.reflect.KFunction0
 
 class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_activity)
+
+        val viewModel = LoginViewModel()
+
+        setContent {
+            GoToCreateAccount(goToCreateAccount = viewModel.goToCreateAccount)
+            LinguaSyneTheme(darkTheme = false) {
+                Surface(
+                    modifier = Modifier
+                        .background(MaterialTheme.colors.background)
+                )
+                {
+                    DisplayLogin(
+                        viewModel.userEmailInput,
+                        viewModel.userPasswordInput,
+                        handleEmailChange = viewModel::handleEmailChange,
+                        handlePasswordChange = viewModel::handlePasswordChange,
+                        outlineColour = viewModel.outlineColour,
+                        buttonOnClick = viewModel::handleButtonPress,
+                        textOnClick = viewModel::handleTextPress,
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun GoToCreateAccount(goToCreateAccount: Boolean) {
+        if (goToCreateAccount) {
+            // Launch the create account screen
+        }
+    }
+
+
+    @Composable
+    fun DisplayLogin(
+        userEmailInput: String,
+        userPasswordInput: String,
+        handleEmailChange: (String) -> Unit,
+        handlePasswordChange: (String) -> Unit,
+        outlineColour: Color,
+        buttonOnClick: KFunction0<Unit>,
+        textOnClick: (Int) -> Unit,
+    ) {
+
+        Column(
+            modifier = Modifier
+                .padding(all = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(110.dp))
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = userEmailInput,
+                onValueChange = { handleEmailChange(it) },
+                label = { Text("Email address") },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.body1,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = outlineColour
+                ),
+            )
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = userPasswordInput,
+                onValueChange = { handlePasswordChange(it) },
+                label = { Text("Password") },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.body1,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = outlineColour
+                ),
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            )
+
+
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(modifier = Modifier.height(250.dp))
+
+            Button(
+                onClick = { buttonOnClick() },
+                shape = RoundedCornerShape(100),
+                modifier = Modifier.size(200.dp, 45.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+            )
+            {
+                Text("Log in")
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            ClickableText(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = AnnotatedString("No account? Click here to create one"),
+                onClick = textOnClick
+            )
+
+        }
+
+
+    }
+/*
+---------------------------- OLD -----------------------
 
         findViewById<Button>(R.id.login_button).setOnClickListener{
             logInUser()
@@ -32,7 +166,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
+---------------------------------------------------------------------  */
     public override fun onStart() {
         super.onStart()
         val auth: FirebaseAuth = FirebaseAuth.getInstance()
