@@ -1,11 +1,13 @@
 package com.example.linguasyne.classes
 
 import android.graphics.Bitmap
+import android.net.Uri
+import com.google.firebase.storage.StorageReference
 import java.util.*
 
 class User(email: String) {
 
-    var user_image: Bitmap? = null
+    var user_image_uri: Uri? = null
     val user_id: String
     val user_email: String
     var user_level: Int = 0

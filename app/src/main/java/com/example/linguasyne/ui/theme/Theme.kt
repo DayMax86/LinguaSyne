@@ -13,30 +13,30 @@ private val LightThemeColors = lightColors(
     primary = LsTextBlue,
     primaryVariant = LsPurple500,
     onPrimary = Black,
-    secondary = LsVocabTextBlue,
+    secondary = LsPurple500,
     secondaryVariant = LsTeal200,
     onSecondary = Black,
     error = LsErrorRed,
     onError = LsErrorRed,
     background = LsBackgroundTeal,
-    onBackground = Black,
+    onBackground = White,
     surface = LsBackgroundTeal,
-    onSurface = Black
+    onSurface = White
 )
 
 private val DarkThemeColors = lightColors(
     primary = LsPurple200,
     primaryVariant = LsPurple500,
     onPrimary = Black,
-    secondary = LsVocabTextBlue,
+    secondary = LsPurple500,
     secondaryVariant = LsTeal200,
     onSecondary = Black,
     error = LsErrorRed,
     onError = LsErrorRed,
     background = LsBackgroundTeal,
-    onBackground = Black,
+    onBackground = White,
     surface = LsBackgroundTeal,
-    onSurface = Black
+    onSurface = White
 )
 
 

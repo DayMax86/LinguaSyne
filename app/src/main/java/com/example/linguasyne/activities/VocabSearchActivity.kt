@@ -57,7 +57,6 @@ class VocabSearchActivity : AppCompatActivity() {
     fun VocabCardPress(lTV: Boolean) {
         Log.e("VocabSearch", "VocabCardPress called, checking lTV boolean")
         if (lTV) {
-            //TODO() This is not working!
             Log.e("VocabSearch", "attempting to start activity")
             val intent = Intent(this, DisplayTermActivity::class.java)
             startActivity(intent)
@@ -95,7 +94,7 @@ class VocabSearchActivity : AppCompatActivity() {
                     Log.e("VocabSearch", "within .clickable")
                            },
             elevation = 5.dp,
-            backgroundColor = Color.Blue,
+            backgroundColor = MaterialTheme.colors.background,
             shape = RoundedCornerShape(corner = CornerSize(10.dp)),
             )
         {

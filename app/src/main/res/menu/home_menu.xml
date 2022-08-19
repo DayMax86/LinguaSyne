@@ -17,6 +17,11 @@
         android:title="Test item"
         />
     <item
+        android:id="@+id/menu_user_check"
+        android:title="User check"
+        />
+
+    <item
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="Search"

@@ -1,15 +1,23 @@
 package com.example.linguasyne.managers
 
+import android.content.ContentResolver
+import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.BitmapFactory.decodeResource
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
+import com.example.linguasyne.R
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.classes.Vocab
+import com.google.api.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.storage.FirebaseStorage
+import java.net.URL
 
 object FirebaseManager {
 
@@ -78,37 +86,29 @@ object FirebaseManager {
                         "User image path = /users/${firebaseUser?.uid}/image/$filename"
                     )
                 }
+
             val imageRef = storageRef.child("/users/${firebaseUser?.uid}/image/$filename")
-            val ONE_MEGABYTE: Long = 1024 * 1024
-            imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
 
-                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-                current_user.user_image = bitmap
-                Log.d("HomeActivity", "Current user's image has been set")
+            current_user.user_image_uri = uri
+            Log.d("HomeActivity", "Current user's image has been set")
 
-            }.addOnFailureListener {
-                //TODO() Currently the onFailureListener is always triggering
-                Log.d("HomeActivity", "Failed to get byte data from image")
-            }
         } else {
-            Log.d("HomeActivity", "Imagine upload to Firebase UNSUCCESSFUL - uri == null")
+            Log.e("HomeActivity", "Image upload to Firebase UNSUCCESSFUL, uri is null!")
         }
 
     }
 
-    /*fun getUserImageFromFirebase(): Bitmap? {
-        val filename = "profileImage"
-        val firebaseUser = FirebaseAuth.getInstance().currentUser
-        val storageRef =
-            FirebaseStorage.getInstance()
-                .getReference("/users/${firebaseUser?.uid}/image/$filename")
-        if (firebaseUser != null) {
-            storageRef.downloadUrl.addOnSuccessListener {
-                Log.d("HomeActivity", "User image URL: $it")
-            }
+    fun getUserImageFromFirebase(ctxRes: ContentResolver): Bitmap {
+        if (current_user.user_image_uri != null) {
+            Log.d("HomeActivity", "Image successfully retrieved")
+            return MediaStore.Images.Media.getBitmap(ctxRes, current_user.user_image_uri)
+        } else {
+            //Return a default image
+            // TODO() Why can I not use a default image from R.drawable? (without context)
+            Log.e("HomeActivity", "No user image so default image has to be used")
+            return Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888)
         }
-        return null
-    }*/
+    }
 
     fun createNewAccount(email: String, password: String): Boolean {
 
@@ -163,8 +163,7 @@ object FirebaseManager {
                     success = false
                     Log.e("LoginActivity", "User log in failed: $it")
                 }
-        }
-        else {
+        } else {
             Log.e("LoginActivity", "Either email or password is null")
         }
 
