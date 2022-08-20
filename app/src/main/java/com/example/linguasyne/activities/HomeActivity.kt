@@ -47,6 +47,12 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val viewModel = HomeViewModel()
+        // TODO() MVVM is posing challenges with passing contexts
+        FirebaseManager.getUserImageFromFirebase(this.contentResolver)
+        //viewModel.init(fetchContentResolver())
+
+
+
 
         setContent {
             LinguaSyneTheme(darkTheme = false) {
@@ -67,7 +73,7 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    // TODO() MVVM is posing challenges with passing contexts
+
     fun fetchContentResolver(): ContentResolver {
         return this.applicationContext.contentResolver
     }
@@ -76,7 +82,7 @@ class HomeActivity : AppCompatActivity() {
     fun DisplayHome(
         user: User,
         onClickHelp: () -> Unit,
-        userImage: Bitmap,
+        userBitmap: Bitmap,
     ) {
         Column(
 
@@ -226,19 +232,18 @@ class HomeActivity : AppCompatActivity() {
                         ) {
 
 
-                                Image(
-                                    modifier = Modifier
-                                        .border(
-                                            color = MaterialTheme.colors.primary,
-                                            width = 2.dp,
-                                            shape = CircleShape
-                                        )
-                                        //.size(width = 30.dp, height = 30.dp)
-                                        .clip(shape = CircleShape),
-                                    bitmap = userImage.asImageBitmap(),
-
-                                    contentDescription = null,
-                                )
+                            Image(
+                                modifier = Modifier
+                                    .border(
+                                        color = MaterialTheme.colors.primary,
+                                        width = 2.dp,
+                                        shape = CircleShape
+                                    )
+                                    //.size(width = 30.dp, height = 30.dp)
+                                    .clip(shape = CircleShape),
+                                bitmap = userBitmap.asImageBitmap(),
+                                contentDescription = null,
+                            )
 
 
                             Text(
@@ -479,7 +484,7 @@ class HomeActivity : AppCompatActivity() {
                                 Image(
                                     modifier = Modifier
                                         //.size(width = 200.dp, height = 200.dp)
-                                        .padding( all = 5.dp)
+                                        .padding(all = 5.dp)
                                         .align(Alignment.CenterHorizontally)
                                         .clip(RoundedCornerShape(2.dp)),
                                     painter = painterResource(R.drawable.ic_launcher_background),
@@ -609,7 +614,11 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
             R.id.menu_user_check -> {
-                Toast.makeText(this,"current user is ${FirebaseManager.current_user.user_email}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "current user is ${FirebaseManager.current_user.user_email}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
         return super.onOptionsItemSelected(item)

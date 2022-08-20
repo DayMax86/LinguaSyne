@@ -1,23 +1,21 @@
 package com.example.linguasyne.managers
 
 import android.content.ContentResolver
-import android.content.res.Resources
+import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.BitmapFactory.decodeResource
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
-import com.example.linguasyne.R
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.classes.Vocab
-import com.google.api.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import java.net.URL
+import java.util.*
 
 object FirebaseManager {
 
@@ -75,7 +73,8 @@ object FirebaseManager {
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         val storageRef =
             FirebaseStorage.getInstance()
-                .getReference("/users/${firebaseUser?.uid}/image/$filename")
+                .getReference("/users/${current_user.user_id}/image/$filename")
+        Log.e("HomeActivity", "current_user.user_id = ${current_user.user_id}")
         if (uri != null) {
             storageRef.putFile(uri)
                 .addOnSuccessListener {
@@ -83,11 +82,24 @@ object FirebaseManager {
                     Log.d("HomeActivity", "User image uri = $uri")
                     Log.d(
                         "HomeActivity",
-                        "User image path = /users/${firebaseUser?.uid}/image/$filename"
+                        "User image path = /users/${current_user.user_id}/image/$filename"
                     )
                 }
 
-            val imageRef = storageRef.child("/users/${firebaseUser?.uid}/image/$filename")
+
+            if (firebaseUser != null) {
+                val userImageRef = Firebase.firestore.collection("users").document("${firebaseUser.email}")
+                userImageRef
+                    .update("user_image_uri", uri)
+                    .addOnSuccessListener {
+                        Log.d("HomeActivity", "user_image_uri field on Firebase has been set for ${current_user.user_email}")
+                    }
+                    .addOnFailureListener{
+                        Log.e("HomeActivity", "Failed to update user_image_uri on Firebase: $it")
+                    }
+            } else {
+                Log.e("HomeActivity", "No firebaseUser is logged in!!")
+            }
 
             current_user.user_image_uri = uri
             Log.d("HomeActivity", "Current user's image has been set")
@@ -96,17 +108,26 @@ object FirebaseManager {
             Log.e("HomeActivity", "Image upload to Firebase UNSUCCESSFUL, uri is null!")
         }
 
+        //
+
     }
 
-    fun getUserImageFromFirebase(ctxRes: ContentResolver): Bitmap {
+    fun getUserImageFromFirebase(cntRes: ContentResolver) {
+        // TODO() I believe this is being called before the uri is set (in the method above)...
+        // TODO() ... since the 'upload image to firebase' method is called FROM the HomeActivity.
+        // TODO() One solution would be to have the user upload an image when they create an account...
+        // TODO() ... but then they wouldn't be able to upload one at any later opportunity. Hmmm.....
         if (current_user.user_image_uri != null) {
+            cntRes.takePersistableUriPermission(
+                current_user.user_image_uri!!,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
             Log.d("HomeActivity", "Image successfully retrieved")
-            return MediaStore.Images.Media.getBitmap(ctxRes, current_user.user_image_uri)
+            current_user.user_bitmap = MediaStore.Images.Media.getBitmap(cntRes, current_user.user_image_uri)
         } else {
             //Return a default image
             // TODO() Why can I not use a default image from R.drawable? (without context)
             Log.e("HomeActivity", "No user image so default image has to be used")
-            return Bitmap.createBitmap(300,300,Bitmap.Config.ARGB_8888)
         }
     }
 
@@ -115,15 +136,16 @@ object FirebaseManager {
         val auth: FirebaseAuth = FirebaseAuth.getInstance()
         var success = false
 
+        /*------------ ADD TO FIREBASE 'AUTHENTICATION' -------------*/
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d("CreateAccountActivity", "createUserWithEmail:SUCCESS, $email")
                 val user = User(email)
                 current_user = user
-                addUserToFirebase(user)
+                /*------------ ADD TO FIREBASE 'FIRESTORE' -------------*/
+                addUserToFirestore(user)
                 // Let the source of the function call know if the account has been made successfully or not
-                // so it can update the ui accordingly
                 success = true
             }
             .addOnFailureListener {
@@ -137,10 +159,10 @@ object FirebaseManager {
         return success
     }
 
-    fun addUserToFirebase(user: User) {
+    fun addUserToFirestore(user: User) {
         FirebaseFirestore.getInstance()
-            .collection("users")
-            .add(user)
+            .collection("users").document(current_user.user_id)
+            .set(user)
             .addOnSuccessListener {
                 Log.d("CreateAccountActivity", "User added to Firestore")
             }

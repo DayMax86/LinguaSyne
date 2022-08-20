@@ -72,7 +72,7 @@ class CreateAccountViewModel : ViewModel() {
 
     fun handleButtonPress() {
         if (FirebaseManager.createNewAccount(userEmailInput, userPasswordInput)) {
-            FirebaseManager.addUserToFirebase(FirebaseManager.current_user)
+            FirebaseManager.addUserToFirestore(FirebaseManager.current_user)
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.linguasyne.viewmodels
 
 
+import android.content.ContentResolver
 import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,8 +14,13 @@ import com.example.linguasyne.managers.FirebaseManager
 
 class HomeViewModel : ViewModel() {
 
+    var userBitmap: Bitmap by mutableStateOf(FirebaseManager.current_user.user_bitmap!!)
+
     var user: User by mutableStateOf(FirebaseManager.current_user)
-    var userBitmap: Bitmap by mutableStateOf(FirebaseManager.getUserImageFromFirebase())
+
+    fun init(homeContentResolver: ContentResolver) {
+        //FirebaseManager.getUserImageFromFirebase(homeContentResolver)
+    }
 
     fun handleHelpClick() {
         //Do something
