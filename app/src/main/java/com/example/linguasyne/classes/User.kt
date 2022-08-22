@@ -12,7 +12,6 @@ class User(email: String) {
     var user_id: String = ""
     val user_email: String
     var user_level: Int = 0
-    var user_bitmap: Bitmap? = Bitmap.createBitmap(300, 300, Bitmap.Config.ARGB_8888)
 
     init{
         this.user_email = email

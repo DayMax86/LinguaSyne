@@ -1,11 +1,8 @@
 package com.example.linguasyne.managers
 
-import android.content.ContentResolver
-import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
+import androidx.core.net.toUri
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.classes.Vocab
@@ -15,7 +12,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import java.util.*
 
 object FirebaseManager {
 
@@ -54,7 +50,7 @@ object FirebaseManager {
             }
             .addOnFailureListener { exception ->
                 Log.d("VocabSearchActivity", "Inside OnFailureListener")
-                Log.d("VocabSearchActivity", "Error getting documents: ", exception)
+                Log.e("VocabSearchActivity", "Error getting documents: ", exception)
             }
         Log.d("VocabSearchActivity", "After attaching listener")
     }
@@ -64,72 +60,82 @@ object FirebaseManager {
             .collection("vocab")
             .add(term)
             .addOnSuccessListener {
-                Log.d("HomeActivity", "Vocab item #" + "$term.id" + " added to firebase")
+                Log.d("HomeActivity", "Vocab item #" + term.id + " added to firebase")
             }
     }
 
-    fun uploadUserImageToFirebase(uri: Uri?) {
+    fun uploadUserImageToFirebaseStorage(localUri: Uri?) {
         val filename = "profileImage"
         val firebaseUser = FirebaseAuth.getInstance().currentUser
-        val storageRef =
-            FirebaseStorage.getInstance()
-                .getReference("/users/${current_user.user_id}/image/$filename")
-        Log.e("HomeActivity", "current_user.user_id = ${current_user.user_id}")
-        if (uri != null) {
-            storageRef.putFile(uri)
-                .addOnSuccessListener {
-                    Log.d("HomeActivity", "User image successfully uploaded to Firebase")
-                    Log.d("HomeActivity", "User image uri = $uri")
-                    Log.d(
-                        "HomeActivity",
-                        "User image path = /users/${current_user.user_id}/image/$filename"
-                    )
-                }
+        if (firebaseUser != null) {
+            val storageRef =
+                FirebaseStorage.getInstance()
+                    .getReference("/users/${current_user.user_id}/image/$filename")
+            Log.e("HomeActivity", "current_user.user_id = ${current_user.user_id}")
+            if (localUri != null) {
+                storageRef.putFile(localUri)
+                    .addOnSuccessListener {
+                        Log.d("HomeActivity", "User image successfully uploaded to Firestore")
+                        Log.d(
+                            "HomeActivity",
+                            "User image path on firestore = /users/${current_user.user_id}/image/$filename"
+                        )
+                    }
+            }
+        } else {
+            Log.e("HomeActivity", "No firebaseUser is logged in!!")
+        }
+        updateUserImageUriOnFirestore()
+    }
 
+    fun updateUserImageUriOnFirestore() {
+        val filename = "profileImage"
+        val firebaseUser = current_user
 
-            if (firebaseUser != null) {
-                val userImageRef = Firebase.firestore.collection("users").document("${firebaseUser.email}")
-                userImageRef
+        val firestoreRef =
+            Firebase.firestore.collection("users").document(firebaseUser.user_email)
+        // firestoreRef is the user's document on firestore, NOT the image in storage
+
+        FirebaseStorage.getInstance().getReference()
+            .child("users/${current_user.user_id}/image/$filename").downloadUrl
+            .addOnSuccessListener { uri ->
+
+                firestoreRef
                     .update("user_image_uri", uri)
                     .addOnSuccessListener {
-                        Log.d("HomeActivity", "user_image_uri field on Firebase has been set for ${current_user.user_email}")
+                        Log.d(
+                            "HomeActivity",
+                            "user_image_uri field on Firebase has been set for ${current_user.user_email}"
+                        )
+                        current_user.user_image_uri = uri
+                        Log.d(
+                            "HomeActivity",
+                            "user_image_uri field on Firebase has assigned value: $uri"
+                        )
                     }
-                    .addOnFailureListener{
+                    .addOnFailureListener {
                         Log.e("HomeActivity", "Failed to update user_image_uri on Firebase: $it")
+                        setDefaultUserImageUri()
                     }
-            } else {
-                Log.e("HomeActivity", "No firebaseUser is logged in!!")
+
+
             }
 
-            current_user.user_image_uri = uri
-            Log.d("HomeActivity", "Current user's image has been set")
-
-        } else {
-            Log.e("HomeActivity", "Image upload to Firebase UNSUCCESSFUL, uri is null!")
-        }
-
-        //
 
     }
 
-    fun getUserImageFromFirebase(cntRes: ContentResolver) {
-        // TODO() I believe this is being called before the uri is set (in the method above)...
-        // TODO() ... since the 'upload image to firebase' method is called FROM the HomeActivity.
-        // TODO() One solution would be to have the user upload an image when they create an account...
-        // TODO() ... but then they wouldn't be able to upload one at any later opportunity. Hmmm.....
-        if (current_user.user_image_uri != null) {
-            cntRes.takePersistableUriPermission(
-                current_user.user_image_uri!!,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION
-            )
-            Log.d("HomeActivity", "Image successfully retrieved")
-            current_user.user_bitmap = MediaStore.Images.Media.getBitmap(cntRes, current_user.user_image_uri)
-        } else {
-            //Return a default image
-            // TODO() Why can I not use a default image from R.drawable? (without context)
-            Log.e("HomeActivity", "No user image so default image has to be used")
-        }
+    fun setDefaultUserImageUri() {
+
+        current_user.user_image_uri =
+            Uri.parse("https://firebasestorage.googleapis.com/v0/b/linguasyne.appspot.com/o/default%2FAngrySteveEmote.png?alt=media&token=b3ba69f5-0ba8-41f4-9449-b58327b7f4d0")
+
+        Log.e(
+            "HomeActivity",
+            "Default image URL fetched from Firestore"
+        )
+
     }
+
 
     fun createNewAccount(email: String, password: String): Boolean {
 
@@ -145,6 +151,7 @@ object FirebaseManager {
                 current_user = user
                 /*------------ ADD TO FIREBASE 'FIRESTORE' -------------*/
                 addUserToFirestore(user)
+                setDefaultUserImageUri()
                 // Let the source of the function call know if the account has been made successfully or not
                 success = true
             }

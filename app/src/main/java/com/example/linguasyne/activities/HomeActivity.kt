@@ -1,11 +1,8 @@
 package com.example.linguasyne.activities
 
 import android.content.ActivityNotFoundException
-import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory.*
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -34,10 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.User
 
@@ -47,12 +45,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val viewModel = HomeViewModel()
-        // TODO() MVVM is posing challenges with passing contexts
-        FirebaseManager.getUserImageFromFirebase(this.contentResolver)
-        //viewModel.init(fetchContentResolver())
 
-
-
+        viewModel.init()
 
         setContent {
             LinguaSyneTheme(darkTheme = false) {
@@ -64,25 +58,21 @@ class HomeActivity : AppCompatActivity() {
                     DisplayHome(
                         viewModel.user,
                         viewModel::handleHelpClick,
-                        viewModel.userBitmap,
+                        viewModel.userImage,
                     )
+
                 }
             }
         }
 
-
     }
 
-
-    fun fetchContentResolver(): ContentResolver {
-        return this.applicationContext.contentResolver
-    }
 
     @Composable
     fun DisplayHome(
         user: User,
         onClickHelp: () -> Unit,
-        userBitmap: Bitmap,
+        userImage: Uri?,
     ) {
         Column(
 
@@ -232,17 +222,29 @@ class HomeActivity : AppCompatActivity() {
                         ) {
 
 
-                            Image(
+                            AsyncImage(
                                 modifier = Modifier
+                                    .clickable {
+                                        //TESTING------------------------------
+                                        Toast
+                                            .makeText(
+                                                this@HomeActivity,
+                                                "current user image URL = ${user.user_image_uri}",
+                                                Toast.LENGTH_LONG
+                                            )
+                                            .show()
+                                        //TESTING-----------------------------
+                                    }
                                     .border(
                                         color = MaterialTheme.colors.primary,
                                         width = 2.dp,
                                         shape = CircleShape
                                     )
-                                    //.size(width = 30.dp, height = 30.dp)
+                                    .size(width = 150.dp, height = 150.dp)
                                     .clip(shape = CircleShape),
-                                bitmap = userBitmap.asImageBitmap(),
+                                model = userImage,
                                 contentDescription = null,
+                                contentScale = ContentScale.Crop,
                             )
 
 
@@ -580,7 +582,7 @@ class HomeActivity : AppCompatActivity() {
         Log.d("ImageSelector", "Image has been selected")
 
         val uri = data?.data
-        FirebaseManager.uploadUserImageToFirebase(uri)
+        FirebaseManager.uploadUserImageToFirebaseStorage(uri)
 
     }
 
@@ -617,6 +619,11 @@ class HomeActivity : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     "current user is ${FirebaseManager.current_user.user_email}",
+                    Toast.LENGTH_LONG
+                ).show()
+                Toast.makeText(
+                    this,
+                    "current user image URL = ${FirebaseManager.current_user.user_image_uri}",
                     Toast.LENGTH_LONG
                 ).show()
             }
