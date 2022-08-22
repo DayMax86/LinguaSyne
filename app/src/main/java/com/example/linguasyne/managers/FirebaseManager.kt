@@ -64,7 +64,7 @@ object FirebaseManager {
             }
     }
 
-    fun uploadUserImageToFirebaseStorage(localUri: Uri?) {
+    fun uploadUserImageToFirebaseStorage(localUri: Uri?, imageUploaded: (Uri) -> Unit) {
         val filename = "profileImage"
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         if (firebaseUser != null) {
@@ -75,6 +75,7 @@ object FirebaseManager {
             if (localUri != null) {
                 storageRef.putFile(localUri)
                     .addOnSuccessListener {
+                        updateUserImageUriOnFirestore(imageUploaded)
                         Log.d("HomeActivity", "User image successfully uploaded to Firestore")
                         Log.d(
                             "HomeActivity",
@@ -85,10 +86,9 @@ object FirebaseManager {
         } else {
             Log.e("HomeActivity", "No firebaseUser is logged in!!")
         }
-        updateUserImageUriOnFirestore()
     }
 
-    fun updateUserImageUriOnFirestore() {
+    fun updateUserImageUriOnFirestore(imageUploaded: (Uri) -> Unit) {
         val filename = "profileImage"
         val firebaseUser = current_user
 
@@ -108,6 +108,7 @@ object FirebaseManager {
                             "user_image_uri field on Firebase has been set for ${current_user.user_email}"
                         )
                         current_user.user_image_uri = uri
+                        imageUploaded(uri)
                         Log.d(
                             "HomeActivity",
                             "user_image_uri field on Firebase has assigned value: $uri"

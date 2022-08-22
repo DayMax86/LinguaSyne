@@ -23,6 +23,10 @@ class HomeViewModel : ViewModel() {
 
     }
 
+    fun testItem(uri: Uri) {
+        userImage = uri
+    }
+
     fun handleHelpClick() {
         //Do something
     }

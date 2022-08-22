@@ -41,10 +41,10 @@ import com.example.linguasyne.classes.User
 
 class HomeActivity : AppCompatActivity() {
 
+    val viewModel = HomeViewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val viewModel = HomeViewModel()
 
         viewModel.init()
 
@@ -566,7 +566,7 @@ class HomeActivity : AppCompatActivity() {
                 startActivityForResult(intent, PICK_IMAGE)
             } catch (e: ActivityNotFoundException) {
                 // display error state to the user
-                Toast.makeText(this, "Error launching camera", Toast.LENGTH_LONG)
+                Toast.makeText(this, "Error launching camera", Toast.LENGTH_LONG).show()
             }
         }
         //Temporarily loading vocab straight away to see if async error is present
@@ -578,12 +578,11 @@ class HomeActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Toast.makeText(this, "Image has been selected", Toast.LENGTH_LONG)
+        Toast.makeText(this, "Image has been selected", Toast.LENGTH_LONG).show()
         Log.d("ImageSelector", "Image has been selected")
 
         val uri = data?.data
-        FirebaseManager.uploadUserImageToFirebaseStorage(uri)
-
+        FirebaseManager.uploadUserImageToFirebaseStorage(uri) { viewModel.testItem(it) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
