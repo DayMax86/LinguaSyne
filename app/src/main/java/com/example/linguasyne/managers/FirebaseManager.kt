@@ -1,8 +1,10 @@
 package com.example.linguasyne.managers
 
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
+import com.example.linguasyne.activities.LoginActivity
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.classes.Vocab
@@ -12,22 +14,19 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import okhttp3.internal.wait
 
 object FirebaseManager {
 
-    lateinit var current_user: User
+    var current_user: User = User("")
 
     fun loadVocabFromFirebase() {
-        Log.d("VocabSearchActivity", "Before attaching listener")
         val ref = FirebaseFirestore.getInstance()
         ref.collection("vocab")
             .get()
             .addOnSuccessListener { documents ->
-                Log.d("VocabSearchActivity", "Inside OnSuccessListener")
                 val results = mutableListOf<Vocab>()
-                Log.d("FirebaseManager", "OnSuccessListener triggered!")
                 for (document in documents) {
-                    Log.d("FirebaseManager", "${document.id} => ${document.data}")
                     val vocab_translations = document.get("translations")
                     val vocab_mnemonics = document.get("mnemonics")
                     val vocab_genders = document.get("genders")
@@ -49,10 +48,8 @@ object FirebaseManager {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.d("VocabSearchActivity", "Inside OnFailureListener")
                 Log.e("VocabSearchActivity", "Error getting documents: ", exception)
             }
-        Log.d("VocabSearchActivity", "After attaching listener")
     }
 
     fun addVocabToFirebase(term: Term) {
@@ -116,7 +113,8 @@ object FirebaseManager {
                     }
                     .addOnFailureListener {
                         Log.e("HomeActivity", "Failed to update user_image_uri on Firebase: $it")
-                        setDefaultUserImageUri()
+                        imageUploaded(getDefaultUserImageUri())
+
                     }
 
 
@@ -125,16 +123,8 @@ object FirebaseManager {
 
     }
 
-    fun setDefaultUserImageUri() {
-
-        current_user.user_image_uri =
-            Uri.parse("https://firebasestorage.googleapis.com/v0/b/linguasyne.appspot.com/o/default%2FAngrySteveEmote.png?alt=media&token=b3ba69f5-0ba8-41f4-9449-b58327b7f4d0")
-
-        Log.e(
-            "HomeActivity",
-            "Default image URL fetched from Firestore"
-        )
-
+    fun getDefaultUserImageUri(): Uri {
+        return Uri.parse("https://firebasestorage.googleapis.com/v0/b/linguasyne.appspot.com/o/default%2FAngrySteveEmote.png?alt=media&token=b3ba69f5-0ba8-41f4-9449-b58327b7f4d0")
     }
 
 
@@ -152,7 +142,6 @@ object FirebaseManager {
                 current_user = user
                 /*------------ ADD TO FIREBASE 'FIRESTORE' -------------*/
                 addUserToFirestore(user)
-                setDefaultUserImageUri()
                 // Let the source of the function call know if the account has been made successfully or not
                 success = true
             }
@@ -179,25 +168,49 @@ object FirebaseManager {
             }
     }
 
-    fun logInUser(email: String, password: String): Boolean {
-        var success = true
+    fun logInUser(): Boolean {
+        var success = false
+        val cu = FirebaseAuth.getInstance().currentUser
+
+        if (cu != null) {
+            Log.d("LoginActivity", "User already logged in")
+            success = true
+            //Is this creating a new user without any of their data? If so their data needs to be fetched and assigned
+            current_user = User(cu.email!!)
+        } else {
+            success = false
+            Log.e("LoginActivity", "No current user logged in")
+        }
+
+        return success
+    }
+
+    //Overload function so there is a separate version for using the login button rather than the automatic login
+    fun logInUser(email: String, password: String) {
+//        var success = false
 
         if (email != "" && password != "") {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     Log.d("LoginActivity", "User logged in")
-                    success = true
+//                    success = true
                     current_user = User(email)
                 }
                 .addOnFailureListener {
-                    success = false
+//                    success = false
                     Log.e("LoginActivity", "User log in failed: $it")
                 }
         } else {
             Log.e("LoginActivity", "Either email or password is null")
         }
 
-        return success
+//        return success
+    }
+
+    fun signOutUser() {
+        FirebaseAuth.getInstance().signOut()
+        Log.d("HomeActivity", "User signed out")
+        Log.d("HomeActivity", "Current user id: ${FirebaseAuth.getInstance().currentUser?.uid}")
     }
 
 }

@@ -36,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val viewModel = LoginViewModel()
+        viewModel.init()
 
         setContent {
             GoToCreateAccount(goToCreateAccount = viewModel.goToCreateAccount)
@@ -87,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
         handleEmailChange: (String) -> Unit,
         handlePasswordChange: (String) -> Unit,
         outlineColour: Color,
-        buttonOnClick: KFunction0<Unit>,
+        buttonOnClick: () -> Unit,
         textOnClick: (Int) -> Unit,
     ) {
 
@@ -179,18 +180,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 ---------------------------------------------------------------------  */
-    public override fun onStart() {
-        super.onStart()
-        val auth: FirebaseAuth = FirebaseAuth.getInstance()
-        if (auth.currentUser != null) {
-            //If user is already logged in, launch go to home screen.
-            FirebaseManager.current_user = User(auth.currentUser!!.email.toString())
-            val intent = Intent(this, HomeActivity::class.java)
-            Log.d("LoginActivity", "Attempting to launch HomeActivity from onStart()")
-            startActivity(intent)
-            finish()
-        }
-    }
+
 
     private fun logInUser() {
         FirebaseAuth.getInstance()

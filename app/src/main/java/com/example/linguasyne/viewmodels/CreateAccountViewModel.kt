@@ -74,6 +74,7 @@ class CreateAccountViewModel : ViewModel() {
         if (FirebaseManager.createNewAccount(userEmailInput, userPasswordInput)) {
             FirebaseManager.addUserToFirestore(FirebaseManager.current_user)
         }
+        FirebaseManager.logInUser(userEmailInput, userPasswordInput)
     }
 
     fun handleTextPress(int: Int) {

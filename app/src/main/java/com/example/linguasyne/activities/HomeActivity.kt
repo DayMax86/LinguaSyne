@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -26,7 +25,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,30 +41,62 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.User
+import com.google.android.gms.common.api.Scope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
 
     val viewModel = HomeViewModel()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel.init()
 
         setContent {
-            LinguaSyneTheme(darkTheme = false) {
-                Surface(
-                    modifier = Modifier
-                        .background(MaterialTheme.colors.background)
-                        .fillMaxHeight()
-                ) {
-                    DisplayHome(
-                        viewModel.user,
-                        viewModel::handleHelpClick,
-                        viewModel.userImage,
-                    )
 
-                }
+            LaunchTermBase(launchTermBase = viewModel.launchTermBase)
+            LaunchVocabLesson(
+                launchVocabLesson = viewModel.launchVocabLesson,
+                viewModel::createLesson
+            )
+            LaunchRevisionSession(
+                launchRevisionSession = viewModel.launchRevisionSession,
+                viewModel::createSession
+            )
+            SignOut(launchLogin = viewModel.launchLogin, viewModel::signOut)
+
+            val scaffoldState = rememberScaffoldState(
+                rememberDrawerState(initialValue = DrawerValue.Closed)
+            )
+
+            LinguaSyneTheme(darkTheme = false) {
+
+                Scaffold(
+                    scaffoldState = scaffoldState,
+                    topBar = { HomeTopAppBar(scaffoldState = scaffoldState) },
+                    content = { padding ->
+                        Surface(
+                            modifier = Modifier
+                                .padding(padding)
+                                .background(MaterialTheme.colors.background)
+                                .fillMaxHeight()
+                        ) {
+                            DisplayHome(
+                                viewModel.user,
+                                viewModel::handleHelpClick,
+                                viewModel.userImage,
+                                viewModel::handleVocabLessonClick,
+                                viewModel::handleRevisionClick,
+                                viewModel::handleTermBaseClick,
+                                viewModel::handleProfileImageClick,
+                            )
+
+                        }
+                    },
+                )
             }
         }
 
@@ -69,10 +104,46 @@ class HomeActivity : AppCompatActivity() {
 
 
     @Composable
+    fun HomeTopAppBar(
+        scaffoldState: ScaffoldState,
+    ) {
+        val scope = rememberCoroutineScope()
+        TopAppBar(
+            title = {
+                Text("LinguaSyne")
+            },
+            backgroundColor = MaterialTheme.colors.secondary,
+            navigationIcon = {
+                Icon(
+                    Icons.Default.Menu,
+                    modifier = Modifier.clickable(
+                        onClick = {
+                            scope.launch {
+                                if (scaffoldState.drawerState.isClosed) {
+                                    scaffoldState.drawerState.open()
+                                } else {
+                                    scaffoldState.drawerState.close()
+
+                                }
+                            }
+                        }
+                    ),
+                    contentDescription = ""
+                )
+            }
+        )
+
+    }
+
+    @Composable
     fun DisplayHome(
         user: User,
         onClickHelp: () -> Unit,
         userImage: Uri?,
+        onClickVocabLesson: () -> Unit,
+        onClickRevision: () -> Unit,
+        onClickTermBase: () -> Unit,
+        onClickProfileImage: () -> Unit,
     ) {
         Column(
 
@@ -116,7 +187,7 @@ class HomeActivity : AppCompatActivity() {
                             Button(
                                 modifier = Modifier
                                     .width(150.dp),
-                                onClick = { },
+                                onClick = { onClickVocabLesson() },
                                 shape = RoundedCornerShape(100),
                                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
                                 content = {
@@ -225,15 +296,9 @@ class HomeActivity : AppCompatActivity() {
                             AsyncImage(
                                 modifier = Modifier
                                     .clickable {
-                                        //TESTING------------------------------
-                                        Toast
-                                            .makeText(
-                                                this@HomeActivity,
-                                                "current user image URL = ${user.user_image_uri}",
-                                                Toast.LENGTH_LONG
-                                            )
-                                            .show()
-                                        //TESTING-----------------------------
+                                        // TODO() Not yet implemented!
+                                        onClickProfileImage()
+                                        selectImage()
                                     }
                                     .border(
                                         color = MaterialTheme.colors.primary,
@@ -300,7 +365,7 @@ class HomeActivity : AppCompatActivity() {
                             Button(
                                 modifier = Modifier
                                     .width(150.dp),
-                                onClick = { },
+                                onClick = { onClickRevision() },
                                 shape = RoundedCornerShape(100),
                                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
                                 content = {
@@ -394,6 +459,7 @@ class HomeActivity : AppCompatActivity() {
                         ) {
 
                             Text(
+                                //Fire emoji
                                 text = String(Character.toChars(0x1F525)),
                             )
 
@@ -420,13 +486,16 @@ class HomeActivity : AppCompatActivity() {
                         ) {
 
                             Text(
+                                //Books emoji
                                 text = String(Character.toChars(0x1F4DA)),
                             )
 
                             Text(
+                                modifier = Modifier
+                                    .clickable { onClickTermBase() },
                                 text = " Term base",
                                 style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.secondary
+                                color = MaterialTheme.colors.secondary,
                             )
 
                         }
@@ -526,7 +595,7 @@ class HomeActivity : AppCompatActivity() {
             ) {
                 Text(
                     modifier = Modifier
-                        .clickable { onClickHelp },
+                        .clickable { onClickHelp() },
                     text = "Struggling? Tap here for help",
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.secondary,
@@ -538,39 +607,58 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-//---------------------------------- OLD -------------------------------------------//
 
-    fun oldOnCreate() {
-        findViewById<TextView>(R.id.home_term_base_text).setOnClickListener {
+/*-----------------------------------------LAUNCHERS----------------------------------------------*/
+
+    @Composable
+    fun LaunchTermBase(launchTermBase: Boolean) {
+        if (launchTermBase) {
             val intent = Intent(this, VocabSearchActivity::class.java)
             startActivity(intent)
         }
+    }
 
-        //findViewById<Button>(R.id.vocab_lesson_button).setOnClickListener {
-        //    LessonManager.createLesson(LessonTypes.VOCAB)
-        //    val intent = Intent(this, DisplayTermActivity::class.java)
-        //     startActivity(intent)
-        //}
-
-        //findViewById<Button>(R.id.home_revision_button).setOnClickListener {
-        //RevisionSessionManager.createSession()
-        //     val intent = Intent(this, ReviewTermActivity::class.java)
-        //    startActivity(intent)
-        //  }
-
-        findViewById<ImageView>(R.id.user_profile_imageview).setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.setType("image/*")
-            val PICK_IMAGE = 1
-            try {
-                startActivityForResult(intent, PICK_IMAGE)
-            } catch (e: ActivityNotFoundException) {
-                // display error state to the user
-                Toast.makeText(this, "Error launching camera", Toast.LENGTH_LONG).show()
-            }
+    @Composable
+    fun LaunchVocabLesson(launchVocabLesson: Boolean, createLesson: () -> Unit) {
+        if (launchVocabLesson) {
+            createLesson()
+            val intent = Intent(this, DisplayTermActivity::class.java)
+            startActivity(intent)
         }
-        //Temporarily loading vocab straight away to see if async error is present
-        FirebaseManager.loadVocabFromFirebase()
+    }
+
+    @Composable
+    fun LaunchRevisionSession(launchRevisionSession: Boolean, createSession: () -> Unit) {
+        if (launchRevisionSession) {
+            createSession()
+            val intent = Intent(this, ReviewTermActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    @Composable
+    fun SignOut(launchLogin: Boolean, signOut: () -> Unit) {
+        if (launchLogin) {
+            signOut()
+            this.finish()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+
+        }
+    }
+
+
+    fun selectImage() {
+
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.setType("image/*")
+        val PICK_IMAGE = 1
+        try {
+            startActivityForResult(intent, PICK_IMAGE)
+        } catch (e: ActivityNotFoundException) {
+            // display error state to the user
+            Toast.makeText(this, "Error launching camera", Toast.LENGTH_LONG).show()
+        }
 
     }
 
@@ -582,9 +670,12 @@ class HomeActivity : AppCompatActivity() {
         Log.d("ImageSelector", "Image has been selected")
 
         val uri = data?.data
-        FirebaseManager.uploadUserImageToFirebaseStorage(uri) { viewModel.testItem(it) }
+        FirebaseManager.uploadUserImageToFirebaseStorage(uri) { viewModel.firebaseImageUpload(it) }
     }
+}
 
+//---------------------------------- OLD -------------------------------------------//
+/*
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -594,7 +685,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_sign_out -> {
-                signOut()
+                //signOut()
             }
             R.id.menu_csv_import -> {
                 CSVManager.importVocabCSV(this.applicationContext)
@@ -628,18 +719,5 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
 
-    private fun signOut() {
-        FirebaseAuth.getInstance().signOut()
-        val auth = FirebaseAuth.getInstance()
-        val user = auth.currentUser
-        Log.d("HomeActivity", "User signed out")
-        Log.d("HomeActivity", "Current user id: ${user?.uid}")
-        //Return to login activity
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-}
-
+    } */

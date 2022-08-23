@@ -16,6 +16,12 @@ class LoginViewModel {
     var goToCreateAccount: Boolean by mutableStateOf(false)
     var goToHome: Boolean by mutableStateOf(false)
 
+    fun init() {
+        if (FirebaseManager.logInUser()) {
+            goToHome = true
+        }
+    }
+
     fun handleEmailChange(text: String) {
         userEmailInput = text
     }
@@ -25,16 +31,12 @@ class LoginViewModel {
     }
 
     fun handleButtonPress() {
-        if (FirebaseManager.logInUser(userEmailInput, userPasswordInput)) {
-            //Successfully logged in user so can go to home activity!
-            //TODO() Make this colour a reference rather than a hardcoded hex value
-            outlineColour = Color(0xFF00FF00)
-            goToHome = true
-        } else {
-            //User login to Firebase unsuccessful
-            //TODO() Make this colour a reference rather than a hardcoded hex value
-            outlineColour = Color(0xFFFF0000)
-        }
+        FirebaseManager.logInUser(userEmailInput, userPasswordInput)
+        //Successfully logged in user so can go to home activity!
+        //TODO() Make this colour a reference rather than a hardcoded hex value
+        outlineColour = Color(0xFF00FF00)
+        goToHome = true
+
     }
 
     fun handleTextPress(int: Int) {
