@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -68,15 +70,20 @@ class HomeActivity : AppCompatActivity() {
             )
             SignOut(launchLogin = viewModel.launchLogin, viewModel::signOut)
 
-            val scaffoldState = rememberScaffoldState(
-                rememberDrawerState(initialValue = DrawerValue.Closed)
-            )
+            val scope = rememberCoroutineScope()
+            val scaffoldState = rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
+
 
             LinguaSyneTheme(darkTheme = false) {
 
                 Scaffold(
                     scaffoldState = scaffoldState,
-                    topBar = { HomeTopAppBar(scaffoldState = scaffoldState) },
+                    topBar = {
+                        HomeTopAppBar(
+                            scope = scope,
+                            scaffoldState = scaffoldState,
+                        )
+                    },
                     content = { padding ->
                         Surface(
                             modifier = Modifier
@@ -105,9 +112,9 @@ class HomeActivity : AppCompatActivity() {
 
     @Composable
     fun HomeTopAppBar(
+        scope: CoroutineScope,
         scaffoldState: ScaffoldState,
     ) {
-        val scope = rememberCoroutineScope()
         TopAppBar(
             title = {
                 Text("LinguaSyne")
@@ -126,6 +133,10 @@ class HomeActivity : AppCompatActivity() {
 
                                 }
                             }
+                            Log.d(
+                                "HomeActivity",
+                                "Is closed = ${scaffoldState.drawerState.isClosed}"
+                            )
                         }
                     ),
                     contentDescription = ""

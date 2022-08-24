@@ -1,15 +1,21 @@
 package com.example.linguasyne.viewmodels
 
+import android.graphics.drawable.Drawable
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.example.linguasyne.R
 import com.example.linguasyne.classes.RevisionSession
+import com.example.linguasyne.classes.Term
+import com.example.linguasyne.classes.Vocab
+import com.example.linguasyne.enums.Gender
+import com.example.linguasyne.enums.TermTypes
 import com.example.linguasyne.managers.RevisionSessionManager
-import com.example.linguasyne.ui.theme.LsCorrectGreen
-import com.example.linguasyne.ui.theme.LsErrorRed
-import com.example.linguasyne.ui.theme.LsPurple500
+import com.example.linguasyne.managers.TermDisplayManager
+import com.example.linguasyne.ui.theme.*
 
 class ReviewTermViewModel : ViewModel() {
 
@@ -19,7 +25,18 @@ class ReviewTermViewModel : ViewModel() {
 
     var userInput: String by mutableStateOf("")
     var launchSummary by mutableStateOf(false)
-    var outlineColour by mutableStateOf(Color(0x3F0F0F0F))
+    var textFieldOutlineColour by mutableStateOf(LsGrey)
+    var mascOutlineColour by mutableStateOf(LsGrey)
+    var femOutlineColour by mutableStateOf(LsGrey)
+
+    var selectedGender by mutableStateOf(Gender.NO)
+    private var mascSelected = false
+    private var femSelected = false
+    private var enableGenderSelection = false //They shouldn't be clickable either!
+
+    var selectGenderTestColour by mutableStateOf(LsTextBlue)
+    var mascImage by mutableStateOf(R.drawable.opaquemars)
+    var femImage by mutableStateOf(R.drawable.opaquevenus)
 
     var summaryTotalCorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalCorrect)
     var summaryTotalIncorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalIncorrect)
@@ -33,43 +50,98 @@ class ReviewTermViewModel : ViewModel() {
         ctName = RevisionSessionManager.current_session.currentTerm.name
         ctTrans = RevisionSessionManager.current_session.currentTerm.translations[0]
 
-        currentTermTitle = when (cs) {
+        when (cs) {
             RevisionSession.AnswerTypes.ENG -> {
-                ctName
+                currentTermTitle = ctName
+                enableGenderSelection = true
             }
             RevisionSession.AnswerTypes.TRANS -> {
-                ctTrans
+                currentTermTitle = ctTrans
+                //Disable gender selection for English words
+                enableGenderSelection = false
             }
         }
+
+        if (enableGenderSelection) {
+            mascImage = R.drawable.opaquemars
+            femImage = R.drawable.opaquevenus
+            selectGenderTestColour = LsTextBlue
+        } else {
+            mascImage = R.drawable.alphamars
+            femImage = R.drawable.alphavenus
+            selectGenderTestColour = LsGrey
+        }
+
     }
 
     fun handleSubmit() {
         validateAnswer()
     }
 
+    fun handleMascClick() {
+        //Toggle selection
+        if (mascSelected) {
+            mascSelected = false
+            mascOutlineColour = LsGrey
+        } else if (!mascSelected) {
+            mascSelected = true
+            mascOutlineColour = LsPurple500
+        }
+    }
+
+    fun handleFemClick() {
+        //Toggle selection
+        if (femSelected) {
+            femSelected = false
+            femOutlineColour = LsGrey
+        } else if (!femSelected) {
+            femSelected = true
+            femOutlineColour = LsPurple500
+        }
+    }
+
     private fun validateAnswer() {
         //Check if the user input matches the current term's name
         if (checkAnswer()) {
             //User got the answer correct so show appropriate animation
-            outlineColour = LsCorrectGreen
+            textFieldOutlineColour = LsCorrectGreen
 
-            //delay(1000)
-            //Load the next term
-            advance()
-            //Clear the text box ready for the next term
-            userInput = ""
+            if (enableGenderSelection) {
+                if (checkGender()) {
+                    //delay(1000)
+                    //Load the next term
+                    advance()
+                    resetUi()
+                }
+
+            } else {
+                advance()
+                resetUi()
+            }
+
 
         } else {
             //User got the answer wrong so show appropriate animation
-            outlineColour = LsErrorRed
+            textFieldOutlineColour = LsErrorRed
         }
         // Make sure the activity is displaying either the term name or translation
         updateTermTitle(RevisionSessionManager.current_session.currentStep)
     }
 
+    fun resetUi() {
+        //Reset text box and border colour
+        userInput = ""
+        textFieldOutlineColour = LsGrey
+        //Reset gender borders and values
+        mascSelected = false
+        mascOutlineColour = LsGrey
+        femSelected = false
+        femOutlineColour = LsGrey
+    }
+
     fun handleInput(text: String) {
         userInput = text
-        outlineColour = LsPurple500
+        textFieldOutlineColour = LsPurple500
     }
 
     private fun advance() {
@@ -78,6 +150,56 @@ class ReviewTermViewModel : ViewModel() {
             //There is no next term (reached end of list) so activity should end and summary be launched
             launchSummary = true
         }
+    }
+
+    private fun checkGender(): Boolean {
+
+        if (mascSelected && !femSelected) {
+            // Just Masc selected
+            selectedGender = Gender.M
+        } else if (!mascSelected && femSelected) {
+            // Just Fem selected
+            selectedGender = Gender.F
+        } else if (mascSelected && femSelected) {
+            // Both selected
+            selectedGender = Gender.MF
+        } else {
+            // Must have neither selected
+            selectedGender = Gender.NO
+        }
+
+        // If they got the gender correct...
+        val t = RevisionSessionManager.current_session.currentTerm as Vocab
+        if (selectedGender == t.gender) {
+            when (selectedGender) {
+                Gender.M -> mascOutlineColour = LsCorrectGreen
+                Gender.F -> femOutlineColour = LsCorrectGreen
+                Gender.MF -> {
+                    mascOutlineColour = LsCorrectGreen
+                    femOutlineColour = LsCorrectGreen
+                }
+                else -> {/* No gender so colours remain unchanged */
+                }
+            }
+            return true
+        }
+
+        //If the got the gender wrong...
+        else if (selectedGender != t.gender) {
+            when (selectedGender) {
+                Gender.M -> mascOutlineColour = LsErrorRed
+                Gender.F -> femOutlineColour = LsErrorRed
+                Gender.MF -> {
+                    mascOutlineColour = LsErrorRed
+                    femOutlineColour = LsErrorRed
+                }
+                else -> {/* No gender so colours remain unchanged */
+                }
+            }
+            return false
+        }
+
+        return false
     }
 
     private fun checkAnswer(): Boolean {

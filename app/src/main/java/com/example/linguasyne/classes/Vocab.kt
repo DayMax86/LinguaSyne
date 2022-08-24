@@ -9,10 +9,10 @@ class Vocab(term_id: String,
             term_unlock_level: Int,
             term_translations: List<String>,
             term_mnemonics: List<String>,
-            term_genders: List<String>,
+            term_gender: List<String>,
             term_types: List<String>) : Term(term_id,term_name,term_unlock_level,term_translations,term_mnemonics) {
 
-    val genders = mutableListOf<Gender>()
+    var gender: Gender = Gender.NO
     val types = mutableListOf<TermTypes>()
     val is_part_of = listOf<String>()
     val constituent_terms = listOf<String>()
@@ -20,19 +20,19 @@ class Vocab(term_id: String,
     override val class_type: LessonTypes = LessonTypes.VOCAB
 
     init {
-        setGenders(term_genders)
+        setGender(term_gender)
         setTypes(term_types)
     }
 
 
 
-    private fun setGenders(term_genders: List<String>) {
+    private fun setGender(term_genders: List<String>) {
         term_genders.forEach{
             when (it.toLowerCase()) {
-                "no" -> this.genders.add(Gender.NO)
-                "mf" -> this.genders.add(Gender.MF)
-                "m" -> this.genders.add(Gender.M)
-                "f" -> this.genders.add(Gender.F)
+                "no" -> gender = Gender.NO
+                "mf" -> gender = Gender.MF
+                "m" -> gender = Gender.M
+                "f" -> gender = Gender.F
             }
         }
     }

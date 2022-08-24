@@ -102,8 +102,7 @@ class DisplayTermViewModel {
     private fun fetchGenderImages() {
         if (termToDisplay is Vocab) {
             //Go through all the genders
-            for (g: Gender in (termToDisplay as Vocab).genders) {
-                when (g) {
+            when ((termToDisplay as Vocab).gender) {
                     Gender.NO -> {
                         masc = false
                         fem = false
@@ -120,7 +119,6 @@ class DisplayTermViewModel {
                         masc = true
                         fem = true
                     }
-                }
             }
         }
     }
