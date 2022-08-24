@@ -61,14 +61,14 @@ object FirebaseManager {
             }
     }
 
-    fun uploadUserImageToFirebaseStorage(localUri: Uri?, imageUploaded: (Uri) -> Unit) {
+    fun uploadUserImageToFirebaseStorage(localUri: Uri?, imageUploaded: (Uri?) -> Unit) {
         val filename = "profileImage"
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         if (firebaseUser != null) {
             val storageRef =
                 FirebaseStorage.getInstance()
                     .getReference("/users/${current_user.user_id}/image/$filename")
-            Log.e("HomeActivity", "current_user.user_id = ${current_user.user_id}")
+            Log.d("HomeActivity", "current_user.user_id = ${current_user.user_id}")
             if (localUri != null) {
                 storageRef.putFile(localUri)
                     .addOnSuccessListener {
@@ -85,7 +85,7 @@ object FirebaseManager {
         }
     }
 
-    fun updateUserImageUriOnFirestore(imageUploaded: (Uri) -> Unit) {
+    private fun updateUserImageUriOnFirestore(imageUploaded: (Uri?) -> Unit) {
         val filename = "profileImage"
         val firebaseUser = current_user
 
@@ -128,10 +128,22 @@ object FirebaseManager {
     }
 
 
-    fun createNewAccount(email: String, password: String): Boolean {
+    fun getUserImageFromFirestore(imageFetched: (Uri?) -> Unit){
+        val firebaseUser = current_user
+        val firestoreRef =
+            Firebase.firestore.collection("users").document(firebaseUser.user_email)
+
+        firestoreRef.get().addOnSuccessListener {
+            current_user.user_image_uri = Uri.parse(it.get("user_image_uri") as String?)
+            imageFetched(current_user.user_image_uri)
+        }
+
+    }
+
+
+    fun createNewAccount(email: String, password: String, accountCreated: () -> Unit) {
 
         val auth: FirebaseAuth = FirebaseAuth.getInstance()
-        var success = false
 
         /*------------ ADD TO FIREBASE 'AUTHENTICATION' -------------*/
         auth.createUserWithEmailAndPassword(email, password)
@@ -141,9 +153,7 @@ object FirebaseManager {
                 val user = User(email)
                 current_user = user
                 /*------------ ADD TO FIREBASE 'FIRESTORE' -------------*/
-                addUserToFirestore(user)
-                // Let the source of the function call know if the account has been made successfully or not
-                success = true
+                addUserToFirestore(user) { accountCreated() }
             }
             .addOnFailureListener {
                 // If sign in fails, display a message to the user.
@@ -151,17 +161,17 @@ object FirebaseManager {
                     "CreateAccountActivity",
                     "createUserWithEmail:FAILURE",
                 )
-                success = false
             }
-        return success
     }
 
-    fun addUserToFirestore(user: User) {
+
+    fun addUserToFirestore(user: User, accountCreated: () -> Unit) {
         FirebaseFirestore.getInstance()
             .collection("users").document(current_user.user_id)
             .set(user)
             .addOnSuccessListener {
-                Log.d("CreateAccountActivity", "User added to Firestore")
+                Log.d("CreateAccountActivity", "User added to Firestore (Overloaded function)")
+                accountCreated()
             }
             .addOnFailureListener {
                 Log.e("CreateAccountActivity", it.toString())

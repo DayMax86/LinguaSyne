@@ -1,5 +1,6 @@
 package com.example.linguasyne.viewmodels
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,8 @@ class CreateAccountViewModel : ViewModel() {
 
     var showProgressBar: Boolean by mutableStateOf(false)
     var returnToLogin: Boolean by mutableStateOf(false)
+
+    var userImage: Uri? by mutableStateOf(FirebaseManager.getDefaultUserImageUri())
 
     fun handleEmailChange(text: String) {
         userEmailInput = text
@@ -71,14 +74,20 @@ class CreateAccountViewModel : ViewModel() {
     }
 
     fun handleButtonPress() {
-        if (FirebaseManager.createNewAccount(userEmailInput, userPasswordInput)) {
-            FirebaseManager.addUserToFirestore(FirebaseManager.current_user)
-        }
-        FirebaseManager.logInUser(userEmailInput, userPasswordInput)
+        FirebaseManager.createNewAccount(userEmailInput, userPasswordInput) {accountCreated()}
+
     }
 
-    fun handleTextPress(int: Int) {
+    private fun accountCreated () {
+        FirebaseManager.uploadUserImageToFirebaseStorage(userImage) {firebaseImageUpload(userImage)}
+    }
+
+    fun handleTextPress() {
         returnToLogin = true
+    }
+    fun firebaseImageUpload(uri: Uri?) {
+        userImage = uri
+        Log.d("CreateAccountViewModel", "Firebase image upload complete")
     }
 
     private fun checkPasswordStrength(password: String): PasswordStrengths {

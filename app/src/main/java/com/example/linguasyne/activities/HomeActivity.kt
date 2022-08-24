@@ -307,7 +307,6 @@ class HomeActivity : AppCompatActivity() {
                             AsyncImage(
                                 modifier = Modifier
                                     .clickable {
-                                        // TODO() Not yet implemented!
                                         onClickProfileImage()
                                         selectImage()
                                     }
@@ -677,11 +676,14 @@ class HomeActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Toast.makeText(this, "Image has been selected", Toast.LENGTH_LONG).show()
         Log.d("ImageSelector", "Image has been selected")
 
         val uri = data?.data
-        FirebaseManager.uploadUserImageToFirebaseStorage(uri) { viewModel.firebaseImageUpload(it) }
+        FirebaseManager.uploadUserImageToFirebaseStorage(uri) {
+            if (it != null) {
+                viewModel.firebaseImageUpload(it)
+            }
+        }
     }
 }
 

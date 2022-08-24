@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,11 +32,13 @@ class HomeViewModel : ViewModel() {
 
     fun init() {
         FirebaseManager.loadVocabFromFirebase()
-        if (FirebaseManager.current_user.user_image_uri == null) {
-            userImage = FirebaseManager.getDefaultUserImageUri()
-        } else {
-            userImage = FirebaseManager.current_user.user_image_uri
-        }
+        FirebaseManager.getUserImageFromFirestore {imageFetched(null)}
+    }
+
+    fun imageFetched(uri: Uri?) {
+        userImage = uri
+        // TODO() This currently returns null...
+        Log.d("HomeViewModel", "Image fetched from firestore: $userImage")
     }
 
     fun createLesson() {

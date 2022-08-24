@@ -9,6 +9,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -161,7 +163,10 @@ class ReviewTermActivity : AppCompatActivity() {
                         painterResource(mascImage),
                         modifier = Modifier
                             .border(2.dp, mascOutlineColour, RoundedCornerShape(10))
-                            .clickable {
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
                                 onClickMasc()
                             }
                             .size(width = 75.dp, height = 100.dp)
@@ -178,7 +183,10 @@ class ReviewTermActivity : AppCompatActivity() {
                         painterResource(femImage),
                         modifier = Modifier
                             .border(2.dp, femOutlineColour, RoundedCornerShape(10))
-                            .clickable {
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
                                 onClickFem()
                             }
                             .size(width = 75.dp, height = 100.dp)

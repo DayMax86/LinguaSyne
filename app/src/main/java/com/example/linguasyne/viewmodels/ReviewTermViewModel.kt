@@ -32,7 +32,7 @@ class ReviewTermViewModel : ViewModel() {
     var selectedGender by mutableStateOf(Gender.NO)
     private var mascSelected = false
     private var femSelected = false
-    private var enableGenderSelection = false //They shouldn't be clickable either!
+    private var enableGenderSelection = false
 
     var selectGenderTestColour by mutableStateOf(LsTextBlue)
     var mascImage by mutableStateOf(R.drawable.opaquemars)
@@ -79,24 +79,28 @@ class ReviewTermViewModel : ViewModel() {
     }
 
     fun handleMascClick() {
-        //Toggle selection
-        if (mascSelected) {
-            mascSelected = false
-            mascOutlineColour = LsGrey
-        } else if (!mascSelected) {
-            mascSelected = true
-            mascOutlineColour = LsPurple500
+        if (enableGenderSelection) {
+            //Toggle selection
+            if (mascSelected) {
+                mascSelected = false
+                mascOutlineColour = LsGrey
+            } else if (!mascSelected) {
+                mascSelected = true
+                mascOutlineColour = LsPurple500
+            }
         }
     }
 
     fun handleFemClick() {
-        //Toggle selection
-        if (femSelected) {
-            femSelected = false
-            femOutlineColour = LsGrey
-        } else if (!femSelected) {
-            femSelected = true
-            femOutlineColour = LsPurple500
+        if (enableGenderSelection) {
+            //Toggle selection
+            if (femSelected) {
+                femSelected = false
+                femOutlineColour = LsGrey
+            } else if (!femSelected) {
+                femSelected = true
+                femOutlineColour = LsPurple500
+            }
         }
     }
 
