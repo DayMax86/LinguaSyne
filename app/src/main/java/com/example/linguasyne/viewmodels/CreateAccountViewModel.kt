@@ -8,13 +8,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.example.linguasyne.managers.FirebaseManager
+import com.example.linguasyne.ui.theme.LsCorrectGreen
+import com.example.linguasyne.ui.theme.LsErrorRed
+import com.example.linguasyne.ui.theme.LsTextBlue
 
 class CreateAccountViewModel : ViewModel() {
 
     var userEmailInput: String by mutableStateOf("")
     var userPasswordInput: String by mutableStateOf("")
 
-    var outlineColour by mutableStateOf(Color(0x3F0F0F0F))
+    var emailOutlineColour by mutableStateOf(Color(0x3F0F0F0F))
+    var passwordOutlineColour by mutableStateOf(Color(0x3F0F0F0F))
 
     var passwordStrength: String by mutableStateOf("")
     var progressBarValue: Float by mutableStateOf(0f)
@@ -25,10 +29,12 @@ class CreateAccountViewModel : ViewModel() {
     var userImage: Uri? by mutableStateOf(FirebaseManager.getDefaultUserImageUri())
 
     fun handleEmailChange(text: String) {
+        emailOutlineColour = LsTextBlue
         userEmailInput = text
     }
 
     fun handlePasswordChange(text: String) {
+        passwordOutlineColour = LsTextBlue
         userPasswordInput = text
 
         if (userPasswordInput == "") { //User hasn't entered a password so hide the strength indicator
@@ -41,24 +47,30 @@ class CreateAccountViewModel : ViewModel() {
                 PasswordStrengths.WHITESPACE -> {
                     passwordStrength = "Password cannot contain spaces!"
                     progressBarValue = 0f
+                    passwordOutlineColour = LsErrorRed
                 }
                 PasswordStrengths.VERY_WEAK -> {
                     passwordStrength = "Very weak"
                     progressBarValue = 20f
+                    passwordOutlineColour = Color(0x2200FF00)
                 }
                 PasswordStrengths.WEAK -> {
                     passwordStrength = "Weak"
                     progressBarValue = 40f
+                    passwordOutlineColour = Color(0x4400FF00)
                 }
                 PasswordStrengths.AVERAGE -> {
                     passwordStrength = "Average"
                     progressBarValue = 60f
+                    passwordOutlineColour = Color(0x6600FF00)
                 }
                 PasswordStrengths.STRONG -> {
                     passwordStrength = "Strong"
                     progressBarValue = 80f
+                    passwordOutlineColour = Color(0x8800FF00)
                 }
                 PasswordStrengths.VERY_STRONG -> {
+                    passwordOutlineColour = LsCorrectGreen
                     passwordStrength = "Very strong!"
                     progressBarValue = 100f
                 }
@@ -68,23 +80,33 @@ class CreateAccountViewModel : ViewModel() {
                 PasswordStrengths.SHORT -> {
                     passwordStrength = "Too short"
                     progressBarValue = 0f
+                    passwordOutlineColour = LsErrorRed
                 }
             }
         }
     }
 
     fun handleButtonPress() {
-        FirebaseManager.createNewAccount(userEmailInput, userPasswordInput) {accountCreated()}
+        FirebaseManager.createNewAccount(
+            userEmailInput,
+            userPasswordInput,
+            { accountCreateFailure() })
+        { accountCreated() }
 
     }
 
-    private fun accountCreated () {
-        FirebaseManager.uploadUserImageToFirebaseStorage(userImage) {firebaseImageUpload(userImage)}
+    private fun accountCreated() {
+        FirebaseManager.uploadUserImageToFirebaseStorage(userImage) { firebaseImageUpload(userImage) }
+    }
+
+    private fun accountCreateFailure() {
+        emailOutlineColour = LsErrorRed
     }
 
     fun handleTextPress() {
         returnToLogin = true
     }
+
     fun firebaseImageUpload(uri: Uri?) {
         userImage = uri
         Log.d("CreateAccountViewModel", "Firebase image upload complete")

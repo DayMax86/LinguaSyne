@@ -128,7 +128,7 @@ object FirebaseManager {
     }
 
 
-    fun getUserImageFromFirestore(imageFetched: (Uri?) -> Unit){
+    fun getUserImageFromFirestore(imageFetched: (Uri?) -> Unit) {
         val firebaseUser = current_user
         val firestoreRef =
             Firebase.firestore.collection("users").document(firebaseUser.user_email)
@@ -141,7 +141,12 @@ object FirebaseManager {
     }
 
 
-    fun createNewAccount(email: String, password: String, accountCreated: () -> Unit) {
+    fun createNewAccount(
+        email: String,
+        password: String,
+        accountCreateFailure: () -> Unit,
+        accountCreated: () -> Unit
+    ) {
 
         val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -156,11 +161,12 @@ object FirebaseManager {
                 addUserToFirestore(user) { accountCreated() }
             }
             .addOnFailureListener {
-                // If sign in fails, display a message to the user.
+                //TODO() If sign in fails, display a message to the user explaining why.
                 Log.e(
                     "CreateAccountActivity",
                     "createUserWithEmail:FAILURE",
                 )
+                accountCreateFailure()
             }
     }
 
@@ -196,7 +202,7 @@ object FirebaseManager {
     }
 
     //Overload function so there is a separate version for using the login button rather than the automatic login
-    fun logInUser(email: String, password: String) {
+    fun logInUser(email: String, password: String, onSuccess: () -> Unit) {
 //        var success = false
 
         if (email != "" && password != "") {
@@ -205,6 +211,7 @@ object FirebaseManager {
                     Log.d("LoginActivity", "User logged in")
 //                    success = true
                     current_user = User(email)
+                    onSuccess()
                 }
                 .addOnFailureListener {
 //                    success = false

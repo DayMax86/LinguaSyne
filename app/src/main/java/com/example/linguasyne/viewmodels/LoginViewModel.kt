@@ -4,9 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.linguasyne.managers.FirebaseManager
+import kotlinx.coroutines.launch
 
-class LoginViewModel {
+class LoginViewModel: ViewModel() {
 
     var userEmailInput: String by mutableStateOf("")
     var userPasswordInput: String by mutableStateOf("")
@@ -31,11 +34,16 @@ class LoginViewModel {
     }
 
     fun handleButtonPress() {
-        FirebaseManager.logInUser(userEmailInput, userPasswordInput)
+        /*viewModelScope.launch {
+            // Some async FB call
+            // But treat it as snyc
+        }*/
+        FirebaseManager.logInUser(userEmailInput, userPasswordInput, onSuccess = {
+            outlineColour = Color(0xFF00FF00)
+            goToHome = true
+        })
         //Successfully logged in user so can go to home activity!
         //TODO() Make this colour a reference rather than a hardcoded hex value
-        outlineColour = Color(0xFF00FF00)
-        goToHome = true
 
     }
 

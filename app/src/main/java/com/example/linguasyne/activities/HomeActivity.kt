@@ -51,11 +51,18 @@ class HomeActivity : AppCompatActivity() {
 
     val viewModel = HomeViewModel()
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.init {
+            FirebaseManager.getUserImageFromFirestore {
+                viewModel.imageFetched(it)
+            }
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel.init()
 
         setContent {
 
@@ -78,6 +85,9 @@ class HomeActivity : AppCompatActivity() {
 
                 Scaffold(
                     scaffoldState = scaffoldState,
+                    drawerContent = {
+                                    Text(text = "Geoff is great!")
+                    },
                     topBar = {
                         HomeTopAppBar(
                             scope = scope,
@@ -649,8 +659,8 @@ class HomeActivity : AppCompatActivity() {
     @Composable
     fun SignOut(launchLogin: Boolean, signOut: () -> Unit) {
         if (launchLogin) {
-            signOut()
             this.finish()
+            signOut()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
 

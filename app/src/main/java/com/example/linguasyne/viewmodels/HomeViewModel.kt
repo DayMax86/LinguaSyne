@@ -30,14 +30,13 @@ class HomeViewModel : ViewModel() {
     var launchRevisionSession: Boolean by mutableStateOf(false)
     var launchLogin: Boolean by mutableStateOf(false)
 
-    fun init() {
+    fun init(uriFetch: () -> Unit) {
         FirebaseManager.loadVocabFromFirebase()
-        FirebaseManager.getUserImageFromFirestore {imageFetched(null)}
+        FirebaseManager.getUserImageFromFirestore { uriFetch() }
     }
 
     fun imageFetched(uri: Uri?) {
         userImage = uri
-        // TODO() This currently returns null...
         Log.d("HomeViewModel", "Image fetched from firestore: $userImage")
     }
 

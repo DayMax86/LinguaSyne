@@ -40,7 +40,9 @@ import com.example.linguasyne.viewmodels.CreateAccountViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlin.reflect.KFunction0
 
-class CreateAccountActivity : AppCompatActivity() {
+class CreateAccountActivity(
+    // Pass things the class needs e.g. viewmodel as constructor porameters
+) : AppCompatActivity() {
 
     val viewModel = CreateAccountViewModel()
 
@@ -48,7 +50,6 @@ class CreateAccountActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            TogglePasswordStrengthIndicator(showProgressBar = viewModel.showProgressBar)
             ReturnToLogin(toReturn = viewModel.returnToLogin)
             LinguaSyneTheme(darkTheme = false) {
                 Surface(
@@ -61,11 +62,15 @@ class CreateAccountActivity : AppCompatActivity() {
                         viewModel.userPasswordInput,
                         handleEmailChange = viewModel::handleEmailChange,
                         handlePasswordChange = viewModel::handlePasswordChange,
-                        outlineColour = viewModel.outlineColour,
+                        emailOutlineColour = viewModel.emailOutlineColour,
+                        passwordOutlineColour = viewModel.passwordOutlineColour,
                         buttonOnClick = viewModel::handleButtonPress,
                         textOnClick = viewModel::handleTextPress,
                         userImage = viewModel.userImage,
                     )
+
+                    TogglePasswordStrengthIndicator(showProgressBar = viewModel.showProgressBar)
+
                 }
             }
         }
@@ -105,7 +110,7 @@ class CreateAccountActivity : AppCompatActivity() {
                 .padding(all = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(400.dp))
+            Spacer(modifier = Modifier.height(350.dp))
 
             Row(
                 modifier = Modifier
@@ -115,14 +120,22 @@ class CreateAccountActivity : AppCompatActivity() {
             ) {
                 Text(
                     text = "Password strength:",
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
                 )
+                Row(
+                    modifier = Modifier
+                        .border(width = 1.dp, color = Color.Red)
+                        .padding(all = 10.dp),
+                    horizontalArrangement = Arrangement.Start
+                ) {
 
-                Spacer(modifier = Modifier.width(40.dp))
-
-                Text(
-                    text = passwordStrength,
-                )
-
+                    Text(
+                        text = passwordStrength,
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -130,7 +143,7 @@ class CreateAccountActivity : AppCompatActivity() {
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth(),
-                color = MaterialTheme.colors.secondary,
+                color = MaterialTheme.colors.primary,
                 backgroundColor = MaterialTheme.colors.onBackground,
                 progress = progressBarValue,
             )
@@ -145,7 +158,8 @@ class CreateAccountActivity : AppCompatActivity() {
         userPasswordInput: String,
         handleEmailChange: (String) -> Unit,
         handlePasswordChange: (String) -> Unit,
-        outlineColour: Color,
+        emailOutlineColour: Color,
+        passwordOutlineColour: Color,
         buttonOnClick: () -> Unit,
         textOnClick: () -> Unit,
         userImage: Uri?,
@@ -160,6 +174,7 @@ class CreateAccountActivity : AppCompatActivity() {
             Row(
                 modifier = Modifier
                     .border(width = 1.dp, color = Color.Red)
+                    .fillMaxWidth()
                     .padding(all = 10.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -202,7 +217,7 @@ class CreateAccountActivity : AppCompatActivity() {
                         singleLine = true,
                         textStyle = MaterialTheme.typography.body1,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = outlineColour
+                            focusedBorderColor = emailOutlineColour
                         ),
                     )
                 }
@@ -222,7 +237,7 @@ class CreateAccountActivity : AppCompatActivity() {
                         singleLine = true,
                         textStyle = MaterialTheme.typography.body1,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = outlineColour
+                            focusedBorderColor = passwordOutlineColour
                         ),
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
@@ -230,6 +245,8 @@ class CreateAccountActivity : AppCompatActivity() {
 
                 }
             }
+
+            Spacer(modifier = Modifier.padding(bottom = 200.dp))
 
             Row(
                 modifier = Modifier
