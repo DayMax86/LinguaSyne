@@ -41,7 +41,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlin.reflect.KFunction0
 
 class CreateAccountActivity(
-    // Pass things the class needs e.g. viewmodel as constructor porameters
+    // Pass things the class needs e.g. viewmodel as constructor parameters
 ) : AppCompatActivity() {
 
     val viewModel = CreateAccountViewModel()
@@ -79,7 +79,6 @@ class CreateAccountActivity(
     @Composable
     fun ReturnToLogin(toReturn: Boolean) {
         if (toReturn) {
-            Toast.makeText(this, "Welcome :)", Toast.LENGTH_LONG).show()
             this.finish()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
@@ -90,7 +89,6 @@ class CreateAccountActivity(
     fun TogglePasswordStrengthIndicator(
         showProgressBar: Boolean,
     ) {
-        val viewModel = CreateAccountViewModel()
         if (showProgressBar) {
             DisplayPasswordStrength(
                 passwordStrength = viewModel.passwordStrength,
@@ -114,8 +112,7 @@ class CreateAccountActivity(
 
             Row(
                 modifier = Modifier
-                    .border(width = 1.dp, color = Color.Red)
-                    .padding(all = 10.dp),
+                    .border(width = 1.dp, color = Color.Red),
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
@@ -126,7 +123,7 @@ class CreateAccountActivity(
                 Row(
                     modifier = Modifier
                         .border(width = 1.dp, color = Color.Red)
-                        .padding(all = 10.dp),
+                        .padding(start = 10.dp),
                     horizontalArrangement = Arrangement.Start
                 ) {
 

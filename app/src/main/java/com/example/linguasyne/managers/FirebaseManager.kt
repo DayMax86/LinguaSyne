@@ -202,26 +202,23 @@ object FirebaseManager {
     }
 
     //Overload function so there is a separate version for using the login button rather than the automatic login
-    fun logInUser(email: String, password: String, onSuccess: () -> Unit) {
+    fun logInUser(email: String, password: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
 //        var success = false
 
         if (email != "" && password != "") {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     Log.d("LoginActivity", "User logged in")
-//                    success = true
                     current_user = User(email)
                     onSuccess()
                 }
                 .addOnFailureListener {
-//                    success = false
                     Log.e("LoginActivity", "User log in failed: $it")
+                    onFailure()
                 }
         } else {
             Log.e("LoginActivity", "Either email or password is null")
         }
-
-//        return success
     }
 
     fun signOutUser() {

@@ -9,7 +9,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,11 +20,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.User
@@ -94,116 +100,117 @@ class LoginActivity : AppCompatActivity() {
 
         Column(
             modifier = Modifier
-                .padding(all = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxHeight(),
         ) {
 
-            Spacer(modifier = Modifier.height(110.dp))
-
-            OutlinedTextField(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                value = userEmailInput,
-                onValueChange = { handleEmailChange(it) },
-                label = { Text("Email address") },
-                singleLine = true,
-                textStyle = MaterialTheme.typography.body1,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = outlineColour
-                ),
-            )
+                    .padding(all = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = userPasswordInput,
-                onValueChange = { handlePasswordChange(it) },
-                label = { Text("Password") },
-                singleLine = true,
-                textStyle = MaterialTheme.typography.body1,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = outlineColour
-                ),
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(all = 10.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .border(
+                                color = MaterialTheme.colors.secondary,
+                                width = 4.dp,
+                                shape = CircleShape
+                            )
+                            .size(width = 225.dp, height = 225.dp)
+                            .clip(shape = CircleShape),
+                        model = R.drawable.linguasyne_logo,
+                        contentDescription = null,
+                        contentScale = ContentScale.None,
+                    )
+                }
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = userEmailInput,
+                    onValueChange = { handleEmailChange(it) },
+                    label = {
+                        Text(
+                            text = "Email address",
+                            color = MaterialTheme.colors.secondary,
+                        )
+                    },
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.body1,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = outlineColour,
+                        unfocusedBorderColor = Color.Gray,
+                        textColor = MaterialTheme.colors.primary,
+                    ),
+                )
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = userPasswordInput,
+                    onValueChange = { handlePasswordChange(it) },
+                    label = {
+                        Text(
+                            text = "Password",
+                            color = MaterialTheme.colors.secondary,
+                        )
+                    },
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.body1,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = outlineColour,
+                        unfocusedBorderColor = Color.Gray,
+                        textColor = MaterialTheme.colors.primary,
+                    ),
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                )
 
 
-        }
+                Button(
+                    onClick = { buttonOnClick() },
+                    shape = RoundedCornerShape(100),
+                    modifier = Modifier
+                        .height(60.dp)
+                        .width(150.dp)
+                        .padding(top = 10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.secondary,
+                        contentColor = MaterialTheme.colors.onSurface,
+                    )
+                )
+                {
+                    Text(
+                        text = "Log in",
+                    )
+                }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+                Spacer(modifier = Modifier.height(20.dp))
 
-            Spacer(modifier = Modifier.height(250.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
 
-            Button(
-                onClick = { buttonOnClick() },
-                shape = RoundedCornerShape(100),
-                modifier = Modifier.size(200.dp, 45.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
-            )
-            {
-                Text("Log in")
+                    Row(
+
+                    ) {
+                        ClickableText(
+                            text = AnnotatedString("No account? Click here to create one"),
+                            onClick = textOnClick,
+                        )
+                    }
+
+                }
+
             }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            ClickableText(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = AnnotatedString("No account? Click here to create one"),
-                onClick = textOnClick
-            )
-
-        }
-
-
-    }
-/*
----------------------------- OLD -----------------------
-
-        findViewById<Button>(R.id.login_button).setOnClickListener{
-            logInUser()
-            val intent = Intent(this, HomeActivity::class.java)
-            Log.d("LoginActivity", "Attempting to launch HomeActivity")
-            startActivity(intent)
-        }
-
-        findViewById<TextView>(R.id.create_account_text).setOnClickListener{
-            val intent = Intent(this, CreateAccountActivity::class.java)
-            Log.d("LoginActivity", "Attempting to launch CreateAccountActivity from OnClickListener (create_account_text)")
-            startActivity(intent)
-        }
-    }
----------------------------------------------------------------------  */
-
-
-    private fun logInUser() {
-        FirebaseAuth.getInstance()
-
-        val email = findViewById<TextView>(R.id.email_login_textbox).text.toString()
-        val password = findViewById<EditText>(R.id.password_login_textbox).text.toString()
-
-        if (email != "" && password != "") {
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener {
-                    Log.d("LoginActivity", "User logged in")
-                    Toast.makeText(this, "Login successful", Toast.LENGTH_LONG).show()
-                    FirebaseManager.current_user = User(email)
-                }
-                .addOnFailureListener {
-                    Log.d("LoginActivity", "User log in failed")
-                    Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show()
-                }
-
-        }
-        else {
-            Log.d("LoginActivity", "Either email or password is null")
-            Toast.makeText(this,"Please enter both an email address and password", Toast.LENGTH_LONG).show()
         }
 
     }

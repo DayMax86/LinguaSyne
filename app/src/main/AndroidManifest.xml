@@ -4,22 +4,19 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/linguasyne_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/linguasyne_logo_shadow"
         android:supportsRtl="true"
         android:theme="@style/Theme.LinguaSyne">
-        <activity
-            android:name=".activities.LessonActivity"
-            android:exported="false"
-            android:label="@string/title_activity_lesson"
-            android:theme="@style/Theme.LinguaSyne.NoActionBar" />
+
         <activity android:name=".activities.VocabSearchActivity" />
         <activity
             android:name=".activities.DisplayTermActivity"
             android:parentActivityName=".activities.HomeActivity" />
 
-        <activity android:name=".activities.HomeActivity" />
+        <activity android:name=".activities.HomeActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <activity android:name=".activities.ReviewTermActivity"
             android:parentActivityName=".activities.HomeActivity" />

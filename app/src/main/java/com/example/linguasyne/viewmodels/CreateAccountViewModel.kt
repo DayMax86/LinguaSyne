@@ -51,28 +51,28 @@ class CreateAccountViewModel : ViewModel() {
                 }
                 PasswordStrengths.VERY_WEAK -> {
                     passwordStrength = "Very weak"
-                    progressBarValue = 20f
+                    progressBarValue = 0.2f
                     passwordOutlineColour = Color(0x2200FF00)
                 }
                 PasswordStrengths.WEAK -> {
                     passwordStrength = "Weak"
-                    progressBarValue = 40f
+                    progressBarValue = 0.4f
                     passwordOutlineColour = Color(0x4400FF00)
                 }
                 PasswordStrengths.AVERAGE -> {
                     passwordStrength = "Average"
-                    progressBarValue = 60f
+                    progressBarValue = 0.6f
                     passwordOutlineColour = Color(0x6600FF00)
                 }
                 PasswordStrengths.STRONG -> {
                     passwordStrength = "Strong"
-                    progressBarValue = 80f
+                    progressBarValue = 0.8f
                     passwordOutlineColour = Color(0x8800FF00)
                 }
                 PasswordStrengths.VERY_STRONG -> {
                     passwordOutlineColour = LsCorrectGreen
                     passwordStrength = "Very strong!"
-                    progressBarValue = 100f
+                    progressBarValue = 1f
                 }
                 PasswordStrengths.ERROR -> {
                     Log.e("CreateAccountActivity", "Error in displaying password strength")

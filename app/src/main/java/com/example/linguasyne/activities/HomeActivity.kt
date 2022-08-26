@@ -27,8 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -39,6 +38,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
@@ -86,7 +86,10 @@ class HomeActivity : AppCompatActivity() {
                 Scaffold(
                     scaffoldState = scaffoldState,
                     drawerContent = {
-                                    Text(text = "Geoff is great!")
+                        MainDrawerContent(
+                            viewModel::handleTermBaseClick,
+                            viewModel::signOut,
+                        )
                     },
                     topBar = {
                         HomeTopAppBar(
@@ -127,13 +130,18 @@ class HomeActivity : AppCompatActivity() {
     ) {
         TopAppBar(
             title = {
-                Text("LinguaSyne")
+                Text(
+                    text ="LinguaSyne",
+                    color = MaterialTheme.colors.onSurface
+                )
             },
             backgroundColor = MaterialTheme.colors.secondary,
             navigationIcon = {
                 Icon(
                     Icons.Default.Menu,
-                    modifier = Modifier.clickable(
+                    modifier = Modifier
+                        .padding(start= 5.dp)
+                        .clickable(
                         onClick = {
                             scope.launch {
                                 if (scaffoldState.drawerState.isClosed) {
@@ -157,6 +165,224 @@ class HomeActivity : AppCompatActivity() {
     }
 
     @Composable
+    fun MainDrawerContent(
+        launchTermBase: () -> Unit,
+        signOut: () -> Unit,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+        )
+        {
+
+            Row(
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .width(intrinsicSize = IntrinsicSize.Min)
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Text(
+                        text = "Settings",
+                        style = MaterialTheme.typography.h1,
+                        color = MaterialTheme.colors.primary
+                    )
+                    Icon(
+                        Icons.Default.Settings,
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .size(40.dp, 40.dp),
+                        //.fillMaxSize(0.5f),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.secondary
+                    )
+                }
+
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(3.dp),
+                color = MaterialTheme.colors.onBackground,
+            )
+
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        launchTermBase()
+                    },
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Text(
+                        text = "Term base",
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary
+                    )
+                    Icon(
+                        Icons.Default.Search,
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 6.dp)
+                            .size(20.dp, 20.dp),
+                        //.fillMaxSize(0.5f),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.secondary
+                    )
+                }
+
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(1.dp),
+                color = MaterialTheme.colors.onBackground,
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Text(
+                        text = "Help",
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary
+                    )
+                    Icon(
+                        Icons.Default.Info,
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 6.dp)
+                            .size(20.dp, 20.dp),
+                        //.fillMaxSize(0.5f),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.secondary
+                    )
+                }
+
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(1.dp),
+                color = MaterialTheme.colors.onBackground,
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Text(
+                        text = "About LinguaSyne",
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary
+                    )
+                    Icon(
+                        Icons.Default.Info,
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 6.dp)
+                            .size(20.dp, 20.dp),
+                        //.fillMaxSize(0.5f),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.secondary
+                    )
+                }
+
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(1.dp),
+                color = MaterialTheme.colors.onBackground,
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Text(
+                        text = "Share LinguaSyne with a friend!",
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary
+                    )
+                    Icon(
+                        Icons.Default.Share,
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 6.dp)
+                            .size(20.dp, 20.dp),
+                        //.fillMaxSize(0.5f),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.secondary
+                    )
+                }
+
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(1.dp),
+                color = MaterialTheme.colors.onBackground,
+            )
+
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        signOut()
+                    },
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Text(
+                        text = "Sign out",
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary
+                    )
+                    Icon(
+                        Icons.Default.AccountCircle,
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 6.dp)
+                            .size(20.dp, 20.dp),
+                        //.fillMaxSize(0.5f),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.secondary
+                    )
+                }
+
+            }
+
+
+        }
+    }
+
+
+    @Composable
     fun DisplayHome(
         user: User,
         onClickHelp: () -> Unit,
@@ -174,27 +400,23 @@ class HomeActivity : AppCompatActivity() {
 
             Column(
                 modifier = Modifier
-                    .border(width = 1.dp, color = Color.Yellow)
                     .fillMaxWidth(),
             ) {
                 /*---------------------------FIRST LAYER------------------------------------------*/
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .border(width = 1.dp, color = Color.Red),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
 
                     Row(
                         modifier = Modifier
-                            .border(width = 1.dp, color = Color.Red)
                             .padding(start = 10.dp),
                     ) {
                         /*--Left column with 'lessons' and 3 buttons--*/
 
                         Column(
-                            modifier = Modifier
-                                .border(width = 1.dp, color = Color.Yellow),
+
                         ) {
 
                             Text(
@@ -210,24 +432,24 @@ class HomeActivity : AppCompatActivity() {
                                     .width(150.dp),
                                 onClick = { onClickVocabLesson() },
                                 shape = RoundedCornerShape(100),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.secondary,
+                                    contentColor = MaterialTheme.colors.onSurface,
+                                ),
                                 content = {
                                     Row(
                                         modifier = Modifier
-                                            .border(width = 1.dp, color = Color.Red)
                                             .fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                     ) {
                                         Row(
-                                            modifier = Modifier
-                                                .border(width = 1.dp, color = Color.Red),
+
                                         ) {
                                             Text("Vocab")
                                         }
 
                                         Row(
-                                            modifier = Modifier
-                                                .border(width = 1.dp, color = Color.Red),
+
                                         ) {
                                             Text("50")
                                         }
@@ -241,24 +463,24 @@ class HomeActivity : AppCompatActivity() {
                                     .width(150.dp),
                                 onClick = { },
                                 shape = RoundedCornerShape(100),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.secondary,
+                                    contentColor = MaterialTheme.colors.onSurface,
+                                ),
                                 content = {
                                     Row(
                                         modifier = Modifier
-                                            .border(width = 1.dp, color = Color.Red)
                                             .fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                     ) {
                                         Row(
-                                            modifier = Modifier
-                                                .border(width = 1.dp, color = Color.Red),
+
                                         ) {
                                             Text("Verbs")
                                         }
 
                                         Row(
-                                            modifier = Modifier
-                                                .border(width = 1.dp, color = Color.Red),
+
                                         ) {
                                             Text("50")
                                         }
@@ -272,24 +494,24 @@ class HomeActivity : AppCompatActivity() {
                                     .width(150.dp),
                                 onClick = { },
                                 shape = RoundedCornerShape(100),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.secondary,
+                                    contentColor = MaterialTheme.colors.onSurface,
+                                ),
                                 content = {
                                     Row(
                                         modifier = Modifier
-                                            .border(width = 1.dp, color = Color.Red)
                                             .fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                     ) {
                                         Row(
-                                            modifier = Modifier
-                                                .border(width = 1.dp, color = Color.Red),
+
                                         ) {
                                             Text("Phrases")
                                         }
 
                                         Row(
-                                            modifier = Modifier
-                                                .border(width = 1.dp, color = Color.Red),
+
                                         ) {
                                             Text("50")
                                         }
@@ -303,19 +525,18 @@ class HomeActivity : AppCompatActivity() {
 
                     Row(
                         modifier = Modifier
-                            .border(width = 1.dp, color = Color.Red)
                             .padding(end = 10.dp),
                     ) {
                         /*--Right column with profile info--*/
 
                         Column(
-                            modifier = Modifier
-                                .border(width = 1.dp, color = Color.Yellow),
+
                         ) {
 
 
                             AsyncImage(
                                 modifier = Modifier
+                                    .padding(top = 30.dp)
                                     .clickable {
                                         onClickProfileImage()
                                         selectImage()
@@ -332,6 +553,14 @@ class HomeActivity : AppCompatActivity() {
                                 contentScale = ContentScale.Crop,
                             )
 
+                            Text(
+                                modifier = Modifier
+                                    .padding(top = 10.dp)
+                                    .align(Alignment.CenterHorizontally),
+                                style = MaterialTheme.typography.body1,
+                                color = MaterialTheme.colors.primary,
+                                text = FirebaseManager.current_user.user_email
+                            )
 
                             Text(
                                 modifier = Modifier
@@ -353,25 +582,21 @@ class HomeActivity : AppCompatActivity() {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(width = 1.dp, color = Color.Yellow),
             ) {
                 /*---------------------------SECOND LAYER------------------------------------------*/
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .border(width = 1.dp, color = Color.Red),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Row(
-                        modifier = Modifier
-                            .border(width = 1.dp, color = Color.Red),
+
                     ) {
                         /*--Left column with 'revision' and button--*/
 
                         Column(
-                            modifier = Modifier
-                                .border(width = 1.dp, color = Color.Yellow),
+
                         ) {
 
                             Text(
@@ -387,24 +612,24 @@ class HomeActivity : AppCompatActivity() {
                                     .width(150.dp),
                                 onClick = { onClickRevision() },
                                 shape = RoundedCornerShape(100),
-                                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = MaterialTheme.colors.secondary,
+                                    contentColor = MaterialTheme.colors.onSurface,
+                                ),
                                 content = {
                                     Row(
                                         modifier = Modifier
-                                            .border(width = 1.dp, color = Color.Red)
                                             .fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                     ) {
                                         Row(
-                                            modifier = Modifier
-                                                .border(width = 1.dp, color = Color.Red),
+
                                         ) {
                                             Text("To revise")
                                         }
 
                                         Row(
-                                            modifier = Modifier
-                                                .border(width = 1.dp, color = Color.Red),
+
                                         ) {
                                             Text("50")
                                         }
@@ -418,7 +643,6 @@ class HomeActivity : AppCompatActivity() {
                     Row(
                         modifier = Modifier
                             .padding(top = 36.dp) //Why have I had to do this and it doesn't align bottom when I tell it to?
-                            .border(width = 1.dp, color = Color.Red),
                     ) {
                         /*--Right column with 'exam' button--*/
 
@@ -427,17 +651,18 @@ class HomeActivity : AppCompatActivity() {
                                 .width(150.dp),
                             onClick = { },
                             shape = RoundedCornerShape(100),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.secondary,
+                                contentColor = MaterialTheme.colors.onSurface,
+                            ),
                             content = {
                                 Row(
                                     modifier = Modifier
-                                        .border(width = 1.dp, color = Color.Red)
                                         .fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center,
                                 ) {
                                     Row(
-                                        modifier = Modifier
-                                            .border(width = 1.dp, color = Color.Red),
+
                                     ) {
                                         Text("Exam")
                                     }
@@ -455,26 +680,21 @@ class HomeActivity : AppCompatActivity() {
             Spacer(modifier = Modifier.height(10.dp))
 
             Column(
-                modifier = Modifier
-                    .border(width = 1.dp, color = Color.Yellow),
+
             ) {
                 /*---------------------------THIRD LAYER------------------------------------------*/
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .border(width = 1.dp, color = Color.Red),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Row(
-                        modifier = Modifier
-                            .border(width = 1.dp, color = Color.Red),
+
                     ) {
                         /*--Left column with 'streak' icon and text--*/
 
                         Row(
-                            modifier = Modifier
-                                .border(width = 1.dp, color = Color.Red),
                             horizontalArrangement = Arrangement.SpaceEvenly,
                         ) {
 
@@ -494,14 +714,11 @@ class HomeActivity : AppCompatActivity() {
                     }
 
                     Row(
-                        modifier = Modifier
-                            .border(width = 1.dp, color = Color.Red),
+
                     ) {
                         /*--Right column with 'term base' icon and text--*/
 
                         Row(
-                            modifier = Modifier
-                                .border(width = 1.dp, color = Color.Red),
                             horizontalArrangement = Arrangement.SpaceEvenly,
                         ) {
 
@@ -534,35 +751,33 @@ class HomeActivity : AppCompatActivity() {
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .fillMaxWidth()
-                    .padding(all = 10.dp),
-                elevation = 5.dp,
+                    .padding(all = 16.dp),
+                elevation = 6.dp,
+                backgroundColor = MaterialTheme.colors.onSurface,
             ) {
                 /*--Rounded corner card housing API info--*/
 
                 Row(
                     modifier = Modifier
-                        .padding(all = 5.dp)
-                        .border(width = 1.dp, color = Color.Red),
+                        .border(width = 2.dp, color = MaterialTheme.colors.secondary)
+                        .padding(all = 5.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
 
                     Row(
                         modifier = Modifier
                             .padding(all = 5.dp)
-                            .border(width = 1.dp, color = Color.Red),
                     ) {
 
                         Row(
-                            modifier = Modifier
-                                .border(width = 1.dp, color = Color.Red),
+
                         )
                         {
 
                             /*--Left column of card with 'today in' text and image--*/
 
                             Column(
-                                modifier = Modifier
-                                    .border(width = 1.dp, color = Color.Red),
+
                             ) {
 
 
@@ -590,8 +805,7 @@ class HomeActivity : AppCompatActivity() {
                     }
                     Row(
                         modifier = Modifier
-                            .padding(all = 5.dp)
-                            .border(width = 1.dp, color = Color.Red),
+                            .padding(all = 5.dp),
                     ) {
 
                         Text(
@@ -606,11 +820,10 @@ class HomeActivity : AppCompatActivity() {
             }
 
 
-            /*--help text--*/
+            /*--help text--
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .border(width = 1.dp, color = Color.Red),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Text(
@@ -622,7 +835,7 @@ class HomeActivity : AppCompatActivity() {
                     textAlign = TextAlign.Center,
                 )
             }
-
+*/
         }
 
     }
