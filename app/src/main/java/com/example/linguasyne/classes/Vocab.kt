@@ -9,7 +9,7 @@ class Vocab(term_id: String,
             term_unlock_level: Int,
             term_translations: List<String>,
             term_mnemonics: List<String>,
-            term_gender: List<String>,
+            term_gender: String,
             term_types: List<String>) : Term(term_id,term_name,term_unlock_level,term_translations,term_mnemonics) {
 
     var gender: Gender = Gender.NO
@@ -20,24 +20,23 @@ class Vocab(term_id: String,
     override val class_type: LessonTypes = LessonTypes.VOCAB
 
     init {
-        setGender(term_gender)
-        setTypes(term_types)
+        assignGender(term_gender)
+        assignTypes(term_types)
     }
 
 
 
-    private fun setGender(term_genders: List<String>) {
-        term_genders.forEach{
-            when (it.toLowerCase()) {
+    private fun assignGender(term_gender: String) {
+            when (term_gender.toLowerCase()) {
                 "no" -> gender = Gender.NO
                 "mf" -> gender = Gender.MF
                 "m" -> gender = Gender.M
                 "f" -> gender = Gender.F
             }
-        }
+
     }
 
-    private fun setTypes(term_types: List<String>){
+    private fun assignTypes(term_types: List<String>){
         term_types.forEach {
             when (it.toLowerCase()) {
                 "n" -> this.types.add(TermTypes.NOUN)

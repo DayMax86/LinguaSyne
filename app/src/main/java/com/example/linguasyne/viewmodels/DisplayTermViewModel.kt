@@ -27,6 +27,9 @@ class DisplayTermViewModel {
 
     var enabledLeftArrow by mutableStateOf(false)
     var enabledRightArrow by mutableStateOf(false)
+    var leftArrowImage by mutableStateOf(R.drawable.opaqueleftarrow)
+    var rightArrowImage by mutableStateOf(R.drawable.opaquerightarrow)
+
     private var masc by mutableStateOf(false)
     private var fem by mutableStateOf(false)
 
@@ -81,6 +84,9 @@ class DisplayTermViewModel {
             (Sources.SEARCH) -> {
                 enabledLeftArrow = false
                 enabledRightArrow = false
+                // Done through search so don't cycle through terms
+                leftArrowImage = R.drawable.alphaleftarrow
+                rightArrowImage = R.drawable.alpharightarrow
             }
             else -> {/*-----*/
             }
@@ -89,13 +95,17 @@ class DisplayTermViewModel {
         if (firstInList) {
             //Disable left arrow ImageView onClickListener
             enabledLeftArrow = false
+            leftArrowImage = R.drawable.alphaleftarrow
         } else if (lastInList) {
             //Disable right arrow ImageView onClickListener
             enabledRightArrow = false
+            rightArrowImage = R.drawable.alpharightarrow
         } else {
             //must be somewhere away from the ends of the list so both can be enabled
             enabledLeftArrow = true
             enabledRightArrow = true
+            leftArrowImage = R.drawable.alphaleftarrow
+            rightArrowImage = R.drawable.alpharightarrow
         }
     }
 
@@ -103,34 +113,38 @@ class DisplayTermViewModel {
         if (termToDisplay is Vocab) {
             //Go through all the genders
             when ((termToDisplay as Vocab).gender) {
-                    Gender.NO -> {
-                        masc = false
-                        fem = false
-                    }
-                    Gender.F -> {
-                        masc = false
-                        fem = true
-                    }
-                    Gender.M -> {
-                        masc = true
-                        fem = false
-                    }
-                    Gender.MF -> {
-                        masc = true
-                        fem = true
-                    }
+                Gender.NO -> {
+                    masc = false
+                    fem = false
+                }
+                Gender.F -> {
+                    masc = false
+                    fem = true
+                }
+                Gender.M -> {
+                    masc = true
+                    fem = false
+                }
+                Gender.MF -> {
+                    masc = true
+                    fem = true
+                }
             }
         }
     }
 
     fun loadPrev() {
-        tPos--
-        fetchTerm()
+        if (tPos > 0 && enabledLeftArrow) {
+            tPos--
+            fetchTerm()
+        }
     }
 
     fun loadNext() {
-        tPos++
-        fetchTerm()
+        if (tPos < LessonManager.current_lesson.lesson_list.size - 1 && enabledRightArrow) {
+            tPos++
+            fetchTerm()
+        }
     }
 
     fun onActivityEnd() {

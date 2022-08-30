@@ -50,7 +50,7 @@ class RevisionSummaryActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .padding(all = 10.dp)
-                //.background(MaterialTheme.colors.background)
+                .fillMaxHeight()
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

@@ -29,7 +29,7 @@ object FirebaseManager {
                 for (document in documents) {
                     val vocab_translations = document.get("translations")
                     val vocab_mnemonics = document.get("mnemonics")
-                    val vocab_genders = document.get("genders")
+                    val vocab_gender = document.get("gender")
                     val vocab_types = document.get("types")
                     val vocab = Vocab(
                         document.getField<String>("id").toString(),
@@ -37,7 +37,7 @@ object FirebaseManager {
                         document.getField<Int>("unlock_level")!!.toInt(),
                         vocab_translations as List<String>,
                         vocab_mnemonics as List<String>,
-                        vocab_genders as List<String>,
+                        vocab_gender as String,
                         vocab_types as List<String>
                     )
                     results.add(vocab)

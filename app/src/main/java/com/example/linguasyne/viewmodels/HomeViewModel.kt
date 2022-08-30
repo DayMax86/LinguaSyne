@@ -42,11 +42,13 @@ class HomeViewModel : ViewModel() {
 
     fun createLesson() {
         LessonManager.createLesson(LessonTypes.VOCAB)
+        launchVocabLesson = false //Make sure to set this back to false in case the user starts a new lesson without restarting the home activity
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createSession() {
         RevisionSessionManager.createSession()
+        launchRevisionSession = false //Set back to false so the user can launch another session without home activity restart
     }
 
     fun firebaseImageUpload(uri: Uri) {

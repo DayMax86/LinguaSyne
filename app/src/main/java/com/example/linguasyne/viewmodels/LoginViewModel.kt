@@ -40,6 +40,7 @@ class LoginViewModel : ViewModel() {
             loggedIn = try {
                 Firebase.auth
                     .signInWithEmailAndPassword(userEmailInput,userPasswordInput)
+                //TODO() await import not working
                     //.await()
                 true
             } catch (ignore: Exception) {

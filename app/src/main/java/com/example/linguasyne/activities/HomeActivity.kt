@@ -281,6 +281,9 @@ class HomeActivity : AppCompatActivity() {
             )
 
             Row(
+                /*modifier = Modifier.clickable { //TODO() FOR DEVELOPER USE ONLY!! Will be removed in release version.
+                CSVManager.importVocabCSV(this@HomeActivity.applicationContext)
+            },*/
                 horizontalArrangement = Arrangement.Start,
             ) {
 
@@ -820,22 +823,6 @@ class HomeActivity : AppCompatActivity() {
             }
 
 
-            /*--help text--
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    modifier = Modifier
-                        .clickable { onClickHelp() },
-                    text = "Struggling? Tap here for help",
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.secondary,
-                    textAlign = TextAlign.Center,
-                )
-            }
-*/
         }
 
     }

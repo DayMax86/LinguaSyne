@@ -164,13 +164,11 @@ class CreateAccountActivity(
 
         Column(
             modifier = Modifier
-                .border(width = 1.dp, color = Color.Yellow)
                 .fillMaxHeight()
         ) {
 
             Row(
                 modifier = Modifier
-                    .border(width = 1.dp, color = Color.Red)
                     .fillMaxWidth()
                     .padding(all = 10.dp),
                 horizontalArrangement = Arrangement.Center
@@ -195,12 +193,9 @@ class CreateAccountActivity(
 
 
             Column(
-                modifier = Modifier
-                    .border(width = 1.dp, color = Color.Yellow)
             ) {
                 Row(
                     modifier = Modifier
-                        .border(width = 1.dp, color = Color.Red)
                         .padding(all = 10.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -221,7 +216,6 @@ class CreateAccountActivity(
 
                 Row(
                     modifier = Modifier
-                        .border(width = 1.dp, color = Color.Red)
                         .padding(all = 10.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -247,7 +241,6 @@ class CreateAccountActivity(
 
             Row(
                 modifier = Modifier
-                    .border(width = 1.dp, color = Color.Red)
                     .fillMaxWidth()
                     .padding(all = 10.dp),
                 horizontalArrangement = Arrangement.Center
@@ -268,7 +261,6 @@ class CreateAccountActivity(
 
             Row(
                 modifier = Modifier
-                    .border(width = 1.dp, color = Color.Red)
                     .fillMaxWidth()
                     .padding(all = 10.dp),
                 horizontalArrangement = Arrangement.Center
@@ -276,7 +268,6 @@ class CreateAccountActivity(
             {
                 Row(
                     modifier = Modifier
-                        .border(width = 1.dp, color = Color.Red)
                         .padding(all = 10.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {

@@ -21,7 +21,7 @@ object CSVManager {
                     row[2].toInt(),                  //unlock level
                     row[3].split("/"),    //translations
                     row[4].split("/"),    //mnemonics
-                    row[5].split("/"),    //gender
+                    row[5],    //gender
                     row[6].split("/")     //types
                 )
                 FirebaseManager.addVocabToFirebase(term)
