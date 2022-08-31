@@ -13,15 +13,15 @@ import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.managers.VocabRepository
 
+enum class Sources {
+    LESSON,
+    SEARCH
+}
+
 class DisplayTermViewModel {
 
     private var tPos: Int = 0
-    private lateinit var vSource: Sources
-
-    private enum class Sources {
-        LESSON,
-        SEARCH
-    }
+    lateinit var vSource: Sources
 
     var termToDisplay: Term by mutableStateOf(VocabRepository.currentVocab[0])
 
@@ -33,8 +33,9 @@ class DisplayTermViewModel {
     private var masc by mutableStateOf(false)
     private var fem by mutableStateOf(false)
 
-    fun onActivityLaunch() {
+    fun onActivityLaunch(): Sources {
         getTermData()
+        return vSource
     }
 
     private fun getTermData() {
@@ -80,7 +81,26 @@ class DisplayTermViewModel {
                 } else if (tPos == 0) {
                     firstInList = true
                 }
+
+
+                if (firstInList) {
+                    //Disable left arrow ImageView onClickListener
+                    enabledLeftArrow = false
+                    leftArrowImage = R.drawable.alphaleftarrow
+                } else if (lastInList) {
+                    //Disable right arrow ImageView onClickListener
+                    enabledRightArrow = false
+                    rightArrowImage = R.drawable.alpharightarrow
+                } else {
+                    //must be somewhere away from the ends of the list so both can be enabled
+                    enabledLeftArrow = true
+                    enabledRightArrow = true
+                    leftArrowImage = R.drawable.opaqueleftarrow
+                    rightArrowImage = R.drawable.opaquerightarrow
+                }
+
             }
+
             (Sources.SEARCH) -> {
                 enabledLeftArrow = false
                 enabledRightArrow = false
@@ -92,21 +112,7 @@ class DisplayTermViewModel {
             }
         }
 
-        if (firstInList) {
-            //Disable left arrow ImageView onClickListener
-            enabledLeftArrow = false
-            leftArrowImage = R.drawable.alphaleftarrow
-        } else if (lastInList) {
-            //Disable right arrow ImageView onClickListener
-            enabledRightArrow = false
-            rightArrowImage = R.drawable.alpharightarrow
-        } else {
-            //must be somewhere away from the ends of the list so both can be enabled
-            enabledLeftArrow = true
-            enabledRightArrow = true
-            leftArrowImage = R.drawable.alphaleftarrow
-            rightArrowImage = R.drawable.alpharightarrow
-        }
+
     }
 
     private fun fetchGenderImages() {
@@ -134,16 +140,20 @@ class DisplayTermViewModel {
     }
 
     fun loadPrev() {
-        if (tPos > 0 && enabledLeftArrow) {
-            tPos--
-            fetchTerm()
+        if (enabledLeftArrow) {
+            if (tPos > 0) {
+                tPos--
+                fetchTerm()
+            }
         }
     }
 
     fun loadNext() {
-        if (tPos < LessonManager.current_lesson.lesson_list.size - 1 && enabledRightArrow) {
-            tPos++
-            fetchTerm()
+        if (enabledRightArrow) {
+            if (tPos < LessonManager.current_lesson.lesson_list.size - 1) {
+                tPos++
+                fetchTerm()
+            }
         }
     }
 

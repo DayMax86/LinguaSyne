@@ -9,7 +9,7 @@ import com.example.linguasyne.managers.VocabRepository
 
 class VocabSearchViewModel {
 
-    var vocabList by mutableStateOf(mutableListOf<Vocab>())
+    var vocabList by mutableStateOf(VocabRepository.allVocab as MutableList<Vocab>)
 
     var launchTermView by mutableStateOf(false)
 

@@ -34,7 +34,7 @@ class ReviewTermViewModel : ViewModel() {
     private var femSelected = false
     private var enableGenderSelection = false
 
-    var selectGenderTestColour by mutableStateOf(LsTextBlue)
+    var selectGenderTextColour by mutableStateOf(LsTextBlue)
     var mascImage by mutableStateOf(R.drawable.opaquemars)
     var femImage by mutableStateOf(R.drawable.opaquevenus)
 
@@ -65,11 +65,11 @@ class ReviewTermViewModel : ViewModel() {
         if (enableGenderSelection) {
             mascImage = R.drawable.opaquemars
             femImage = R.drawable.opaquevenus
-            selectGenderTestColour = LsTextBlue
+            selectGenderTextColour = LsTextBlue
         } else {
             mascImage = R.drawable.alphamars
             femImage = R.drawable.alphavenus
-            selectGenderTestColour = LsGrey
+            selectGenderTextColour = LsGrey
         }
 
     }
@@ -128,8 +128,7 @@ class ReviewTermViewModel : ViewModel() {
             //User got the answer wrong so show appropriate animation
             textFieldOutlineColour = LsErrorRed
         }
-        // Make sure the activity is displaying either the term name or translation
-        updateTermTitle(RevisionSessionManager.current_session.currentStep)
+
     }
 
     fun resetUi() {
@@ -141,6 +140,9 @@ class ReviewTermViewModel : ViewModel() {
         mascOutlineColour = LsGrey
         femSelected = false
         femOutlineColour = LsGrey
+
+        // Make sure the activity is displaying either the term name or translation
+        updateTermTitle(RevisionSessionManager.current_session.currentStep)
     }
 
     fun handleInput(text: String) {
@@ -197,7 +199,8 @@ class ReviewTermViewModel : ViewModel() {
                     mascOutlineColour = LsErrorRed
                     femOutlineColour = LsErrorRed
                 }
-                else -> {/* No gender so colours remain unchanged */
+                else -> {/* No gender but the user needs to select one */
+                    selectGenderTextColour = LsErrorRed
                 }
             }
             return false

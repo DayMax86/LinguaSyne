@@ -8,6 +8,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -21,32 +24,81 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.Term
+import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.DisplayTermViewModel
+import com.example.linguasyne.viewmodels.Sources
+import dev.chrisbanes.snapper.ExperimentalSnapperApi
+import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 
 open class DisplayTermActivity : AppCompatActivity() {
 
     val viewModel = DisplayTermViewModel()
 
+    @OptIn(ExperimentalSnapperApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            viewModel.onActivityLaunch()
             LinguaSyneTheme(darkTheme = false) {
                 Surface(
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                         .fillMaxHeight()
-                )
-                {
-                    DisplayTerm(
-                        viewModel.termToDisplay,
-                        viewModel::loadPrev,
-                        viewModel::loadNext,
-                        viewModel.leftArrowImage,
-                        viewModel.rightArrowImage,
-                    )
+                        .fillMaxWidth()
+                ) {
+                    when (viewModel.onActivityLaunch()) {
+                        Sources.LESSON -> {
+                            val lazyListState = rememberLazyListState()
+                            LazyRow(
+                                modifier = Modifier
+                                    //.padding(10.dp)
+                                    .fillMaxWidth()
+                                    .fillMaxHeight(),
+                                state = lazyListState,
+                                flingBehavior = rememberSnapperFlingBehavior(lazyListState),
+                            ) {
+                                items(
+                                    LessonManager.current_lesson.lesson_list
+                                ) { item ->
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(10.dp),
+                                        elevation = 3.dp,
+                                    ) {
+                                        Surface(
+                                            modifier = Modifier
+                                                .background(MaterialTheme.colors.background)
+                                                .fillMaxHeight()
+                                                .fillMaxWidth()
+                                        )
+                                        {
+                                            DisplayTerm(
+                                                item,
+                                                null,
+                                                null,
+                                                viewModel.leftArrowImage,
+                                                viewModel.rightArrowImage,
+                                            )
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                        Sources.SEARCH -> {
+
+                            DisplayTerm(
+                                viewModel.termToDisplay,
+                                viewModel::loadPrev,
+                                viewModel::loadNext,
+                                viewModel.leftArrowImage,
+                                viewModel.rightArrowImage,
+                            )
+
+                        }
+                    }
                 }
             }
         }
@@ -58,12 +110,11 @@ open class DisplayTermActivity : AppCompatActivity() {
         viewModel.onActivityEnd()
     }
 
-
     @Composable
     fun DisplayTerm(
         term: Term,
-        onClickLeft: () -> Unit,
-        onClickRight: () -> Unit,
+        onClickLeft: (() -> Unit?)?,
+        onClickRight: (() -> Unit?)?,
         leftArrowImage: Int,
         rightArrowImage: Int,
     ) {
@@ -84,7 +135,11 @@ open class DisplayTermActivity : AppCompatActivity() {
                 ) {
                     AsyncImage(
                         modifier = Modifier
-                            .clickable { onClickLeft() }
+                            .clickable {
+                                if (onClickLeft != null) {
+                                    onClickLeft()
+                                }
+                            }
                             .padding(start = 10.dp, top = 10.dp)
                             .height(100.dp),
                         model = leftArrowImage,
@@ -122,7 +177,11 @@ open class DisplayTermActivity : AppCompatActivity() {
                 ) {
                     AsyncImage(
                         modifier = Modifier
-                            .clickable { onClickRight() }
+                            .clickable {
+                                if (onClickRight != null) {
+                                    onClickRight()
+                                }
+                            }
                             .padding(end = 10.dp, top = 10.dp)
                             .height(100.dp),
                         //.padding(10.dp),
@@ -201,8 +260,13 @@ open class DisplayTermActivity : AppCompatActivity() {
                             shape = RoundedCornerShape(16.dp),
                         )
                         .background(color = MaterialTheme.colors.onBackground),
-                    value = "",
-                    //TODO() How to get all translations from the term's translations list without breaking MVVM structure??
+                    value = term.translations.forEach {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary,
+                        )
+                    }.toString(),
                     onValueChange = { /**/ },
                     enabled = false,
                 )

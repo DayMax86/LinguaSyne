@@ -22,6 +22,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -33,17 +36,22 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
+import com.example.linguasyne.classes.NewsItem
 import com.example.linguasyne.classes.User
 import com.google.android.gms.common.api.Scope
+import dev.chrisbanes.snapper.ExperimentalSnapperApi
+import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -56,6 +64,9 @@ class HomeActivity : AppCompatActivity() {
         viewModel.init {
             FirebaseManager.getUserImageFromFirestore {
                 viewModel.imageFetched(it)
+            }
+            viewModel.APIcall {
+                Log.d("HomeActivity", "Success!")
             }
         }
     }
@@ -112,6 +123,7 @@ class HomeActivity : AppCompatActivity() {
                                 viewModel::handleRevisionClick,
                                 viewModel::handleTermBaseClick,
                                 viewModel::handleProfileImageClick,
+                                viewModel.newsItems,
                             )
 
                         }
@@ -131,7 +143,7 @@ class HomeActivity : AppCompatActivity() {
         TopAppBar(
             title = {
                 Text(
-                    text ="LinguaSyne",
+                    text = "LinguaSyne",
                     color = MaterialTheme.colors.onSurface
                 )
             },
@@ -140,23 +152,23 @@ class HomeActivity : AppCompatActivity() {
                 Icon(
                     Icons.Default.Menu,
                     modifier = Modifier
-                        .padding(start= 5.dp)
+                        .padding(start = 5.dp)
                         .clickable(
-                        onClick = {
-                            scope.launch {
-                                if (scaffoldState.drawerState.isClosed) {
-                                    scaffoldState.drawerState.open()
-                                } else {
-                                    scaffoldState.drawerState.close()
+                            onClick = {
+                                scope.launch {
+                                    if (scaffoldState.drawerState.isClosed) {
+                                        scaffoldState.drawerState.open()
+                                    } else {
+                                        scaffoldState.drawerState.close()
 
+                                    }
                                 }
+                                Log.d(
+                                    "HomeActivity",
+                                    "Is closed = ${scaffoldState.drawerState.isClosed}"
+                                )
                             }
-                            Log.d(
-                                "HomeActivity",
-                                "Is closed = ${scaffoldState.drawerState.isClosed}"
-                            )
-                        }
-                    ),
+                        ),
                     contentDescription = ""
                 )
             }
@@ -176,215 +188,258 @@ class HomeActivity : AppCompatActivity() {
         )
         {
 
-            Row(
-                horizontalArrangement = Arrangement.Start,
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start,
             ) {
-
                 Row(
-                    modifier = Modifier
-                        .width(intrinsicSize = IntrinsicSize.Min)
-                        .padding(10.dp),
                     horizontalArrangement = Arrangement.Start,
                 ) {
-                    Text(
-                        text = "Settings",
-                        style = MaterialTheme.typography.h1,
-                        color = MaterialTheme.colors.primary
-                    )
-                    Icon(
-                        Icons.Default.Settings,
+
+                    Row(
                         modifier = Modifier
-                            .padding(10.dp)
-                            .size(40.dp, 40.dp),
-                        //.fillMaxSize(0.5f),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.secondary
-                    )
+                            .width(intrinsicSize = IntrinsicSize.Min)
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Text(
+                            text = "Settings",
+                            style = MaterialTheme.typography.h1,
+                            color = MaterialTheme.colors.primary,
+                            maxLines = 1,
+                        )
+                        Icon(
+                            Icons.Default.Settings,
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .size(40.dp, 40.dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.secondary
+                        )
+                    }
+
                 }
 
+                Divider(
+                    modifier = Modifier
+                        .height(3.dp),
+                    color = MaterialTheme.colors.onBackground,
+                )
             }
 
-            Divider(
+            Column(
                 modifier = Modifier
-                    .height(3.dp),
-                color = MaterialTheme.colors.onBackground,
-            )
-
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        launchTermBase()
-                    },
-                horizontalArrangement = Arrangement.Start,
+                    .width(intrinsicSize = IntrinsicSize.Max),
+                horizontalAlignment = Alignment.Start,
             ) {
-
                 Row(
                     modifier = Modifier
-                        .padding(10.dp),
+                        .clickable {
+                            launchTermBase()
+                        },
                     horizontalArrangement = Arrangement.Start,
                 ) {
-                    Text(
-                        text = "Term base",
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.primary
-                    )
-                    Icon(
-                        Icons.Default.Search,
+
+                    Row(
                         modifier = Modifier
-                            .padding(start = 10.dp, top = 6.dp)
-                            .size(20.dp, 20.dp),
-                        //.fillMaxSize(0.5f),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.secondary
-                    )
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Text(
+                            text = "Term base",
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary,
+                            maxLines = 1,
+                        )
+                        Icon(
+                            Icons.Default.Search,
+                            modifier = Modifier
+                                .padding(start = 10.dp, top = 6.dp)
+                                .size(20.dp, 20.dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.secondary
+                        )
+                    }
+
                 }
 
-            }
-
-            Divider(
-                modifier = Modifier
-                    .height(1.dp),
-                color = MaterialTheme.colors.onBackground,
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.Start,
-            ) {
-
-                Row(
+                Divider(
                     modifier = Modifier
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    Text(
-                        text = "Help",
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.primary
-                    )
-                    Icon(
-                        Icons.Default.Info,
-                        modifier = Modifier
-                            .padding(start = 10.dp, top = 6.dp)
-                            .size(20.dp, 20.dp),
-                        //.fillMaxSize(0.5f),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.secondary
-                    )
-                }
-
+                        .height(1.dp),
+                    color = MaterialTheme.colors.onBackground,
+                )
             }
 
-            Divider(
-                modifier = Modifier
-                    .height(1.dp),
-                color = MaterialTheme.colors.onBackground,
-            )
 
-            Row(
-                /*modifier = Modifier.clickable { //TODO() FOR DEVELOPER USE ONLY!! Will be removed in release version.
+            Column(
+                modifier = Modifier
+                    .width(intrinsicSize = IntrinsicSize.Max),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Text(
+                            text = "Help",
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary,
+                            maxLines = 1,
+                        )
+                        Icon(
+                            Icons.Default.Info,
+                            modifier = Modifier
+                                .padding(start = 10.dp, top = 6.dp)
+                                .size(20.dp, 20.dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.secondary
+                        )
+                    }
+
+                }
+
+                Divider(
+                    modifier = Modifier
+                        .height(1.dp),
+                    color = MaterialTheme.colors.onBackground,
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .width(intrinsicSize = IntrinsicSize.Max),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Row(
+                    /*modifier = Modifier.clickable { //TODO() FOR DEVELOPER USE ONLY!! Will be removed in release version.
                 CSVManager.importVocabCSV(this@HomeActivity.applicationContext)
             },*/
-                horizontalArrangement = Arrangement.Start,
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Text(
+                            text = "About LinguaSyne",
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary,
+                            maxLines = 1,
+                        )
+                        Icon(
+                            Icons.Default.Info,
+                            modifier = Modifier
+                                .padding(start = 10.dp, top = 6.dp)
+                                .size(20.dp, 20.dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.secondary
+                        )
+                    }
+
+                }
+
+                Divider(
+                    modifier = Modifier
+                        .height(1.dp),
+                    color = MaterialTheme.colors.onBackground,
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .width(intrinsicSize = IntrinsicSize.Max),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Text(
+                            text = "Share LinguaSyne with a friend!",
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary,
+                            maxLines = 1,
+                        )
+                        Icon(
+                            Icons.Default.Share,
+                            modifier = Modifier
+                                .padding(start = 10.dp, top = 6.dp)
+                                .size(20.dp, 20.dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.secondary
+                        )
+                    }
+
+                }
+
+                Divider(
+                    modifier = Modifier
+                        .height(1.dp),
+                    color = MaterialTheme.colors.onBackground,
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .width(intrinsicSize = IntrinsicSize.Max),
+                horizontalAlignment = Alignment.Start,
             ) {
 
                 Row(
                     modifier = Modifier
-                        .padding(10.dp),
+                        .clickable {
+                            signOut()
+                        },
                     horizontalArrangement = Arrangement.Start,
                 ) {
-                    Text(
-                        text = "About LinguaSyne",
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.primary
-                    )
-                    Icon(
-                        Icons.Default.Info,
+
+                    Row(
                         modifier = Modifier
-                            .padding(start = 10.dp, top = 6.dp)
-                            .size(20.dp, 20.dp),
-                        //.fillMaxSize(0.5f),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.secondary
-                    )
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Text(
+                            text = "Sign out",
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary,
+                            maxLines = 1,
+                        )
+                        Icon(
+                            Icons.Default.AccountCircle,
+                            modifier = Modifier
+                                .padding(start = 10.dp, top = 6.dp)
+                                .size(20.dp, 20.dp),
+                            contentDescription = null,
+                            tint = MaterialTheme.colors.secondary
+                        )
+                    }
+
                 }
-
-            }
-
-            Divider(
-                modifier = Modifier
-                    .height(1.dp),
-                color = MaterialTheme.colors.onBackground,
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.Start,
-            ) {
-
-                Row(
+                Divider(
                     modifier = Modifier
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    Text(
-                        text = "Share LinguaSyne with a friend!",
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.primary
-                    )
-                    Icon(
-                        Icons.Default.Share,
-                        modifier = Modifier
-                            .padding(start = 10.dp, top = 6.dp)
-                            .size(20.dp, 20.dp),
-                        //.fillMaxSize(0.5f),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.secondary
-                    )
-                }
-
+                        .height(1.dp),
+                    color = MaterialTheme.colors.onBackground,
+                )
             }
-
-            Divider(
-                modifier = Modifier
-                    .height(1.dp),
-                color = MaterialTheme.colors.onBackground,
-            )
-
-            Row(
-                modifier = Modifier
-                    .clickable {
-                        signOut()
-                    },
-                horizontalArrangement = Arrangement.Start,
-            ) {
-
-                Row(
-                    modifier = Modifier
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    Text(
-                        text = "Sign out",
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.primary
-                    )
-                    Icon(
-                        Icons.Default.AccountCircle,
-                        modifier = Modifier
-                            .padding(start = 10.dp, top = 6.dp)
-                            .size(20.dp, 20.dp),
-                        //.fillMaxSize(0.5f),
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.secondary
-                    )
-                }
-
-            }
-
 
         }
     }
 
 
+    @OptIn(ExperimentalSnapperApi::class)
     @Composable
     fun DisplayHome(
         user: User,
@@ -394,6 +449,7 @@ class HomeActivity : AppCompatActivity() {
         onClickRevision: () -> Unit,
         onClickTermBase: () -> Unit,
         onClickProfileImage: () -> Unit,
+        newsItems: List<NewsItem.Data>,
     ) {
         Column(
 
@@ -750,76 +806,103 @@ class HomeActivity : AppCompatActivity() {
 
             /*---------------------------FOURTH LAYER------------------------------------------*/
 
-            Card(
+            val lazyListState = rememberLazyListState()
+            LazyRow(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
+                    //.padding(10.dp)
                     .fillMaxWidth()
-                    .padding(all = 16.dp),
-                elevation = 6.dp,
-                backgroundColor = MaterialTheme.colors.onSurface,
-            ) {
-                /*--Rounded corner card housing API info--*/
-
-                Row(
-                    modifier = Modifier
-                        .border(width = 2.dp, color = MaterialTheme.colors.secondary)
-                        .padding(all = 5.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-
-                    Row(
+                    .fillMaxHeight(),
+                state = lazyListState,
+                flingBehavior = rememberSnapperFlingBehavior(lazyListState),
+            )
+            {
+                items(
+                    newsItems
+                ) { item ->
+                    Card(
                         modifier = Modifier
-                            .padding(all = 5.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .fillMaxWidth()
+                            .padding(all = 16.dp),
+                        elevation = 6.dp,
+                        backgroundColor = MaterialTheme.colors.onSurface,
                     ) {
+                        /*--Rounded corner card housing API info--*/
 
                         Row(
-
-                        )
-                        {
-
-                            /*--Left column of card with 'today in' text and image--*/
+                            modifier = Modifier
+                                .border(width = 2.dp, color = MaterialTheme.colors.secondary)
+                                .padding(all = 5.dp),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                        ) {
 
                             Column(
-
+                                modifier = Modifier
+                                    .padding(all = 5.dp)
                             ) {
 
+                                Row(
 
-                                Text(
-                                    text = "Today in /COUNTRY/",
-                                    style = MaterialTheme.typography.body1,
-                                    color = MaterialTheme.colors.secondary
                                 )
+                                {
 
-                                Image(
+
+                                    Column(
+
+                                    ) {
+
+
+                                        Text(
+                                            modifier = Modifier
+                                                .padding(end = 5.dp),
+                                            text = "Today in /COUNTRY/",
+                                            style = MaterialTheme.typography.body1,
+                                            color = MaterialTheme.colors.secondary
+                                        )
+
+
+
+
+                                    }
+
+                                    AsyncImage(
+                                        modifier = Modifier
+                                            .width(200.dp)
+                                            .border(
+                                                2.dp,
+                                                color = MaterialTheme.colors.secondary,
+                                                shape = RoundedCornerShape(5.dp)
+                                            )
+                                            .clip(RoundedCornerShape(5.dp)),
+                                        model = item.image,
+                                        contentDescription = null,
+                                    )
+
+                                }
+
+                                Row(
                                     modifier = Modifier
-                                        //.size(width = 200.dp, height = 200.dp)
-                                        .padding(all = 5.dp)
-                                        .align(Alignment.CenterHorizontally)
-                                        .clip(RoundedCornerShape(2.dp)),
-                                    painter = painterResource(R.drawable.ic_launcher_background),
-                                    contentDescription = null,
-                                )
+                                        .padding(all = 5.dp),
+                                ) {
 
+                                    Text(
+                                        modifier = Modifier
+                                            .clipToBounds(),
+                                        text = item.title,
+                                        style = MaterialTheme.typography.body1,
+                                        color = MaterialTheme.colors.secondary,
+                                        overflow = TextOverflow.Ellipsis,
+                                        softWrap = false,
+                                    )
+                                }
 
                             }
 
                         }
-                        /*--Right column of card with info/article text--*/
-                    }
-                    Row(
-                        modifier = Modifier
-                            .padding(all = 5.dp),
-                    ) {
 
-                        Text(
-                            text = "Lorem ipsum dolor sit amet...",
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.secondary
-                        )
+
                     }
                 }
-
-
             }
 
 

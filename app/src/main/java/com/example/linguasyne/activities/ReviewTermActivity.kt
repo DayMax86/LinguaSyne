@@ -55,7 +55,7 @@ class ReviewTermActivity : AppCompatActivity() {
                         textFieldOutlineColour = viewModel.textFieldOutlineColour,
                         mascOutlineColour = viewModel.mascOutlineColour,
                         femOutlineColour = viewModel.femOutlineColour,
-                        selectGenderTextColour = viewModel.selectGenderTestColour,
+                        selectGenderTextColour = viewModel.selectGenderTextColour,
                         mascImage = viewModel.mascImage,
                         femImage = viewModel.femImage,
                     )
