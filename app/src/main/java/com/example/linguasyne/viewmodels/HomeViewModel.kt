@@ -5,13 +5,17 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.example.linguasyne.classes.NewsItem
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.managers.*
+import com.example.linguasyne.ui.theme.LsTeal200
+import com.example.linguasyne.ui.theme.LsVocabTextBlue
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,6 +32,8 @@ class HomeViewModel : ViewModel() {
     var launchLogin: Boolean by mutableStateOf(false)
 
     var newsItems: List<NewsItem.Data> by mutableStateOf(emptyList())
+    val selectedNewsColour: Color = LsVocabTextBlue
+    val unselectedNewsColour: Color = LsTeal200
 
     fun init(uriFetch: () -> Unit) {
         FirebaseManager.loadVocabFromFirebase()

@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.tasks.await
+
 //import kotlinx.coroutines.tasks.await
 
 class LoginViewModel : ViewModel() {
@@ -40,8 +42,7 @@ class LoginViewModel : ViewModel() {
             loggedIn = try {
                 Firebase.auth
                     .signInWithEmailAndPassword(userEmailInput,userPasswordInput)
-                //TODO() await import not working
-                    //.await()
+                    .await()
                 true
             } catch (ignore: Exception) {
                 false

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -18,7 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -49,52 +52,92 @@ open class DisplayTermActivity : AppCompatActivity() {
                 ) {
                     when (viewModel.onActivityLaunch()) {
                         Sources.LESSON -> {
-                            val lazyListState = rememberLazyListState()
-                            LazyRow(
+                            Column(
                                 modifier = Modifier
-                                    //.padding(10.dp)
                                     .fillMaxWidth()
-                                    .fillMaxHeight(),
-                                state = lazyListState,
-                                flingBehavior = rememberSnapperFlingBehavior(lazyListState),
+                                    .fillMaxHeight()
                             ) {
-                                items(
-                                    LessonManager.current_lesson.lesson_list
-                                ) { item ->
-                                    Card(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(10.dp),
-                                        elevation = 3.dp,
-                                    ) {
-                                        Surface(
+
+
+                                val lazyListState = rememberLazyListState()
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .fillMaxHeight(0.95f),
+                                    state = lazyListState,
+                                    flingBehavior = rememberSnapperFlingBehavior(lazyListState),
+                                ) {
+                                    items(
+                                        LessonManager.current_lesson.lesson_list
+                                    ) { item ->
+
+                                        Card(
                                             modifier = Modifier
-                                                .background(MaterialTheme.colors.background)
-                                                .fillMaxHeight()
-                                                .fillMaxWidth()
-                                        )
-                                        {
-                                            DisplayTerm(
-                                                item,
-                                                null,
-                                                null,
-                                                viewModel.leftArrowImage,
-                                                viewModel.rightArrowImage,
+                                                .fillParentMaxWidth()
+                                                .padding(10.dp),
+                                            elevation = 3.dp,
+                                        ) {
+                                            Surface(
+                                                modifier = Modifier
+                                                    .background(MaterialTheme.colors.background)
+                                                    .fillMaxHeight()
+                                                    .fillMaxWidth()
                                             )
+                                            {
+                                                DisplayTerm(
+                                                    item,
+                                                    viewModel.mascOutlineColour,
+                                                    viewModel.femOutlineColour,
+                                                )
+                                            }
+
                                         }
 
+
+                                    }
+                                   /* item {
+                                        Card(
+                                            modifier = Modifier
+                                                .fillParentMaxWidth()
+                                                .padding(10.dp),
+                                            elevation = 3.dp,
+                                        ) {
+                                        Text("Test")
+                                        }
+
+                                    }*/
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .fillMaxWidth(),
+                                )
+                                {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.Center,
+                                    ) {
+
+
+                                        DotsIndicator(
+                                            totalDots = LessonManager.current_lesson.lesson_list.size,
+                                            selectedIndex = lazyListState.firstVisibleItemIndex,
+                                            selectedColor = viewModel.selectedNewsColour,
+                                            unSelectedColor = viewModel.unselectedNewsColour,
+                                        )
                                     }
                                 }
+
                             }
                         }
                         Sources.SEARCH -> {
 
                             DisplayTerm(
                                 viewModel.termToDisplay,
-                                viewModel::loadPrev,
-                                viewModel::loadNext,
-                                viewModel.leftArrowImage,
-                                viewModel.rightArrowImage,
+                                viewModel.mascOutlineColour,
+                                viewModel.femOutlineColour,
                             )
 
                         }
@@ -113,14 +156,14 @@ open class DisplayTermActivity : AppCompatActivity() {
     @Composable
     fun DisplayTerm(
         term: Term,
-        onClickLeft: (() -> Unit?)?,
-        onClickRight: (() -> Unit?)?,
-        leftArrowImage: Int,
-        rightArrowImage: Int,
+        mascOutlineColour: Color,
+        femOutlineColour: Color,
     ) {
 
 
         Column(
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
 
             //------------------------------ FIRST ROW --------------------------------//
@@ -133,7 +176,7 @@ open class DisplayTermActivity : AppCompatActivity() {
 
                 Row(
                 ) {
-                    AsyncImage(
+                    /*AsyncImage(
                         modifier = Modifier
                             .clickable {
                                 if (onClickLeft != null) {
@@ -145,7 +188,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                         model = leftArrowImage,
                         contentDescription = null,
                         alignment = Alignment.CenterStart,
-                    )
+                    )*/
                 }
 
                 Row(
@@ -175,7 +218,7 @@ open class DisplayTermActivity : AppCompatActivity() {
 
                 Row(
                 ) {
-                    AsyncImage(
+                    /*AsyncImage(
                         modifier = Modifier
                             .clickable {
                                 if (onClickRight != null) {
@@ -188,7 +231,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                         model = rightArrowImage,
                         contentDescription = null,
                         alignment = Alignment.CenterStart,
-                    )
+                    )*/
                 }
 
             }
@@ -211,6 +254,9 @@ open class DisplayTermActivity : AppCompatActivity() {
                     ) {
                         Image(
                             modifier = Modifier
+                                .padding(1.dp)
+                                .border(2.dp, mascOutlineColour, RoundedCornerShape(10))
+                                .padding(5.dp)
                                 .height(100.dp),
                             painter = painterResource(id = R.drawable.opaquemars),
                             contentDescription = null,
@@ -222,6 +268,9 @@ open class DisplayTermActivity : AppCompatActivity() {
                     ) {
                         Image(
                             modifier = Modifier
+                                .padding(1.dp)
+                                .border(2.dp, femOutlineColour, RoundedCornerShape(10))
+                                .padding(5.dp)
                                 .height(100.dp),
                             painter = painterResource(id = R.drawable.opaquevenus),
                             contentDescription = null,
@@ -243,12 +292,32 @@ open class DisplayTermActivity : AppCompatActivity() {
                 Text(
                     modifier = Modifier
                         .padding(all = 10.dp),
-                    text = "Translations",
+                    text = stringResource(R.string.translations),
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.secondary,
                 )
 
-                TextField(
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 10.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .border(
+                            2.dp,
+                            color = MaterialTheme.colors.primary,
+                            shape = RoundedCornerShape(16.dp),
+                        )
+                        //.background(color = MaterialTheme.colors.onBackground),
+                ) {
+                    term.translations.forEach {
+                        Text(
+                            modifier = Modifier.padding(all = 5.dp),
+                            text = it,
+                        )
+                    }
+                }
+
+                /*TextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 10.dp, end = 10.dp)
@@ -269,7 +338,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                     }.toString(),
                     onValueChange = { /**/ },
                     enabled = false,
-                )
+                )*/
 
             }
 
@@ -283,7 +352,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                 Text(
                     modifier = Modifier
                         .padding(all = 10.dp),
-                    text = "Mnemonics",
+                    text = "${resources.getText(R.string.mnemonics)}",
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.secondary,
                 )
@@ -321,7 +390,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(all = 10.dp),
-                    text = "Your progress",
+                    text = "${resources.getText(R.string.your_progress)}",
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.secondary,
                 )
@@ -388,7 +457,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                         Text(
                             modifier = Modifier
                                 .padding(all = 10.dp),
-                            text = "Next review",
+                            text = "${resources.getText(R.string.next_review)}",
                             style = MaterialTheme.typography.body2,
                             color = MaterialTheme.colors.secondary,
                         )
@@ -418,6 +487,42 @@ open class DisplayTermActivity : AppCompatActivity() {
 
     }
 
+
+    @Composable
+    fun DotsIndicator(
+        totalDots: Int,
+        selectedIndex: Int,
+        selectedColor: Color,
+        unSelectedColor: Color,
+    ) {
+
+        LazyRow(
+
+        ) {
+
+            items(totalDots) { index ->
+                if (index == selectedIndex) {
+                    Box(
+                        modifier = Modifier
+                            .size(15.dp)
+                            .clip(CircleShape)
+                            .background(selectedColor)
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .size(15.dp)
+                            .clip(CircleShape)
+                            .background(unSelectedColor)
+                    )
+                }
+
+                if (index != totalDots - 1) {
+                    Spacer(modifier = Modifier.padding(horizontal = 2.dp))
+                }
+            }
+        }
+    }
 
 }
 

@@ -125,7 +125,7 @@ class ReviewTermActivity : AppCompatActivity() {
                         .fillMaxWidth(),
                     value = userInput,
                     onValueChange = { handleChange(it) },
-                    label = { Text("Enter translation") },
+                    label = { Text("${resources.getText(R.string.enter_translation)}") },
                     singleLine = true,
                     textStyle = MaterialTheme.typography.body1,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -143,7 +143,7 @@ class ReviewTermActivity : AppCompatActivity() {
                 horizontalArrangement = Arrangement.Start,
             ) {
                 Text(
-                    text = "Select gender",
+                    text = "${resources.getText(R.string.select_gender)}",
                     color = selectGenderTextColour,
                     style = MaterialTheme.typography.body1,
                 )
@@ -214,7 +214,7 @@ class ReviewTermActivity : AppCompatActivity() {
                 )
                 {
                     Text(
-                        text = "Submit",
+                        text = "${resources.getText(R.string.submit)}",
                     color = MaterialTheme.colors.onBackground)
                 }
             }

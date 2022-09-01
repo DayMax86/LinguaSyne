@@ -6,12 +6,17 @@ import android.widget.TextView
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.managers.VocabRepository
+import com.example.linguasyne.ui.theme.LsCorrectGreen
+import com.example.linguasyne.ui.theme.LsGrey
+import com.example.linguasyne.ui.theme.LsTeal200
+import com.example.linguasyne.ui.theme.LsVocabTextBlue
 
 enum class Sources {
     LESSON,
@@ -20,18 +25,17 @@ enum class Sources {
 
 class DisplayTermViewModel {
 
-    private var tPos: Int = 0
     lateinit var vSource: Sources
 
     var termToDisplay: Term by mutableStateOf(VocabRepository.currentVocab[0])
 
-    var enabledLeftArrow by mutableStateOf(false)
-    var enabledRightArrow by mutableStateOf(false)
-    var leftArrowImage by mutableStateOf(R.drawable.opaqueleftarrow)
-    var rightArrowImage by mutableStateOf(R.drawable.opaquerightarrow)
-
     private var masc by mutableStateOf(false)
+    var mascOutlineColour by mutableStateOf(LsGrey)
     private var fem by mutableStateOf(false)
+    var femOutlineColour by mutableStateOf(LsGrey)
+
+    val selectedNewsColour: Color = LsVocabTextBlue
+    val unselectedNewsColour: Color = LsTeal200
 
     fun onActivityLaunch(): Sources {
         getTermData()
@@ -41,7 +45,6 @@ class DisplayTermViewModel {
     private fun getTermData() {
         fetchTermSource()
         fetchTerm()
-        fetchImages()
         fetchGenderImages()
     }
 
@@ -58,7 +61,7 @@ class DisplayTermViewModel {
     private fun fetchTerm() {
         when (fetchTermSource()) {
             (Sources.LESSON) -> {
-                termToDisplay = LessonManager.current_lesson.lesson_list.elementAt(tPos)
+                termToDisplay = LessonManager.current_lesson.lesson_list.elementAt(0)
             }
             (Sources.SEARCH) -> {
                 termToDisplay = VocabRepository.currentVocab.elementAt(0)
@@ -68,6 +71,7 @@ class DisplayTermViewModel {
         }
     }
 
+    /*
     private fun fetchImages() {
         var firstInList = false
         var lastInList = false
@@ -114,6 +118,7 @@ class DisplayTermViewModel {
 
 
     }
+    */
 
     private fun fetchGenderImages() {
         if (termToDisplay is Vocab) {
@@ -121,41 +126,32 @@ class DisplayTermViewModel {
             when ((termToDisplay as Vocab).gender) {
                 Gender.NO -> {
                     masc = false
+                    mascOutlineColour = LsGrey
                     fem = false
+                    femOutlineColour = LsGrey
                 }
                 Gender.F -> {
                     masc = false
+                    mascOutlineColour = LsGrey
                     fem = true
+                    femOutlineColour = LsCorrectGreen
                 }
                 Gender.M -> {
                     masc = true
+                    mascOutlineColour = LsCorrectGreen
                     fem = false
+                    femOutlineColour = LsGrey
                 }
                 Gender.MF -> {
                     masc = true
+                    mascOutlineColour = LsCorrectGreen
                     fem = true
+                    femOutlineColour = LsCorrectGreen
                 }
             }
         }
     }
 
-    fun loadPrev() {
-        if (enabledLeftArrow) {
-            if (tPos > 0) {
-                tPos--
-                fetchTerm()
-            }
-        }
-    }
-
-    fun loadNext() {
-        if (enabledRightArrow) {
-            if (tPos < LessonManager.current_lesson.lesson_list.size - 1) {
-                tPos++
-                fetchTerm()
-            }
-        }
-    }
 
     fun onActivityEnd() {
         LessonManager.activeLesson = false

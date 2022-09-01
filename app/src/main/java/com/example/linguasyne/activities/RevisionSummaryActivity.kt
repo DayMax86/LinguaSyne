@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.linguasyne.R
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.ReviewTermViewModel
 
@@ -55,7 +56,7 @@ class RevisionSummaryActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Summary",
+                text = "${resources.getText(R.string.summary)}",
                 color = MaterialTheme.colors.primary,
                 style = MaterialTheme.typography.h1
             )
@@ -63,11 +64,11 @@ class RevisionSummaryActivity : ComponentActivity() {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                "Total correct: ${sv.totalCorrect}",
+                "${resources.getText(R.string.total_correct)}: ${sv.totalCorrect}",
                 color = MaterialTheme.colors.primary
             )
             Text(
-                "Total incorrect: ${sv.totalIncorrect}",
+                "${resources.getText(R.string.total_incorrect)}: ${sv.totalIncorrect}",
                 color = MaterialTheme.colors.primary
             )
 
@@ -79,7 +80,7 @@ class RevisionSummaryActivity : ComponentActivity() {
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
             )
             {
-                Text("Continue")
+                Text("${resources.getText(R.string.continue_string)}")
             }
         }
     }

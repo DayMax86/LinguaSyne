@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,6 +27,7 @@ import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.VocabSearchViewModel
 import kotlin.reflect.KFunction1
+import com.example.linguasyne.R
 
 class VocabSearchActivity : AppCompatActivity() {
 
@@ -88,13 +90,14 @@ class VocabSearchActivity : AppCompatActivity() {
         Card(
             modifier = Modifier
                 .padding(all = 10.dp)
+                .border(2.dp,MaterialTheme.colors.secondary, shape = RoundedCornerShape(size = 10.dp))
                 .fillMaxWidth()
                 .clickable {
                     onClick(vocab)
                     Log.e("VocabSearch", "within .clickable")
                            },
             elevation = 5.dp,
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = MaterialTheme.colors.onBackground,
             shape = RoundedCornerShape(corner = CornerSize(10.dp)),
             )
         {
@@ -111,12 +114,12 @@ class VocabSearchActivity : AppCompatActivity() {
                         style = MaterialTheme.typography.h1,
                     )
                     Text(
-                        text = "Unlock level: ${vocab.unlock_level.toString()}",
+                        text = "${resources.getText(R.string.unlock_level)}: ${vocab.unlock_level.toString()}",
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1,
                     )
                     Text(
-                        text = "Current level: ${vocab.current_level_term}",
+                        text = "${resources.getText(R.string.current_level)}: ${vocab.current_level_term}",
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1,
                     )

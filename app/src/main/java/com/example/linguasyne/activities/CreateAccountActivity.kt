@@ -37,6 +37,7 @@ import com.example.linguasyne.R
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.CreateAccountViewModel
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import kotlin.reflect.KFunction0
 
@@ -116,7 +117,7 @@ class CreateAccountActivity(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = "Password strength:",
+                    text = "${resources.getText(R.string.password_strength)}: ",
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.primary,
                 )
@@ -154,7 +155,7 @@ class CreateAccountActivity(
         userEmailInput: String,
         userPasswordInput: String,
         handleEmailChange: (String) -> Unit,
-        handlePasswordChange: (String) -> Unit,
+        handlePasswordChange: (String, Context) -> Unit,
         emailOutlineColour: Color,
         passwordOutlineColour: Color,
         buttonOnClick: () -> Unit,
@@ -205,7 +206,7 @@ class CreateAccountActivity(
                             .fillMaxWidth(),
                         value = userEmailInput,
                         onValueChange = { handleEmailChange(it) },
-                        label = { Text("Email address") },
+                        label = { Text("${resources.getText(R.string.email_address)}") },
                         singleLine = true,
                         textStyle = MaterialTheme.typography.body1,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -223,8 +224,8 @@ class CreateAccountActivity(
                         modifier = Modifier
                             .fillMaxWidth(),
                         value = userPasswordInput,
-                        onValueChange = { handlePasswordChange(it) },
-                        label = { Text("Password") },
+                        onValueChange = { handlePasswordChange(it,this@CreateAccountActivity.baseContext) },
+                        label = { Text("${resources.getText(R.string.password)}") },
                         singleLine = true,
                         textStyle = MaterialTheme.typography.body1,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -254,7 +255,7 @@ class CreateAccountActivity(
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
                 )
                 {
-                    Text("Create account")
+                    Text("${resources.getText(R.string.create_account)}")
                 }
 
             }
@@ -272,7 +273,7 @@ class CreateAccountActivity(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     ClickableText(
-                        text = AnnotatedString("Return to login"),
+                        text = AnnotatedString("${resources.getText(R.string.return_to_login)}"),
                         onClick = { textOnClick() },
                     )
                 }
@@ -291,7 +292,7 @@ class CreateAccountActivity(
             startActivityForResult(intent, PICK_IMAGE)
         } catch (e: ActivityNotFoundException) {
             // display error state to the user
-            Toast.makeText(this, "Error launching camera", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "${resources.getText(R.string.camera_error_toast)}", Toast.LENGTH_LONG).show()
         }
 
     }

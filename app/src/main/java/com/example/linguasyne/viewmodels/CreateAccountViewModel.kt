@@ -7,10 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.example.linguasyne.R
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsErrorRed
 import com.example.linguasyne.ui.theme.LsTextBlue
+import android.content.Context
 
 class CreateAccountViewModel : ViewModel() {
 
@@ -33,7 +35,7 @@ class CreateAccountViewModel : ViewModel() {
         userEmailInput = text
     }
 
-    fun handlePasswordChange(text: String) {
+    fun handlePasswordChange(text: String, context: Context) {
         passwordOutlineColour = LsTextBlue
         userPasswordInput = text
 
@@ -45,40 +47,40 @@ class CreateAccountViewModel : ViewModel() {
 
             when (checkPasswordStrength(userPasswordInput)) {
                 PasswordStrengths.WHITESPACE -> {
-                    passwordStrength = "Password cannot contain spaces!"
+                    passwordStrength = "${context.resources.getText(R.string.password_strength_spaces)}"
                     progressBarValue = 0f
                     passwordOutlineColour = LsErrorRed
                 }
                 PasswordStrengths.VERY_WEAK -> {
-                    passwordStrength = "Very weak"
+                    passwordStrength = "${context.resources.getText(R.string.password_strength_very_weak)}"
                     progressBarValue = 0.2f
                     passwordOutlineColour = Color(0x2200FF00)
                 }
                 PasswordStrengths.WEAK -> {
-                    passwordStrength = "Weak"
+                    passwordStrength = "${context.resources.getText(R.string.password_strength_weak)}"
                     progressBarValue = 0.4f
                     passwordOutlineColour = Color(0x4400FF00)
                 }
                 PasswordStrengths.AVERAGE -> {
-                    passwordStrength = "Average"
+                    passwordStrength = "${context.resources.getText(R.string.password_strength_average)}"
                     progressBarValue = 0.6f
                     passwordOutlineColour = Color(0x6600FF00)
                 }
                 PasswordStrengths.STRONG -> {
-                    passwordStrength = "Strong"
+                    passwordStrength = "${context.resources.getText(R.string.password_strength_strong)}"
                     progressBarValue = 0.8f
                     passwordOutlineColour = Color(0x8800FF00)
                 }
                 PasswordStrengths.VERY_STRONG -> {
                     passwordOutlineColour = LsCorrectGreen
-                    passwordStrength = "Very strong!"
+                    passwordStrength = "${context.resources.getText(R.string.password_strength_very_strong)}"
                     progressBarValue = 1f
                 }
                 PasswordStrengths.ERROR -> {
                     Log.e("CreateAccountActivity", "Error in displaying password strength")
                 }
                 PasswordStrengths.SHORT -> {
-                    passwordStrength = "Too short"
+                    passwordStrength = "${context.resources.getText(R.string.password_strength_short)}"
                     progressBarValue = 0f
                     passwordOutlineColour = LsErrorRed
                 }

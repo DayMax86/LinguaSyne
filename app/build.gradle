@@ -55,7 +55,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.1'
     implementation 'androidx.test.ext:junit-ktx:1.1.3'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
+    implementation platform('com.google.firebase:firebase-bom:30.3.1')
+    implementation 'com.google.firebase:firebase-storage-ktx'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4'
     testImplementation 'junit:junit:'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -74,6 +76,9 @@ dependencies {
 
     //Snapper
     implementation "dev.chrisbanes.snapper:snapper:0.3.0"
+
+    //ViewPager dots for compose
+    implementation "com.google.accompanist:accompanist-pager:0.22.0-rc"
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

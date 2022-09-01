@@ -137,7 +137,7 @@ class LoginActivity : AppCompatActivity() {
                     onValueChange = { handleEmailChange(it) },
                     label = {
                         Text(
-                            text = "Email address",
+                            text = "${resources.getText(R.string.email_address)}",
                             color = MaterialTheme.colors.secondary,
                         )
                     },
@@ -157,7 +157,7 @@ class LoginActivity : AppCompatActivity() {
                     onValueChange = { handlePasswordChange(it) },
                     label = {
                         Text(
-                            text = "Password",
+                            text = "${resources.getText(R.string.password)}",
                             color = MaterialTheme.colors.secondary,
                         )
                     },
@@ -187,7 +187,7 @@ class LoginActivity : AppCompatActivity() {
                 )
                 {
                     Text(
-                        text = "Log in",
+                        text = "${resources.getText(R.string.log_in)}",
                     )
                 }
 
@@ -203,7 +203,7 @@ class LoginActivity : AppCompatActivity() {
 
                     ) {
                         ClickableText(
-                            text = AnnotatedString("No account? Click here to create one"),
+                            text = AnnotatedString("${resources.getText(R.string.create_account_prompt)}"),
                             onClick = textOnClick,
                         )
                     }

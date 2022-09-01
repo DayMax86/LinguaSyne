@@ -143,7 +143,7 @@ class HomeActivity : AppCompatActivity() {
         TopAppBar(
             title = {
                 Text(
-                    text = "LinguaSyne",
+                    text = "${resources.getText(R.string.app_name)}",
                     color = MaterialTheme.colors.onSurface
                 )
             },
@@ -204,7 +204,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "Settings",
+                            text = "${resources.getText(R.string.settings)}",
                             style = MaterialTheme.typography.h1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -247,7 +247,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "Term base",
+                            text = "${resources.getText(R.string.term_base)}",
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -287,7 +287,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "Help",
+                            text = "${resources.getText(R.string.help)}",
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -329,7 +329,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "About LinguaSyne",
+                            text = "${resources.getText(R.string.about)}",
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -368,7 +368,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "Share LinguaSyne with a friend!",
+                            text = "${resources.getText(R.string.share)}",
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -412,7 +412,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "Sign out",
+                            text = "${resources.getText(R.string.sign_out)}",
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -481,7 +481,7 @@ class HomeActivity : AppCompatActivity() {
                             Text(
                                 modifier = Modifier
                                     .padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
-                                text = "Lessons",
+                                text = "${resources.getText(R.string.lessons)}",
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.secondary,
                             )
@@ -504,7 +504,7 @@ class HomeActivity : AppCompatActivity() {
                                         Row(
 
                                         ) {
-                                            Text("Vocab")
+                                            Text("${resources.getText(R.string.vocab)}")
                                         }
 
                                         Row(
@@ -535,7 +535,7 @@ class HomeActivity : AppCompatActivity() {
                                         Row(
 
                                         ) {
-                                            Text("Verbs")
+                                            Text("${resources.getText(R.string.verbs)}")
                                         }
 
                                         Row(
@@ -566,7 +566,7 @@ class HomeActivity : AppCompatActivity() {
                                         Row(
 
                                         ) {
-                                            Text("Phrases")
+                                            Text("${resources.getText(R.string.phrases)}")
                                         }
 
                                         Row(
@@ -626,7 +626,7 @@ class HomeActivity : AppCompatActivity() {
                                     .align(Alignment.CenterHorizontally),
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.primary,
-                                text = "Level ${user.user_level}"
+                                text = "${resources.getText(R.string.level)} ${user.user_level}"
                             )
 
                         }
@@ -661,7 +661,7 @@ class HomeActivity : AppCompatActivity() {
                             Text(
                                 modifier = Modifier
                                     .padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
-                                text = "Revision",
+                                text = "${resources.getText(R.string.revision)}",
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.secondary,
                             )
@@ -684,7 +684,7 @@ class HomeActivity : AppCompatActivity() {
                                         Row(
 
                                         ) {
-                                            Text("To revise")
+                                            Text("${resources.getText(R.string.to_revise)}")
                                         }
 
                                         Row(
@@ -723,7 +723,7 @@ class HomeActivity : AppCompatActivity() {
                                     Row(
 
                                     ) {
-                                        Text("Exam")
+                                        Text("${resources.getText(R.string.exam)}")
                                     }
 
                                 }
@@ -736,7 +736,6 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
 
             Column(
 
@@ -763,7 +762,7 @@ class HomeActivity : AppCompatActivity() {
                             )
 
                             Text(
-                                text = " X-day streak!",
+                                text = " N${resources.getText(R.string.day_streak)}",
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.secondary
                             )
@@ -789,7 +788,7 @@ class HomeActivity : AppCompatActivity() {
                             Text(
                                 modifier = Modifier
                                     .clickable { onClickTermBase() },
-                                text = " Term base",
+                                text = " ${resources.getText(R.string.term_base)}",
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.secondary,
                             )
@@ -806,68 +805,74 @@ class HomeActivity : AppCompatActivity() {
 
             /*---------------------------FOURTH LAYER------------------------------------------*/
 
-            val lazyListState = rememberLazyListState()
-            LazyRow(
-                modifier = Modifier
-                    //.padding(10.dp)
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                state = lazyListState,
-                flingBehavior = rememberSnapperFlingBehavior(lazyListState),
-            )
-            {
-                items(
-                    newsItems
-                ) { item ->
-                    Card(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .fillMaxWidth()
-                            .padding(all = 16.dp),
-                        elevation = 6.dp,
-                        backgroundColor = MaterialTheme.colors.onSurface,
-                    ) {
-                        /*--Rounded corner card housing API info--*/
+            Column(
 
-                        Row(
+            ) {
+
+                val lazyListState = rememberLazyListState()
+                LazyRow(
+                    modifier = Modifier
+                        //.padding(10.dp)
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    state = lazyListState,
+                    flingBehavior = rememberSnapperFlingBehavior(lazyListState),
+                )
+                {
+                    items(
+                        newsItems
+                    ) { item ->
+                        Card(
                             modifier = Modifier
-                                .border(width = 2.dp, color = MaterialTheme.colors.secondary)
-                                .padding(all = 5.dp),
-                            horizontalArrangement = Arrangement.SpaceEvenly,
+                                .clip(RoundedCornerShape(10.dp))
+                                .fillParentMaxWidth(1f)
+                                .wrapContentHeight()
+                                .padding(all = 16.dp),
+                            elevation = 6.dp,
+                            backgroundColor = MaterialTheme.colors.onSurface,
                         ) {
+                            /*--Rounded corner card housing API info--*/
 
                             Column(
                                 modifier = Modifier
-                                    .padding(all = 5.dp)
+                                    .border(width = 2.dp, color = MaterialTheme.colors.secondary)
+                                    .padding(all = 5.dp),
                             ) {
 
-                                Row(
+                                Column(
+                                ) {
 
-                                )
-                                {
+                                    Row(
 
-
-                                    Column(
-
-                                    ) {
+                                    )
+                                    {
 
 
-                                        Text(
-                                            modifier = Modifier
-                                                .padding(end = 5.dp),
-                                            text = "Today in /COUNTRY/",
-                                            style = MaterialTheme.typography.body1,
-                                            color = MaterialTheme.colors.secondary
-                                        )
+                                        Column(
+
+                                        ) {
 
 
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(start = 5.dp, end = 5.dp),
+                                                text = "${resources.getText(R.string.today_in)} ${
+                                                    resources.getText(
+                                                        R.string.country_name
+                                                    )
+                                                }",
+                                                style = MaterialTheme.typography.body1,
+                                                color = MaterialTheme.colors.secondary
+                                            )
 
 
+                                        }
                                     }
 
                                     AsyncImage(
                                         modifier = Modifier
-                                            .width(200.dp)
+                                            .fillParentMaxWidth()
+                                            .padding(all = 5.dp)
                                             .border(
                                                 2.dp,
                                                 color = MaterialTheme.colors.secondary,
@@ -878,36 +883,96 @@ class HomeActivity : AppCompatActivity() {
                                         contentDescription = null,
                                     )
 
-                                }
 
-                                Row(
-                                    modifier = Modifier
-                                        .padding(all = 5.dp),
-                                ) {
 
-                                    Text(
+                                    Row(
                                         modifier = Modifier
-                                            .clipToBounds(),
-                                        text = item.title,
-                                        style = MaterialTheme.typography.body1,
-                                        color = MaterialTheme.colors.secondary,
-                                        overflow = TextOverflow.Ellipsis,
-                                        softWrap = false,
-                                    )
+                                            .padding(all = 5.dp),
+                                    ) {
+
+                                        Text(
+                                            modifier = Modifier
+                                                .clipToBounds(),
+                                            text = item.title,
+                                            style = MaterialTheme.typography.body1,
+                                            color = MaterialTheme.colors.secondary,
+                                            overflow = TextOverflow.Visible,
+                                            softWrap = true,
+                                        )
+                                    }
+
                                 }
 
                             }
 
-                        }
 
+                        }
+                    }
+
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.Bottom,
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.Bottom,
+                    ) {
+
+                        DotsIndicator(
+                            totalDots = viewModel.newsItems.size,
+                            selectedIndex = lazyListState.firstVisibleItemIndex,
+                            selectedColor = viewModel.selectedNewsColour,
+                            unSelectedColor = viewModel.unselectedNewsColour,
+                        )
 
                     }
                 }
+
+
             }
-
-
         }
 
+    }
+
+
+    @Composable
+    fun DotsIndicator(
+        totalDots: Int,
+        selectedIndex: Int,
+        selectedColor: Color,
+        unSelectedColor: Color,
+    ) {
+
+        LazyRow(
+
+        ) {
+
+            items(totalDots) { index ->
+                if (index == selectedIndex) {
+                    Box(
+                        modifier = Modifier
+                            .size(15.dp)
+                            .clip(CircleShape)
+                            .background(selectedColor)
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .size(15.dp)
+                            .clip(CircleShape)
+                            .background(unSelectedColor)
+                    )
+                }
+
+                if (index != totalDots - 1) {
+                    Spacer(modifier = Modifier.padding(horizontal = 2.dp))
+                }
+            }
+        }
     }
 
 
