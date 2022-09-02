@@ -6,19 +6,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
-import com.google.firebase.auth.FirebaseAuth
 import com.example.linguasyne.managers.*
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.HomeViewModel
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -38,18 +33,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.NewsItem
 import com.example.linguasyne.classes.User
-import com.google.android.gms.common.api.Scope
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import kotlinx.coroutines.CoroutineScope
@@ -61,14 +52,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.init {
-            FirebaseManager.getUserImageFromFirestore {
-                viewModel.imageFetched(it)
-            }
-            viewModel.APIcall {
-                Log.d("HomeActivity", "Success!")
-            }
-        }
+        viewModel.init()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -143,7 +127,7 @@ class HomeActivity : AppCompatActivity() {
         TopAppBar(
             title = {
                 Text(
-                    text = "${resources.getText(R.string.app_name)}",
+                    text = stringResource(id = R.string.app_name),
                     color = MaterialTheme.colors.onSurface
                 )
             },
@@ -204,7 +188,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "${resources.getText(R.string.settings)}",
+                            text = stringResource(id = R.string.settings),
                             style = MaterialTheme.typography.h1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -247,7 +231,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "${resources.getText(R.string.term_base)}",
+                            text = stringResource(id = R.string.term_base),
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -287,7 +271,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "${resources.getText(R.string.help)}",
+                            text = stringResource(id = R.string.help),
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -329,7 +313,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "${resources.getText(R.string.about)}",
+                            text = stringResource(id = R.string.about),
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -368,7 +352,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "${resources.getText(R.string.share)}",
+                            text = stringResource(id = R.string.share),
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -412,7 +396,7 @@ class HomeActivity : AppCompatActivity() {
                         horizontalArrangement = Arrangement.Start,
                     ) {
                         Text(
-                            text = "${resources.getText(R.string.sign_out)}",
+                            text = stringResource(id = R.string.sign_out),
                             style = MaterialTheme.typography.body1,
                             color = MaterialTheme.colors.primary,
                             maxLines = 1,
@@ -481,7 +465,7 @@ class HomeActivity : AppCompatActivity() {
                             Text(
                                 modifier = Modifier
                                     .padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
-                                text = "${resources.getText(R.string.lessons)}",
+                                text = stringResource(id = R.string.lessons),
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.secondary,
                             )
@@ -504,7 +488,7 @@ class HomeActivity : AppCompatActivity() {
                                         Row(
 
                                         ) {
-                                            Text("${resources.getText(R.string.vocab)}")
+                                            Text(stringResource(id = R.string.vocab))
                                         }
 
                                         Row(
@@ -535,7 +519,7 @@ class HomeActivity : AppCompatActivity() {
                                         Row(
 
                                         ) {
-                                            Text("${resources.getText(R.string.verbs)}")
+                                            Text(stringResource(id = R.string.verbs))
                                         }
 
                                         Row(
@@ -566,7 +550,7 @@ class HomeActivity : AppCompatActivity() {
                                         Row(
 
                                         ) {
-                                            Text("${resources.getText(R.string.phrases)}")
+                                            Text(stringResource(id = R.string.phrases))
                                         }
 
                                         Row(
@@ -618,7 +602,7 @@ class HomeActivity : AppCompatActivity() {
                                     .align(Alignment.CenterHorizontally),
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.primary,
-                                text = FirebaseManager.current_user.user_email
+                                text = FirebaseManager.currentUser!!.email
                             )
 
                             Text(
@@ -626,7 +610,7 @@ class HomeActivity : AppCompatActivity() {
                                     .align(Alignment.CenterHorizontally),
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.primary,
-                                text = "${resources.getText(R.string.level)} ${user.user_level}"
+                                text = stringResource(id = R.string.level) + "${user.level}"
                             )
 
                         }
@@ -661,7 +645,7 @@ class HomeActivity : AppCompatActivity() {
                             Text(
                                 modifier = Modifier
                                     .padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
-                                text = "${resources.getText(R.string.revision)}",
+                                text = stringResource(id = R.string.revision),
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.secondary,
                             )
@@ -684,7 +668,7 @@ class HomeActivity : AppCompatActivity() {
                                         Row(
 
                                         ) {
-                                            Text("${resources.getText(R.string.to_revise)}")
+                                            Text(stringResource(id = R.string.to_revise))
                                         }
 
                                         Row(
@@ -723,7 +707,7 @@ class HomeActivity : AppCompatActivity() {
                                     Row(
 
                                     ) {
-                                        Text("${resources.getText(R.string.exam)}")
+                                        Text(stringResource(id = R.string.exam))
                                     }
 
                                 }
@@ -762,7 +746,9 @@ class HomeActivity : AppCompatActivity() {
                             )
 
                             Text(
-                                text = " N${resources.getText(R.string.day_streak)}",
+                                modifier = Modifier
+                                    .padding(start = 2.dp),
+                                text = stringResource(id = R.string.day_streak, user.streak),
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.secondary
                             )
@@ -787,8 +773,9 @@ class HomeActivity : AppCompatActivity() {
 
                             Text(
                                 modifier = Modifier
+                                    .padding(start = 2.dp)
                                     .clickable { onClickTermBase() },
-                                text = " ${resources.getText(R.string.term_base)}",
+                                text = stringResource(id = R.string.term_base),
                                 style = MaterialTheme.typography.body1,
                                 color = MaterialTheme.colors.secondary,
                             )
@@ -856,11 +843,7 @@ class HomeActivity : AppCompatActivity() {
                                             Text(
                                                 modifier = Modifier
                                                     .padding(start = 5.dp, end = 5.dp),
-                                                text = "${resources.getText(R.string.today_in)} ${
-                                                    resources.getText(
-                                                        R.string.country_name
-                                                    )
-                                                }",
+                                                text = stringResource(id = R.string.today_in, user.studyCountry),
                                                 style = MaterialTheme.typography.body1,
                                                 color = MaterialTheme.colors.secondary
                                             )
@@ -999,7 +982,7 @@ class HomeActivity : AppCompatActivity() {
     fun LaunchRevisionSession(launchRevisionSession: Boolean, createSession: () -> Unit) {
         if (launchRevisionSession) {
             createSession()
-            val intent = Intent(this, ReviewTermActivity::class.java)
+            val intent = Intent(this, ReviseTermActivity::class.java)
             startActivity(intent)
         }
     }
@@ -1016,8 +999,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
 
-    fun selectImage() {
-
+    private fun selectImage() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.setType("image/*")
         val PICK_IMAGE = 1
@@ -1027,21 +1009,14 @@ class HomeActivity : AppCompatActivity() {
             // display error state to the user
             Toast.makeText(this, "Error launching camera", Toast.LENGTH_LONG).show()
         }
-
     }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Log.d("ImageSelector", "Image has been selected")
-
         val uri = data?.data
-        FirebaseManager.uploadUserImageToFirebaseStorage(uri) {
-            if (it != null) {
-                viewModel.firebaseImageUpload(it)
-            }
-        }
+        viewModel.uploadUserImage(uri)
     }
 }
 

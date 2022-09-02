@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.*
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -28,18 +27,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.widget.addTextChangedListener
 import coil.compose.AsyncImage
-import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.R
-import com.example.linguasyne.classes.User
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.CreateAccountViewModel
 import android.content.Context
-import com.google.firebase.auth.FirebaseAuth
-import kotlin.reflect.KFunction0
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
+import com.example.linguasyne.ui.theme.LsCorrectGreen
+import com.example.linguasyne.ui.theme.White
 
 class CreateAccountActivity(
     // Pass things the class needs e.g. viewmodel as constructor parameters
@@ -52,13 +56,14 @@ class CreateAccountActivity(
 
         setContent {
             ReturnToLogin(toReturn = viewModel.returnToLogin)
+            GoToHome(goToHome = viewModel.goToHome)
             LinguaSyneTheme(darkTheme = false) {
                 Surface(
                     modifier = Modifier
                         .background(MaterialTheme.colors.background)
                 )
                 {
-                    DisplayLogin(
+                    DisplayCreateAccount(
                         viewModel.userEmailInput,
                         viewModel.userPasswordInput,
                         handleEmailChange = viewModel::handleEmailChange,
@@ -68,6 +73,14 @@ class CreateAccountActivity(
                         buttonOnClick = viewModel::handleButtonPress,
                         textOnClick = viewModel::handleTextPress,
                         userImage = viewModel.userImage,
+                        blurAmount = viewModel.blurAmount,
+                    )
+
+                    AnimateSuccessfulLogin(
+                        animate = viewModel.animateSuccess,
+                        animationSpec = tween(viewModel.animateDuration),
+                        initialScale = 0f,
+                        transformOrigin = TransformOrigin.Center,
                     )
 
                     TogglePasswordStrengthIndicator(showProgressBar = viewModel.showProgressBar)
@@ -84,6 +97,84 @@ class CreateAccountActivity(
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    @Composable
+    fun GoToHome(goToHome: Boolean) {
+        if (goToHome) {
+            this.finish()
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    @OptIn(ExperimentalAnimationApi::class)
+    @Composable
+    fun AnimateSuccessfulLogin(
+        animate: Boolean,
+        animationSpec: FiniteAnimationSpec<Float>,
+        initialScale: Float,
+        transformOrigin: TransformOrigin,
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.75f),
+            verticalArrangement = Arrangement.SpaceEvenly,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            )
+            {
+
+                AnimatedVisibility(
+                    modifier = Modifier
+                        .padding(2.dp),
+                    visible = animate,
+
+                    enter = scaleIn(
+                        animationSpec = animationSpec,
+                        initialScale = initialScale,
+                        transformOrigin = transformOrigin,
+                    ) + expandVertically(
+                        expandFrom = Alignment.CenterVertically
+                    ) + expandHorizontally(
+                        expandFrom = CenterHorizontally
+                    ),
+
+                    exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
+                ) {
+                    Row(
+                        Modifier
+                            .size(200.dp)
+                            .border(4.dp, MaterialTheme.colors.secondary, shape = CircleShape)
+                            .background(
+                                color = LsCorrectGreen, shape = CircleShape
+                            ),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row {
+                            Text(
+                                text = String(Character.toChars(0x2713)),
+                                //color = LsCorrectGreen,
+                                style =
+                                TextStyle(
+                                    color = White,
+                                    fontSize = 150.sp,
+                                ),
+
+                                )
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 
     @Composable
@@ -117,7 +208,7 @@ class CreateAccountActivity(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = "${resources.getText(R.string.password_strength)}: ",
+                    text = stringResource(R.string.password_strength),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.primary,
                 )
@@ -151,7 +242,7 @@ class CreateAccountActivity(
     }
 
     @Composable
-    fun DisplayLogin(
+    fun DisplayCreateAccount(
         userEmailInput: String,
         userPasswordInput: String,
         handleEmailChange: (String) -> Unit,
@@ -161,10 +252,12 @@ class CreateAccountActivity(
         buttonOnClick: () -> Unit,
         textOnClick: () -> Unit,
         userImage: Uri?,
+        blurAmount: Int
     ) {
 
         Column(
             modifier = Modifier
+                .blur(blurAmount.dp, blurAmount.dp, BlurredEdgeTreatment.Rectangle)
                 .fillMaxHeight()
         ) {
 
@@ -206,7 +299,7 @@ class CreateAccountActivity(
                             .fillMaxWidth(),
                         value = userEmailInput,
                         onValueChange = { handleEmailChange(it) },
-                        label = { Text("${resources.getText(R.string.email_address)}") },
+                        label = { Text(stringResource(R.string.email_address)) },
                         singleLine = true,
                         textStyle = MaterialTheme.typography.body1,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -225,7 +318,7 @@ class CreateAccountActivity(
                             .fillMaxWidth(),
                         value = userPasswordInput,
                         onValueChange = { handlePasswordChange(it,this@CreateAccountActivity.baseContext) },
-                        label = { Text("${resources.getText(R.string.password)}") },
+                        label = { Text(stringResource(R.string.password)) },
                         singleLine = true,
                         textStyle = MaterialTheme.typography.body1,
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -255,7 +348,7 @@ class CreateAccountActivity(
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
                 )
                 {
-                    Text("${resources.getText(R.string.create_account)}")
+                    Text(stringResource(R.string.create_account))
                 }
 
             }
@@ -273,7 +366,7 @@ class CreateAccountActivity(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     ClickableText(
-                        text = AnnotatedString("${resources.getText(R.string.return_to_login)}"),
+                        text = AnnotatedString(stringResource(R.string.return_to_login)),
                         onClick = { textOnClick() },
                     )
                 }
@@ -302,10 +395,7 @@ class CreateAccountActivity(
         super.onActivityResult(requestCode, resultCode, data)
 
         Log.d("ImageSelector", "Image has been selected")
-
-        val uri = data?.data
-        // User needs to be logged in first - wait for successful login
-        viewModel.userImage = uri
+        viewModel.userImage = data?.data
     }
 
 }

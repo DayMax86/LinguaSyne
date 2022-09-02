@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -24,7 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.managers.LessonManager
@@ -68,7 +66,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                                     flingBehavior = rememberSnapperFlingBehavior(lazyListState),
                                 ) {
                                     items(
-                                        LessonManager.current_lesson.lesson_list
+                                        LessonManager.current_lesson.lessonList
                                     ) { item ->
 
                                         Card(
@@ -122,7 +120,7 @@ open class DisplayTermActivity : AppCompatActivity() {
 
 
                                         DotsIndicator(
-                                            totalDots = LessonManager.current_lesson.lesson_list.size,
+                                            totalDots = LessonManager.current_lesson.lessonList.size,
                                             selectedIndex = lazyListState.firstVisibleItemIndex,
                                             selectedColor = viewModel.selectedNewsColour,
                                             unSelectedColor = viewModel.unselectedNewsColour,
@@ -307,7 +305,6 @@ open class DisplayTermActivity : AppCompatActivity() {
                             color = MaterialTheme.colors.primary,
                             shape = RoundedCornerShape(16.dp),
                         )
-                        //.background(color = MaterialTheme.colors.onBackground),
                 ) {
                     term.translations.forEach {
                         Text(
@@ -352,7 +349,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                 Text(
                     modifier = Modifier
                         .padding(all = 10.dp),
-                    text = "${resources.getText(R.string.mnemonics)}",
+                    text = stringResource(id = R.string.mnemonics),
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.secondary,
                 )
@@ -390,7 +387,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(all = 10.dp),
-                    text = "${resources.getText(R.string.your_progress)}",
+                    text = stringResource(id = R.string.your_progress),
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.secondary,
                 )
@@ -457,7 +454,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                         Text(
                             modifier = Modifier
                                 .padding(all = 10.dp),
-                            text = "${resources.getText(R.string.next_review)}",
+                            text = stringResource(id = R.string.next_review),
                             style = MaterialTheme.typography.body2,
                             color = MaterialTheme.colors.secondary,
                         )

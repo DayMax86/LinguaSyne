@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.RevisionSession
 import com.example.linguasyne.classes.Term
@@ -16,8 +17,10 @@ import com.example.linguasyne.enums.TermTypes
 import com.example.linguasyne.managers.RevisionSessionManager
 import com.example.linguasyne.managers.TermDisplayManager
 import com.example.linguasyne.ui.theme.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class ReviewTermViewModel : ViewModel() {
+class ReviseTermViewModel : ViewModel() {
 
     var currentTermTitle: String? by mutableStateOf("")
     private var ctName: String = ""
@@ -37,6 +40,9 @@ class ReviewTermViewModel : ViewModel() {
     var selectGenderTextColour by mutableStateOf(LsTextBlue)
     var mascImage by mutableStateOf(R.drawable.opaquemars)
     var femImage by mutableStateOf(R.drawable.opaquevenus)
+
+    var animateCorrect: Boolean by mutableStateOf(false)
+    var animateDuration: Int by mutableStateOf(800)
 
     var summaryTotalCorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalCorrect)
     var summaryTotalIncorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalIncorrect)
@@ -105,30 +111,39 @@ class ReviewTermViewModel : ViewModel() {
     }
 
     private fun validateAnswer() {
-        //Check if the user input matches the current term's name
-        if (checkAnswer()) {
-            //User got the answer correct so show appropriate animation
-            textFieldOutlineColour = LsCorrectGreen
+        viewModelScope.launch {
+            try {
+                //Check if the user input matches the current term's name
+                if (checkAnswer()) {
+                    //User got the answer correct so show appropriate animation
+                    textFieldOutlineColour = LsCorrectGreen
 
-            if (enableGenderSelection) {
-                if (checkGender()) {
-                    //delay(1000)
-                    //Load the next term
-                    advance()
-                    resetUi()
+                    if (enableGenderSelection) {
+                        if (checkGender()) {
+                            animateCorrect = true
+                            delay(1000)
+                            advance()
+                            animateCorrect = false
+                            resetUi()
+                        }
+                    } else {
+                        animateCorrect = true
+                        delay(1000)
+                        advance()
+                        animateCorrect = false
+                        resetUi()
+                    }
+
+
+                } else {
+                    //User got the answer wrong so show appropriate animation
+                    textFieldOutlineColour = LsErrorRed
                 }
 
-            } else {
-                advance()
-                resetUi()
+            } catch (e: Exception) {
+
             }
-
-
-        } else {
-            //User got the answer wrong so show appropriate animation
-            textFieldOutlineColour = LsErrorRed
         }
-
     }
 
     fun resetUi() {

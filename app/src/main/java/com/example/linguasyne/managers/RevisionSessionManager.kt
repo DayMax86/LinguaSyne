@@ -15,11 +15,11 @@ object RevisionSessionManager {
     fun createSession() {
 
         //Find all the terms the user has unlocked from their Firebase data
-        val user: User = FirebaseManager.current_user
+        val user: User = FirebaseManager.currentUser!!
         val tempList: MutableList<Term> = mutableListOf<Term>()
 
         //Find all the terms that are unlocked on or below the user's level
-        val ul: Int = user.user_level
+        val ul: Int = user.level
         for (i: Int in ul downTo 0) {
             VocabRepository.filterByUnlockLevel(i)
             tempList.addAll(VocabRepository.currentVocab)

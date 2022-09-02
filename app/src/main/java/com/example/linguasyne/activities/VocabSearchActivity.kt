@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.linguasyne.classes.Vocab
@@ -90,12 +91,16 @@ class VocabSearchActivity : AppCompatActivity() {
         Card(
             modifier = Modifier
                 .padding(all = 10.dp)
-                .border(2.dp,MaterialTheme.colors.secondary, shape = RoundedCornerShape(size = 10.dp))
+                .border(
+                    2.dp,
+                    MaterialTheme.colors.secondary,
+                    shape = RoundedCornerShape(size = 10.dp)
+                )
                 .fillMaxWidth()
                 .clickable {
                     onClick(vocab)
                     Log.e("VocabSearch", "within .clickable")
-                           },
+                },
             elevation = 5.dp,
             backgroundColor = MaterialTheme.colors.onBackground,
             shape = RoundedCornerShape(corner = CornerSize(10.dp)),
@@ -114,12 +119,12 @@ class VocabSearchActivity : AppCompatActivity() {
                         style = MaterialTheme.typography.h1,
                     )
                     Text(
-                        text = "${resources.getText(R.string.unlock_level)}: ${vocab.unlock_level.toString()}",
+                        text = stringResource(id = R.string.unlock_level) + "${vocab.unlock_level}",
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1,
                     )
                     Text(
-                        text = "${resources.getText(R.string.current_level)}: ${vocab.current_level_term}",
+                        text = stringResource(id = R.string.current_level) + "${vocab.current_level_term}",
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1,
                     )

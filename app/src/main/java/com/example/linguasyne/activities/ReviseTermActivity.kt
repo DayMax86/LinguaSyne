@@ -1,38 +1,47 @@
 package com.example.linguasyne.activities
 
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.linguasyne.R
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
-import com.example.linguasyne.viewmodels.ReviewTermViewModel
+import com.example.linguasyne.ui.theme.LsCorrectGreen
+import com.example.linguasyne.ui.theme.White
+import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
-class ReviewTermActivity : AppCompatActivity() {
+class ReviseTermActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel = ReviewTermViewModel()
+        val viewModel = ReviseTermViewModel()
 
         setContent {
             LaunchSummary(needsLaunching = viewModel.launchSummary)
@@ -59,6 +68,14 @@ class ReviewTermActivity : AppCompatActivity() {
                         mascImage = viewModel.mascImage,
                         femImage = viewModel.femImage,
                     )
+
+                    AnimateCorrectAnswer(
+                        animate = viewModel.animateCorrect,
+                        animationSpec = tween(viewModel.animateDuration),
+                        initialScale = 0f,
+                        transformOrigin = TransformOrigin.Center,
+                    )
+
                 }
             }
         }
@@ -75,6 +92,77 @@ class ReviewTermActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+
+    @OptIn(ExperimentalAnimationApi::class)
+    @Composable
+    fun AnimateCorrectAnswer(
+        animate: Boolean,
+        animationSpec: FiniteAnimationSpec<Float>,
+        initialScale: Float,
+        transformOrigin: TransformOrigin,
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.33f),
+            verticalArrangement = Arrangement.SpaceEvenly,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            )
+            {
+
+                AnimatedVisibility(
+                    modifier = Modifier
+                        .padding(2.dp),
+                    visible = animate,
+
+                    enter = scaleIn(
+                        animationSpec = animationSpec,
+                        initialScale = initialScale,
+                        transformOrigin = transformOrigin,
+                    ) + expandVertically(
+                        expandFrom = Alignment.CenterVertically
+                    ) + expandHorizontally(
+                        expandFrom = Alignment.CenterHorizontally
+                    ),
+
+                    exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
+                ) {
+                    Row(
+                        Modifier
+                            .size(200.dp)
+                            .border(4.dp, MaterialTheme.colors.secondary, shape = CircleShape)
+                            .background(
+                                color = LsCorrectGreen, shape = CircleShape
+                            ),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row {
+                            Text(
+                                text = String(Character.toChars(0x2713)),
+                                //color = LsCorrectGreen,
+                                style =
+                                TextStyle(
+                                    color = White,
+                                    fontSize = 150.sp,
+                                ),
+
+                                )
+                        }
+                    }
+                }
+            }
+
+        }
+
+    }
+
 
     @Composable
     fun ViewTerm(
@@ -125,7 +213,7 @@ class ReviewTermActivity : AppCompatActivity() {
                         .fillMaxWidth(),
                     value = userInput,
                     onValueChange = { handleChange(it) },
-                    label = { Text("${resources.getText(R.string.enter_translation)}") },
+                    label = { Text(stringResource(id = R.string.enter_translation)) },
                     singleLine = true,
                     textStyle = MaterialTheme.typography.body1,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -143,7 +231,7 @@ class ReviewTermActivity : AppCompatActivity() {
                 horizontalArrangement = Arrangement.Start,
             ) {
                 Text(
-                    text = "${resources.getText(R.string.select_gender)}",
+                    text = stringResource(id = R.string.select_gender),
                     color = selectGenderTextColour,
                     style = MaterialTheme.typography.body1,
                 )
@@ -214,7 +302,7 @@ class ReviewTermActivity : AppCompatActivity() {
                 )
                 {
                     Text(
-                        text = "${resources.getText(R.string.submit)}",
+                        text = stringResource(id = R.string.submit),
                     color = MaterialTheme.colors.onBackground)
                 }
             }

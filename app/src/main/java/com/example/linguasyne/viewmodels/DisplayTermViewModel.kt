@@ -1,13 +1,9 @@
 package com.example.linguasyne.viewmodels
 
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import com.example.linguasyne.R
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.Gender
@@ -61,7 +57,7 @@ class DisplayTermViewModel {
     private fun fetchTerm() {
         when (fetchTermSource()) {
             (Sources.LESSON) -> {
-                termToDisplay = LessonManager.current_lesson.lesson_list.elementAt(0)
+                termToDisplay = LessonManager.current_lesson.lessonList.elementAt(0)
             }
             (Sources.SEARCH) -> {
                 termToDisplay = VocabRepository.currentVocab.elementAt(0)

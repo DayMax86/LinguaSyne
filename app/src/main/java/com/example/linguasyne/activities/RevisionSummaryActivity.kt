@@ -10,19 +10,18 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.linguasyne.R
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
-import com.example.linguasyne.viewmodels.ReviewTermViewModel
+import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 class RevisionSummaryActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel = ReviewTermViewModel()
+        val viewModel = ReviseTermViewModel()
 
         setContent {
 
@@ -56,7 +55,7 @@ class RevisionSummaryActivity : ComponentActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "${resources.getText(R.string.summary)}",
+                text = stringResource(R.string.summary),
                 color = MaterialTheme.colors.primary,
                 style = MaterialTheme.typography.h1
             )
@@ -64,11 +63,11 @@ class RevisionSummaryActivity : ComponentActivity() {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                "${resources.getText(R.string.total_correct)}: ${sv.totalCorrect}",
+                text = (stringResource(R.string.total_correct) + "${sv.totalCorrect}"),
                 color = MaterialTheme.colors.primary
             )
             Text(
-                "${resources.getText(R.string.total_incorrect)}: ${sv.totalIncorrect}",
+                text = (stringResource(R.string.total_incorrect) + "${sv.totalIncorrect}"),
                 color = MaterialTheme.colors.primary
             )
 
@@ -80,7 +79,7 @@ class RevisionSummaryActivity : ComponentActivity() {
                 colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
             )
             {
-                Text("${resources.getText(R.string.continue_string)}")
+                Text(stringResource(R.string.continue_string))
             }
         }
     }

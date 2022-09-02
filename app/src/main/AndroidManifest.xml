@@ -21,7 +21,7 @@
         <activity android:name=".activities.HomeActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
-        <activity android:name=".activities.ReviewTermActivity"
+        <activity android:name=".activities.ReviseTermActivity"
             android:parentActivityName=".activities.HomeActivity" />
 
         <activity android:name=".activities.RevisionSummaryActivity"

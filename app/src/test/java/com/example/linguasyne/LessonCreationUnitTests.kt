@@ -23,7 +23,7 @@ class CreateLessonTest {
     @Test
     fun createLesson_isCorrect() {
         //assertThat("Current vocab should have size 5", VocabRepository.currentVocab.size,5)
-        assertEquals(5, LessonManager.current_lesson.lesson_list.size)
+        assertEquals(5, LessonManager.current_lesson.lessonList.size)
     }
 }
 

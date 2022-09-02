@@ -8,6 +8,11 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,21 +22,29 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
+import com.example.linguasyne.ui.theme.LsCorrectGreen
+import com.example.linguasyne.ui.theme.White
 import com.example.linguasyne.viewmodels.LoginViewModel
 import com.google.firebase.auth.FirebaseAuth
 import kotlin.reflect.KFunction0
@@ -59,8 +72,16 @@ class LoginActivity : AppCompatActivity() {
                         handleEmailChange = viewModel::handleEmailChange,
                         handlePasswordChange = viewModel::handlePasswordChange,
                         outlineColour = viewModel.outlineColour,
-                        buttonOnClick = viewModel::handleButtonPress,
+                        buttonOnClick = viewModel::handleLogin,
                         textOnClick = viewModel::handleTextPress,
+                        blurAmount = viewModel.blurAmount,
+                    )
+
+                    AnimateSuccessfulLogin(
+                        animate = viewModel.animateSuccess,
+                        animationSpec = tween(viewModel.animateDuration),
+                        initialScale = 0f,
+                        transformOrigin = TransformOrigin.Center,
                     )
                 }
             }
@@ -80,7 +101,6 @@ class LoginActivity : AppCompatActivity() {
     @Composable
     fun GoToHome(goToHome: Boolean) {
         if (goToHome) {
-            // Launch the home screen
             this.finish()
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
@@ -96,10 +116,12 @@ class LoginActivity : AppCompatActivity() {
         outlineColour: Color,
         buttonOnClick: () -> Unit,
         textOnClick: (Int) -> Unit,
+        blurAmount: Int,
     ) {
 
         Column(
             modifier = Modifier
+                .blur(blurAmount.dp, blurAmount.dp, BlurredEdgeTreatment.Rectangle)
                 .fillMaxHeight(),
         ) {
 
@@ -137,7 +159,7 @@ class LoginActivity : AppCompatActivity() {
                     onValueChange = { handleEmailChange(it) },
                     label = {
                         Text(
-                            text = "${resources.getText(R.string.email_address)}",
+                            text = stringResource(id = R.string.email_address),
                             color = MaterialTheme.colors.secondary,
                         )
                     },
@@ -157,7 +179,7 @@ class LoginActivity : AppCompatActivity() {
                     onValueChange = { handlePasswordChange(it) },
                     label = {
                         Text(
-                            text = "${resources.getText(R.string.password)}",
+                            text = stringResource(id = R.string.password),
                             color = MaterialTheme.colors.secondary,
                         )
                     },
@@ -187,7 +209,7 @@ class LoginActivity : AppCompatActivity() {
                 )
                 {
                     Text(
-                        text = "${resources.getText(R.string.log_in)}",
+                        text = stringResource(id = R.string.log_in),
                     )
                 }
 
@@ -203,8 +225,9 @@ class LoginActivity : AppCompatActivity() {
 
                     ) {
                         ClickableText(
-                            text = AnnotatedString("${resources.getText(R.string.create_account_prompt)}"),
+                            text = AnnotatedString(stringResource(id = R.string.create_account_prompt)),
                             onClick = textOnClick,
+                            style = MaterialTheme.typography.body1,
                         )
                     }
 
@@ -215,5 +238,74 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+
+    @OptIn(ExperimentalAnimationApi::class)
+    @Composable
+    fun AnimateSuccessfulLogin(
+        animate: Boolean,
+        animationSpec: FiniteAnimationSpec<Float>,
+        initialScale: Float,
+        transformOrigin: TransformOrigin,
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.75f),
+            verticalArrangement = Arrangement.SpaceEvenly,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            )
+            {
+
+                AnimatedVisibility(
+                    modifier = Modifier
+                        .padding(2.dp),
+                    visible = animate,
+
+                    enter = scaleIn(
+                        animationSpec = animationSpec,
+                        initialScale = initialScale,
+                        transformOrigin = transformOrigin,
+                    ) + expandVertically(
+                        expandFrom = Alignment.CenterVertically
+                    ) + expandHorizontally(
+                        expandFrom = Alignment.CenterHorizontally
+                    ),
+
+                    exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
+                ) {
+                    Row(
+                        Modifier
+                            .size(200.dp)
+                            .border(4.dp, MaterialTheme.colors.secondary, shape = CircleShape)
+                            .background(
+                                color = LsCorrectGreen, shape = CircleShape
+                            ),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row {
+                            Text(
+                                text = String(Character.toChars(0x2713)),
+                                //color = LsCorrectGreen,
+                                style =
+                                    TextStyle(
+                                        color = White,
+                                        fontSize = 150.sp,
+                                    ),
+
+                            )
+                        }
+                    }
+                }
+            }
+
+        }
+
+    }
 
 }
