@@ -3,9 +3,7 @@ package com.example.linguasyne.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -66,7 +64,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                                     flingBehavior = rememberSnapperFlingBehavior(lazyListState),
                                 ) {
                                     items(
-                                        LessonManager.current_lesson.lessonList
+                                        LessonManager.currentLesson.lessonList
                                     ) { item ->
 
                                         Card(
@@ -77,6 +75,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                                         ) {
                                             Surface(
                                                 modifier = Modifier
+                                                    .verticalScroll(rememberScrollState())
                                                     .background(MaterialTheme.colors.background)
                                                     .fillMaxHeight()
                                                     .fillMaxWidth()
@@ -93,17 +92,7 @@ open class DisplayTermActivity : AppCompatActivity() {
 
 
                                     }
-                                   /* item {
-                                        Card(
-                                            modifier = Modifier
-                                                .fillParentMaxWidth()
-                                                .padding(10.dp),
-                                            elevation = 3.dp,
-                                        ) {
-                                        Text("Test")
-                                        }
 
-                                    }*/
                                 }
                                 Row(
                                     modifier = Modifier
@@ -120,7 +109,7 @@ open class DisplayTermActivity : AppCompatActivity() {
 
 
                                         DotsIndicator(
-                                            totalDots = LessonManager.current_lesson.lessonList.size,
+                                            totalDots = LessonManager.currentLesson.lessonList.size,
                                             selectedIndex = lazyListState.firstVisibleItemIndex,
                                             selectedColor = viewModel.selectedNewsColour,
                                             unSelectedColor = viewModel.unselectedNewsColour,
@@ -161,7 +150,8 @@ open class DisplayTermActivity : AppCompatActivity() {
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            horizontalAlignment = CenterHorizontally,
         ) {
 
             //------------------------------ FIRST ROW --------------------------------//
@@ -169,27 +159,11 @@ open class DisplayTermActivity : AppCompatActivity() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.Center,
             ) {
 
                 Row(
-                ) {
-                    /*AsyncImage(
-                        modifier = Modifier
-                            .clickable {
-                                if (onClickLeft != null) {
-                                    onClickLeft()
-                                }
-                            }
-                            .padding(start = 10.dp, top = 10.dp)
-                            .height(100.dp),
-                        model = leftArrowImage,
-                        contentDescription = null,
-                        alignment = Alignment.CenterStart,
-                    )*/
-                }
-
-                Row(
+                    horizontalArrangement = Arrangement.Center,
                 )
                 {
                     Column(
@@ -212,24 +186,6 @@ open class DisplayTermActivity : AppCompatActivity() {
                         )
 
                     }
-                }
-
-                Row(
-                ) {
-                    /*AsyncImage(
-                        modifier = Modifier
-                            .clickable {
-                                if (onClickRight != null) {
-                                    onClickRight()
-                                }
-                            }
-                            .padding(end = 10.dp, top = 10.dp)
-                            .height(100.dp),
-                        //.padding(10.dp),
-                        model = rightArrowImage,
-                        contentDescription = null,
-                        alignment = Alignment.CenterStart,
-                    )*/
                 }
 
             }
@@ -285,6 +241,8 @@ open class DisplayTermActivity : AppCompatActivity() {
             Spacer(modifier = Modifier.height(10.dp))
 
             Column(
+                modifier = Modifier
+                    .wrapContentHeight()
             ) {
 
                 Text(
@@ -298,8 +256,10 @@ open class DisplayTermActivity : AppCompatActivity() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .wrapContentHeight()
                         .padding(start = 10.dp, end = 10.dp)
                         .clip(RoundedCornerShape(16.dp))
+                        .background(MaterialTheme.colors.onBackground)
                         .border(
                             2.dp,
                             color = MaterialTheme.colors.primary,
@@ -308,34 +268,14 @@ open class DisplayTermActivity : AppCompatActivity() {
                 ) {
                     term.translations.forEach {
                         Text(
-                            modifier = Modifier.padding(all = 5.dp),
-                            text = it,
+                            modifier = Modifier
+                                .padding(all = 5.dp),
+                            text = "$it,",
+                            color = MaterialTheme.colors.secondary,
+                            style = MaterialTheme.typography.body1,
                         )
                     }
                 }
-
-                /*TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 10.dp, end = 10.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                        .wrapContentHeight()
-                        .border(
-                            2.dp,
-                            color = MaterialTheme.colors.primary,
-                            shape = RoundedCornerShape(16.dp),
-                        )
-                        .background(color = MaterialTheme.colors.onBackground),
-                    value = term.translations.forEach {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.primary,
-                        )
-                    }.toString(),
-                    onValueChange = { /**/ },
-                    enabled = false,
-                )*/
 
             }
 
@@ -344,33 +284,40 @@ open class DisplayTermActivity : AppCompatActivity() {
             //---------------------- FOURTH ROW ----------------------------//
 
             Column(
+                modifier = Modifier
+                    .wrapContentHeight()
             ) {
 
                 Text(
                     modifier = Modifier
                         .padding(all = 10.dp),
-                    text = stringResource(id = R.string.mnemonics),
+                    text = stringResource(R.string.mnemonics),
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.secondary,
                 )
 
-                TextField(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .wrapContentHeight()
                         .padding(start = 10.dp, end = 10.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .wrapContentHeight()
+                        .background(MaterialTheme.colors.onBackground)
                         .border(
                             2.dp,
                             color = MaterialTheme.colors.primary,
                             shape = RoundedCornerShape(16.dp),
                         )
-                        .background(color = MaterialTheme.colors.onBackground),
-                    value = "",
-                    //How to get all mnemonics from the term's mnemonics list without breaking MVVM structure??
-                    onValueChange = { /**/ },
-                    enabled = false,
-                )
+                ) {
+                    term.mnemonics.forEach {
+                        Text(
+                            modifier = Modifier.padding(all = 5.dp),
+                            text = it.replace("%'", ","),
+                            color = MaterialTheme.colors.secondary,
+                            style = MaterialTheme.typography.body1,
+                        )
+                    }
+                }
 
             }
 
@@ -385,7 +332,7 @@ open class DisplayTermActivity : AppCompatActivity() {
 
                 Text(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
+                        .align(CenterHorizontally)
                         .padding(all = 10.dp),
                     text = stringResource(id = R.string.your_progress),
                     style = MaterialTheme.typography.body2,

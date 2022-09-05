@@ -6,7 +6,7 @@ import com.example.linguasyne.classes.Vocab
 
 object LessonManager {
 
-    lateinit var current_lesson: Lesson
+    lateinit var currentLesson: Lesson
     var activeLesson: Boolean = false
 
     fun createLesson(lesson_type: LessonTypes) {
@@ -25,7 +25,7 @@ object LessonManager {
                             //VocabRepository.currentVocab.minus(v)
                         } else {
                             //5 items (or the maximum number of items possible if < 5 in vocab list) added to new lesson object
-                            current_lesson = Lesson(tempList, LessonTypes.VOCAB)
+                            currentLesson = Lesson(tempList, LessonTypes.VOCAB)
                             i = 0
                             //Mark the learnt terms as unlocked for the user
                             v.isUnlocked = true

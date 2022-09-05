@@ -53,7 +53,7 @@ class HomeViewModel : ViewModel() {
                 val firebaseUser = FirebaseManager.currentUser
                 Log.e("HomeViewModel", firebaseUser!!.email)
                 val firestoreRef =
-                    Firebase.firestore.collection("users").document(firebaseUser!!.email)
+                    Firebase.firestore.collection("users").document(firebaseUser.email)
 
                 firestoreRef
                     .get()
@@ -61,7 +61,7 @@ class HomeViewModel : ViewModel() {
                     .apply {
                         //Successfully obtained user image uri from firebase
                         FirebaseManager.currentUser!!.imageUri =
-                            Uri.parse(this.get("user_image_uri") as String?)
+                            Uri.parse(this.get("imageUri") as String?)
                     }
                 userImage = FirebaseManager.currentUser!!.imageUri
             } catch (e: Exception) {

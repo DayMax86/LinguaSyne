@@ -596,14 +596,16 @@ class HomeActivity : AppCompatActivity() {
                                 contentScale = ContentScale.Crop,
                             )
 
-                            Text(
-                                modifier = Modifier
-                                    .padding(top = 10.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.primary,
-                                text = FirebaseManager.currentUser!!.email
-                            )
+                            FirebaseManager.currentUser?.let {
+                                Text(
+                                    modifier = Modifier
+                                        .padding(top = 10.dp)
+                                        .align(Alignment.CenterHorizontally),
+                                    style = MaterialTheme.typography.body1,
+                                    color = MaterialTheme.colors.primary,
+                                    text = it.email
+                                )
+                            }
 
                             Text(
                                 modifier = Modifier

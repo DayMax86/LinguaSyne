@@ -58,6 +58,7 @@ object FirebaseManager {
     }
 
 
+
     fun getDefaultUserImageUri(): Uri {
         return Uri.parse("https://firebasestorage.googleapis.com/v0/b/linguasyne.appspot.com/o/default%2FAngrySteveEmote.png?alt=media&token=b3ba69f5-0ba8-41f4-9449-b58327b7f4d0")
     }

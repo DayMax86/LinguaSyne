@@ -196,15 +196,12 @@ class CreateAccountActivity(
     ) {
         Column(
             modifier = Modifier
-                .border(width = 1.dp, color = Color.Yellow)
                 .padding(all = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(350.dp))
 
             Row(
-                modifier = Modifier
-                    .border(width = 1.dp, color = Color.Red),
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
@@ -214,7 +211,6 @@ class CreateAccountActivity(
                 )
                 Row(
                     modifier = Modifier
-                        .border(width = 1.dp, color = Color.Red)
                         .padding(start = 10.dp),
                     horizontalArrangement = Arrangement.Start
                 ) {

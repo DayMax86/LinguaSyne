@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.linguasyne.classes.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -141,11 +142,13 @@ class CreateAccountViewModel : ViewModel() {
     private fun addUserToFirestore(user: User) {
         viewModelScope.launch {
             try {
-                FirebaseFirestore.getInstance()
+                val firestoreInstance = FirebaseFirestore.getInstance()
+                firestoreInstance
                     .collection("users").document(FirebaseManager.currentUser!!.id)
                     .set(user)
                     .await()
                     .apply {
+                        //this.update(FieldPath.of(this.path),"users/${user.email}")
                         uploadUserImage(userImage)
                         handleLogin()
                     }
@@ -156,7 +159,7 @@ class CreateAccountViewModel : ViewModel() {
         }
     }
 
-    fun uploadUserImage(localUri: Uri?) {
+    private fun uploadUserImage(localUri: Uri?) {
         viewModelScope.launch {
             try {
                 val filename = "profileImage"
@@ -170,12 +173,12 @@ class CreateAccountViewModel : ViewModel() {
                     storageRef.putFile(localUri)
                         .await()
                         .apply {
-                            FirebaseStorage.getInstance().getReference()
+                            FirebaseStorage.getInstance().reference
                                 .child("users/${FirebaseManager.currentUser!!.id}/image/$filename").downloadUrl
                                 .await()
                                 .apply {
                                     firestoreRef
-                                        .update("user_image_uri", this)
+                                        .update("imageUri", this)
                                         .await()
                                     userImage = this
                                 }
@@ -183,12 +186,12 @@ class CreateAccountViewModel : ViewModel() {
                 }
 
             } catch (e: Exception) {
-                Log.e("CreateAccountViewModel","$e")
+                Log.e("CreateAccountViewModel", "$e")
             }
         }
     }
 
-    fun handleLogin() {
+    private fun handleLogin() {
         viewModelScope.launch {
             goToHome = try {
                 Firebase.auth
