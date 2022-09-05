@@ -28,6 +28,12 @@ val Typography = Typography(
         fontSize = 18.sp
     ),
 
+    body2 = TextStyle(
+        fontFamily = linguaSyneDefault,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp
+    ),
+
     button = TextStyle(
         fontFamily = linguaSyneDefault,
         fontWeight = FontWeight.Normal,

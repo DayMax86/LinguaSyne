@@ -85,6 +85,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                                                     item,
                                                     viewModel.mascOutlineColour,
                                                     viewModel.femOutlineColour,
+                                                    viewModel::addCustomData
                                                 )
                                             }
 
@@ -125,6 +126,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                                 viewModel.termToDisplay,
                                 viewModel.mascOutlineColour,
                                 viewModel.femOutlineColour,
+                                viewModel::addCustomData
                             )
 
                         }
@@ -145,6 +147,7 @@ open class DisplayTermActivity : AppCompatActivity() {
         term: Term,
         mascOutlineColour: Color,
         femOutlineColour: Color,
+        addCustomData: (term: Term, tOrM: DisplayTermViewModel.TransOrMnem) -> Unit,
     ) {
 
 
@@ -245,14 +248,30 @@ open class DisplayTermActivity : AppCompatActivity() {
                     .wrapContentHeight()
             ) {
 
-                Text(
-                    modifier = Modifier
-                        .padding(all = 10.dp),
-                    text = stringResource(R.string.translations),
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.secondary,
-                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
 
+                    Text(
+                        modifier = Modifier
+                            .padding(all = 10.dp),
+                        text = stringResource(R.string.translations),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.secondary,
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                addCustomData(viewModel.termToDisplay, DisplayTermViewModel.TransOrMnem.TRANSLATIONS)
+                            }
+                            .padding(all = 10.dp),
+                        text = stringResource(R.string.add_translation),
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.secondary,
+                    )
+
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -288,14 +307,31 @@ open class DisplayTermActivity : AppCompatActivity() {
                     .wrapContentHeight()
             ) {
 
-                Text(
-                    modifier = Modifier
-                        .padding(all = 10.dp),
-                    text = stringResource(R.string.mnemonics),
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.secondary,
-                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
 
+
+                    Text(
+                        modifier = Modifier
+                            .padding(all = 10.dp),
+                        text = stringResource(R.string.mnemonics),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.secondary,
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                addCustomData(viewModel.termToDisplay, DisplayTermViewModel.TransOrMnem.MNEMONICS)
+                            }
+                            .padding(all = 10.dp),
+                        text = stringResource(R.string.add_mnemonic),
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.secondary,
+                    )
+
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -318,6 +354,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                         )
                     }
                 }
+
 
             }
 
