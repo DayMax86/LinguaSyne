@@ -1,8 +1,10 @@
 package com.example.linguasyne.activities
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -15,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -29,11 +33,14 @@ import com.example.linguasyne.viewmodels.DisplayTermViewModel
 import com.example.linguasyne.viewmodels.Sources
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.ui.input.*
 
 open class DisplayTermActivity : AppCompatActivity() {
 
     val viewModel = DisplayTermViewModel()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalSnapperApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +92,8 @@ open class DisplayTermActivity : AppCompatActivity() {
                                                     item,
                                                     viewModel.mascOutlineColour,
                                                     viewModel.femOutlineColour,
-                                                    viewModel::addCustomData
+                                                    viewModel::handleTransTextPress,
+                                                    viewModel::handleMnemTextPress,
                                                 )
                                             }
 
@@ -112,8 +120,8 @@ open class DisplayTermActivity : AppCompatActivity() {
                                         DotsIndicator(
                                             totalDots = LessonManager.currentLesson.lessonList.size,
                                             selectedIndex = lazyListState.firstVisibleItemIndex,
-                                            selectedColor = viewModel.selectedNewsColour,
-                                            unSelectedColor = viewModel.unselectedNewsColour,
+                                            selectedColor = viewModel.selectedDotColour,
+                                            unSelectedColor = viewModel.unselectedDotColour,
                                         )
                                     }
                                 }
@@ -121,13 +129,24 @@ open class DisplayTermActivity : AppCompatActivity() {
                             }
                         }
                         Sources.SEARCH -> {
+                            Surface(
+                                modifier = Modifier
+                                    .blur(
+                                        viewModel.blurAmount.dp,
+                                        viewModel.blurAmount.dp,
+                                        BlurredEdgeTreatment.Rectangle
+                                    )
+                            ) {
+                                DisplayTerm(
+                                    viewModel.termToDisplay,
+                                    viewModel.mascOutlineColour,
+                                    viewModel.femOutlineColour,
+                                    viewModel::handleTransTextPress,
+                                    viewModel::handleMnemTextPress,
+                                )
+                            }
 
-                            DisplayTerm(
-                                viewModel.termToDisplay,
-                                viewModel.mascOutlineColour,
-                                viewModel.femOutlineColour,
-                                viewModel::addCustomData
-                            )
+                            TogglePopUpInput(showPopUpInput = viewModel.showPopUpInput)
 
                         }
                     }
@@ -142,12 +161,14 @@ open class DisplayTermActivity : AppCompatActivity() {
         viewModel.onActivityEnd()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     fun DisplayTerm(
         term: Term,
         mascOutlineColour: Color,
         femOutlineColour: Color,
-        addCustomData: (term: Term, tOrM: DisplayTermViewModel.TransOrMnem) -> Unit,
+        onAddTransPress: () -> Unit,
+        onAddMnemPress: () -> Unit,
     ) {
 
 
@@ -263,7 +284,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                     Text(
                         modifier = Modifier
                             .clickable {
-                                addCustomData(viewModel.termToDisplay, DisplayTermViewModel.TransOrMnem.TRANSLATIONS)
+                                onAddTransPress()
                             }
                             .padding(all = 10.dp),
                         text = stringResource(R.string.add_translation),
@@ -323,7 +344,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                     Text(
                         modifier = Modifier
                             .clickable {
-                                addCustomData(viewModel.termToDisplay, DisplayTermViewModel.TransOrMnem.MNEMONICS)
+                                onAddMnemPress()
                             }
                             .padding(all = 10.dp),
                         text = stringResource(R.string.add_mnemonic),
@@ -397,7 +418,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                         Text(
                             modifier = Modifier
                                 .padding(start = 5.dp),
-                            text = term.current_level_term.toString(),
+                            text = term.currentLevelTerm.toString(),
                         )
                     }
 
@@ -408,7 +429,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                         Text(
                             modifier = Modifier
                                 .padding(end = 5.dp),
-                            text = (term.current_level_term + 1).toString(),
+                            text = (term.currentLevelTerm + 1).toString(),
                         )
                     }
                 }
@@ -453,7 +474,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                         Text(
                             modifier = Modifier
                                 .padding(all = 10.dp),
-                            text = term.next_review.toString(),
+                            text = term.nextReview.toString(),
                             style = MaterialTheme.typography.body2,
                             color = MaterialTheme.colors.secondary,
                         )
@@ -468,6 +489,85 @@ open class DisplayTermActivity : AppCompatActivity() {
 
     }
 
+    @Composable
+    fun TogglePopUpInput(
+        showPopUpInput: Boolean,
+    ) {
+        if (showPopUpInput) {
+            DisplayPopUpInput(
+                onTextValueChanged = viewModel::handleTextChange,
+                userInput = viewModel.userInput,
+                textFieldOutlineColour = viewModel.mascOutlineColour,
+                buttonOnClick = viewModel::handleButtonPress,
+            )
+        }
+    }
+
+    @Composable
+    fun DisplayPopUpInput(
+        onTextValueChanged: (String) -> Unit,
+        userInput: String,
+        textFieldOutlineColour: Color,
+        buttonOnClick: () -> Unit,
+    ) {
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+
+            Column(
+
+            ) {
+
+                Card(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.2f)
+                        .padding(all = 16.dp),
+                    elevation = 6.dp,
+                    backgroundColor = MaterialTheme.colors.onSurface,
+                ) {
+
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        value = userInput,
+                        onValueChange = { onTextValueChanged(it) },
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.enter_translation),
+                                color = MaterialTheme.colors.secondary
+                            )
+                        },
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.body1,
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = textFieldOutlineColour,
+                            unfocusedBorderColor = textFieldOutlineColour,
+                        ),
+                    )
+                }
+
+                Button(
+                    onClick = { buttonOnClick() },
+                    shape = RoundedCornerShape(100),
+                    modifier = Modifier
+                        .height(60.dp)
+                        .width(150.dp)
+                        .padding(top = 10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.secondary,
+                        contentColor = MaterialTheme.colors.onSurface,
+                    )
+                ) {
+
+                }
+
+            }
+        }
+    }
 
     @Composable
     fun DotsIndicator(
@@ -502,6 +602,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                     Spacer(modifier = Modifier.padding(horizontal = 2.dp))
                 }
             }
+
         }
     }
 

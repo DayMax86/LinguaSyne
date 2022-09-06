@@ -39,17 +39,22 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.R
-import com.example.linguasyne.classes.User
+import com.example.linguasyne.managers.CSVManager
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.White
 import com.example.linguasyne.viewmodels.LoginViewModel
-import com.google.firebase.auth.FirebaseAuth
-import kotlin.reflect.KFunction0
 
 class LoginActivity : AppCompatActivity() {
+
+    /*--------------------TESTING ONLY--------------------*/
+    /*override fun onStart() {
+        super.onStart()
+        CSVManager.importVocabCSV(this)
+    }*/
+    /*----------------------------------------------------*/
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
 
                     AnimateSuccessfulLogin(
                         animate = viewModel.animateSuccess,
-                        animationSpec = tween(viewModel.animateDuration),
+                        animationSpec = tween(viewModel.animateDuration.toInt()),
                         initialScale = 0f,
                         transformOrigin = TransformOrigin.Center,
                     )
@@ -293,12 +298,12 @@ class LoginActivity : AppCompatActivity() {
                                 text = String(Character.toChars(0x2713)),
                                 //color = LsCorrectGreen,
                                 style =
-                                    TextStyle(
-                                        color = White,
-                                        fontSize = 150.sp,
-                                    ),
+                                TextStyle(
+                                    color = White,
+                                    fontSize = 150.sp,
+                                ),
 
-                            )
+                                )
                         }
                     }
                 }

@@ -14,21 +14,21 @@ object VocabRepository {
         }
 
 
-    fun filterByName(search_term_name: String) {
+    fun filterByName(search_termName: String) {
         currentVocab = allVocab
-            .filter { it.name.contains(search_term_name.toLowerCase()) }
+            .filter { it.name.contains(search_termName.toLowerCase()) }
             .sortedBy { it.name }
     }
 
-    fun filterById(search_term_id: String) {
+    fun filterById(search_termId: String) {
         currentVocab = allVocab
-            .filter { it.id.contains(search_term_id.toLowerCase()) }
+            .filter { it.id.contains(search_termId.toLowerCase()) }
             .sortedBy { it.id }
     }
 
     fun filterByUnlockLevel(search_term_level: Int) {
         currentVocab = allVocab
-            .filter { it.unlock_level == search_term_level }
+            .filter { it.unlockLevel == search_term_level }
             .sortedBy { it.id }
     }
 

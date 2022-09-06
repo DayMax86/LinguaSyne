@@ -46,7 +46,7 @@
         app:layout_constraintTop_toTopOf="@+id/term_search_background_rectangle" />
 
     <TextView
-        android:id="@+id/search_term_unlock_level_textview"
+        android:id="@+id/search_termUnlockLevel_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import com.example.linguasyne.classes.RevisionSession
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.User
+import com.example.linguasyne.enums.ReviewTimes
 import java.time.LocalDateTime
 
 object RevisionSessionManager {
@@ -41,7 +42,7 @@ object RevisionSessionManager {
         //Finally filter by review time and we're left with terms that are due for revision.
         toRemoveList.clear()
         for (t: Term in tempList) {
-            if (t.next_review.isAfter(LocalDateTime.now())) {
+            if (t.nextReview == ReviewTimes.NOW) {
                 toRemoveList.add(t)
             }
         }
@@ -127,13 +128,14 @@ object RevisionSessionManager {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun sortSessionBy(session: MutableList<Term>, order: SortOrder): MutableList<Term> {
         when (order) {
             SortOrder.RANDOM -> {
                 session.shuffle()
             }
             SortOrder.TIME -> {
-                session.sortBy { it.next_review }
+                session.sortBy { it.nextReview }
             }
         }
         return session

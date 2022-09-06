@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.Vocab
+import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
@@ -17,8 +18,11 @@ import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsGrey
 import com.example.linguasyne.ui.theme.LsTeal200
 import com.example.linguasyne.ui.theme.LsVocabTextBlue
+import com.google.common.primitives.UnsignedBytes.toInt
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -33,17 +37,21 @@ class DisplayTermViewModel : ViewModel() {
 
     var termToDisplay: Term by mutableStateOf(VocabRepository.currentVocab[0])
     var termsUploaded: Boolean = false
+    var showPopUpInput: Boolean by mutableStateOf(false)
+    var selectedInputType: TransOrMnem by mutableStateOf(TransOrMnem.TRANSLATIONS)
 
-    var userTranslationInput: String by mutableStateOf("")
-    var userMnemonicInput: String by mutableStateOf("")
+    var userInput: String by mutableStateOf("")
 
     private var masc by mutableStateOf(false)
     var mascOutlineColour by mutableStateOf(LsGrey)
     private var fem by mutableStateOf(false)
     var femOutlineColour by mutableStateOf(LsGrey)
 
-    val selectedNewsColour: Color = LsVocabTextBlue
-    val unselectedNewsColour: Color = LsTeal200
+    val selectedDotColour: Color = LsVocabTextBlue
+    val unselectedDotColour: Color = LsTeal200
+
+    var animateSuccess: Boolean by mutableStateOf(false)
+    var blurAmount: Int by mutableStateOf(0)
 
     fun onActivityLaunch(): Sources {
         getTermData()
@@ -79,41 +87,23 @@ class DisplayTermViewModel : ViewModel() {
             }
             (Sources.SEARCH) -> {
                 //Check if the user has already unlocked the term so that their custom data can be displayed.
-                val firestoreRef = FirebaseFirestore.getInstance()
                 viewModelScope.launch {
-                    try {
-                        var results: MutableList<Term>
-                        firestoreRef
-                            .collection("users")
-                            .document("${FirebaseManager.currentUser?.email}")
-                            .collection("terms")
-                            .get()
-                            .addOnSuccessListener { documents ->
-                                for (document in documents) {
-
-                                }
-                            }
-
-                        for (t in results) {
-                            if (t.id == VocabRepository.currentVocab[0].id) {
-                                termToDisplay = t
-                                Log.d(
-                                    "DisplayTermViewModel",
-                                    "Term to display taken from user's firestore collection (User has already unlocked it)"
-                                )
-                            }
+                        try {
+                            termToDisplay = FirebaseFirestore.getInstance()
+                                .collection("users")
+                                .document("${FirebaseManager.currentUser?.email}")
+                                .collection("terms")
+                                .get()
+                                .await()
+                                .toObjects(Term::class.java)
+                                .first { it.id == VocabRepository.currentVocab[0].id }
+                        } catch (e: Exception) {
+                            Log.e(
+                                "DisplayTermViewModel",
+                                "$e"
+                            )
                         }
-
-
-                    } catch (e: Exception) {
-                        Log.e(
-                            "DisplayTermViewModel",
-                            "$e"
-                        )
                     }
-                }
-
-
             }
 
             else -> {/**/
@@ -150,42 +140,75 @@ class DisplayTermViewModel : ViewModel() {
         MNEMONICS
     }
 
-    fun addCustomData(term: Term, destination: TransOrMnem) {
+    fun handleTextChange(text: String) {
+        userInput = text
+    }
+
+    fun handleButtonPress() {
+        addCustomData(termToDisplay, selectedInputType)
+    }
+
+    fun handleTransTextPress() {
+        showPopUpInput = true
+        blurAmount = 5
+        selectedInputType = TransOrMnem.TRANSLATIONS
+    }
+
+    fun handleMnemTextPress() {
+        showPopUpInput = true
+        blurAmount = 5
+        selectedInputType = TransOrMnem.MNEMONICS
+    }
+
+    private fun addCustomData(term: Term, destination: TransOrMnem) {
         viewModelScope
             .launch {
                 try {
                     val firestoreRef = FirebaseFirestore.getInstance()
-                    var inputList: List<String>
-                    firestoreRef
+                    var termToUpdate = firestoreRef
                         .collection("users")
                         .document("${FirebaseManager.currentUser?.email}")
                         .collection("terms")
-                        .document("${term.name}")
                         .get()
                         .await()
-                        .apply {
-                            inputList = this.get(destination.toString().lowercase()) as List<String>
+                        .toObjects(Term::class.java)
+                        .first { it.id == term.id }
+
+                    when (destination) {
+                        TransOrMnem.TRANSLATIONS -> {
+                            termToUpdate.translations.plus(userInput)
                         }
+                        TransOrMnem.MNEMONICS -> {
+                            termToUpdate.mnemonics.plus(userInput)
+                        }
+                    }
+
                     firestoreRef
                         .collection("users")
                         .document("${FirebaseManager.currentUser?.email}")
                         .collection("terms")
-                        .document("${term.name}")
-                        .update(
-                            destination.toString().lowercase(), inputList.plus(
-                                when (destination) {
-                                    TransOrMnem.TRANSLATIONS -> userTranslationInput
-                                    TransOrMnem.MNEMONICS -> userMnemonicInput
-                                }
-                            )
-                        )
+                        .get()
                         .await()
+                        .first { it.getField<String>("id") == term.id }
+                        .getField<MutableList<String>>(destination.toString().lowercase())
+                        ?.add(
+                                userInput
+                        )
+                    runSuccessAnimation()
                 } catch (e: Exception) {
                     Log.e("DisplayTermViewModel", "$e")
                 }
             }
     }
 
+private fun runSuccessAnimation() {
+    viewModelScope.launch {
+        animateSuccess = !animateSuccess
+        delay(AnimationLengths.ANIMATION_DURATION_DEFAULT)
+        animateSuccess = !animateSuccess
+    }
+
+}
 
     private fun fetchGenderImages() {
         if (termToDisplay is Vocab) {

@@ -90,7 +90,7 @@ class HomeViewModel : ViewModel() {
                                 .await()
                                 .apply {
                                     firestoreRef
-                                        .update("user_image_uri", this)
+                                        .update("imageUri", this)
                                         .await()
                                         userImage = this
                                 }

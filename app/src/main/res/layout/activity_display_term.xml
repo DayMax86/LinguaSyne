@@ -18,21 +18,21 @@
             tools:context=".activities.DisplayTermActivity">
 
             <TextView
-                android:id="@+id/display_term_mnemonics_textview"
+                android:id="@+id/display_termMnemonics_textview"
                 android:layout_width="250dp"
                 android:layout_height="114dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_corners_textbox_bg"
                 android:scrollbars="vertical"
                 android:translationZ="90dp"
-                app:layout_constraintEnd_toEndOf="@+id/display_term_translations_textview"
-                app:layout_constraintStart_toStartOf="@+id/display_term_translations_textview"
-                app:layout_constraintTop_toBottomOf="@+id/display_term_translations_textview">
+                app:layout_constraintEnd_toEndOf="@+id/display_termTranslations_textview"
+                app:layout_constraintStart_toStartOf="@+id/display_termTranslations_textview"
+                app:layout_constraintTop_toBottomOf="@+id/display_termTranslations_textview">
 
             </TextView>
 
             <TextView
-                android:id="@+id/display_term_translations_textview"
+                android:id="@+id/display_termTranslations_textview"
                 android:layout_width="250dp"
                 android:layout_height="54dp"
                 android:layout_marginStart="32dp"
@@ -55,7 +55,7 @@
                 android:textColor="@color/text_blue"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/left_arrow_image"
-                app:layout_constraintTop_toBottomOf="@+id/display_term_translations_textview" />
+                app:layout_constraintTop_toBottomOf="@+id/display_termTranslations_textview" />
 
             <TextView
                 android:id="@+id/term_textbox"
@@ -75,7 +75,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/term_unlock_level_textbox"
+                android:id="@+id/termUnlockLevel_textbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -113,10 +113,10 @@
                 android:layout_marginStart="86dp"
                 android:layout_marginTop="32dp"
 
-                app:layout_constraintEnd_toStartOf="@+id/term_unlock_level_textbox"
+                app:layout_constraintEnd_toStartOf="@+id/termUnlockLevel_textbox"
                 app:layout_constraintHorizontal_bias="0.441"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/term_unlock_level_textbox"
+                app:layout_constraintTop_toBottomOf="@+id/termUnlockLevel_textbox"
                 app:srcCompat="@drawable/alphamars" />
 
             <ImageView
@@ -128,8 +128,8 @@
 
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.594"
-                app:layout_constraintStart_toEndOf="@+id/term_unlock_level_textbox"
-                app:layout_constraintTop_toBottomOf="@+id/term_unlock_level_textbox"
+                app:layout_constraintStart_toEndOf="@+id/termUnlockLevel_textbox"
+                app:layout_constraintTop_toBottomOf="@+id/termUnlockLevel_textbox"
                 app:srcCompat="@drawable/alphavenus" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -191,7 +191,7 @@
                 android:textColor="@color/text_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/display_term_mnemonics_textview" />
+                app:layout_constraintTop_toBottomOf="@+id/display_termMnemonics_textview" />
 
             <ProgressBar
                 android:id="@+id/user_level_progressbar"
@@ -229,7 +229,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/user_level_progressbar" />
 
             <TextView
-                android:id="@+id/next_review_text"
+                android:id="@+id/nextReview_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -240,7 +240,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/user_level_progressbar" />
 
             <EditText
-                android:id="@+id/next_review_date"
+                android:id="@+id/nextReview_date"
                 android:layout_width="178dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -250,9 +250,9 @@
                 android:text="23/01/2021     13:00"
                 android:textColor="@color/text_blue"
                 android:editable="false"
-                app:layout_constraintBottom_toBottomOf="@+id/next_review_text"
-                app:layout_constraintStart_toEndOf="@+id/next_review_text"
-                app:layout_constraintTop_toTopOf="@+id/next_review_text" />
+                app:layout_constraintBottom_toBottomOf="@+id/nextReview_text"
+                app:layout_constraintStart_toEndOf="@+id/nextReview_text"
+                app:layout_constraintTop_toTopOf="@+id/nextReview_text" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

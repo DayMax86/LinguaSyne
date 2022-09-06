@@ -14,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import androidx.lifecycle.MutableLiveData
 import com.example.linguasyne.classes.User
+import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsErrorRed
 import com.google.firebase.auth.FirebaseAuth
@@ -37,7 +38,7 @@ class LoginViewModel : ViewModel() {
     var loggedIn: Boolean? by mutableStateOf(null)
 
     var animateSuccess: Boolean by mutableStateOf(false)
-    var animateDuration: Int by mutableStateOf(1000)
+    var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_LONG)
     var blurAmount: Int by mutableStateOf(0)
 
     fun init() {
@@ -47,7 +48,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun loginCheck(): Boolean {
+    private fun loginCheck(): Boolean {
         var loggedIn = false
         viewModelScope.launch {
             try {

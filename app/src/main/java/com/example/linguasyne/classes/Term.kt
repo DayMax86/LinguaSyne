@@ -1,24 +1,33 @@
 package com.example.linguasyne.classes
+
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.example.linguasyne.enums.ReviewTimes
 import com.example.linguasyne.managers.LessonTypes
 import java.time.LocalDateTime
+import java.time.LocalDateTime.*
 import java.time.Month
 
-open class Term (term_id: String,
-                 term_name: String,
-                 term_unlock_level: Int?,
-                 term_translations: List<String>,
-                 term_mnemonics: List<String>){
+open class Term(
+    termId: String,
+    termName: String,
+    termUnlockLevel: Int,
+    termTranslations: List<String>,
+    termMnemonics: List<String>
+) {
+    constructor() : this("", "", 0, emptyList(), emptyList())
 
-    var id: String = term_id
-    var name: String = term_name
-    var unlock_level: Int? = term_unlock_level
-    var translations = term_translations
-    var mnemonics = term_mnemonics
+    var id: String = termId
+    var name: String = termName
+    var unlockLevel: Int? = termUnlockLevel
+    var translations = termTranslations
+    var mnemonics = termMnemonics
 
-    open val class_type: LessonTypes = LessonTypes.TERM
+    open val classType: LessonTypes = LessonTypes.TERM
 
-    var current_level_term: Int = 0
-    var next_review: LocalDateTime = LocalDateTime.of(2022, Month.JULY,1,12,30,30)
+    var currentLevelTerm: Int = 0
+    @RequiresApi(Build.VERSION_CODES.O)
+    var nextReview: Int = ReviewTimes.NOW
 
     var isUnlocked: Boolean = false
 

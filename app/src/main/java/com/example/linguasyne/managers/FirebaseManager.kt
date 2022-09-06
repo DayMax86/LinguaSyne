@@ -30,7 +30,7 @@ object FirebaseManager {
                     val vocab = Vocab(
                         document.getField<String>("id").toString(),
                         document.getField<String>("name").toString(),
-                        document.getField<Int>("unlock_level")!!.toInt(),
+                        document.getField<Int>("unlockLevel")!!.toInt(),
                         vocabTranslations as List<String>,
                         vocabMnemonics as List<String>,
                         vocabGender as String,

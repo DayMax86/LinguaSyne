@@ -12,6 +12,7 @@ import com.example.linguasyne.R
 import com.example.linguasyne.classes.RevisionSession
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.Vocab
+import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.enums.TermTypes
 import com.example.linguasyne.managers.RevisionSessionManager
@@ -42,7 +43,7 @@ class ReviseTermViewModel : ViewModel() {
     var femImage by mutableStateOf(R.drawable.opaquevenus)
 
     var animateCorrect: Boolean by mutableStateOf(false)
-    var animateDuration: Int by mutableStateOf(800)
+    var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_SHORT)
 
     var summaryTotalCorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalCorrect)
     var summaryTotalIncorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalIncorrect)
@@ -121,14 +122,14 @@ class ReviseTermViewModel : ViewModel() {
                     if (enableGenderSelection) {
                         if (checkGender()) {
                             animateCorrect = true
-                            delay(1000)
+                            delay(AnimationLengths.ANIMATION_DURATION_SHORT)
                             advance()
                             animateCorrect = false
                             resetUi()
                         }
                     } else {
                         animateCorrect = true
-                        delay(1000)
+                        delay(AnimationLengths.ANIMATION_DURATION_SHORT)
                         advance()
                         animateCorrect = false
                         resetUi()
@@ -146,7 +147,12 @@ class ReviseTermViewModel : ViewModel() {
         }
     }
 
-    fun resetUi() {
+    fun animationDone() {
+        animateCorrect = false
+        // Load next data
+    }
+
+    private fun resetUi() {
         //Reset text box and border colour
         userInput = ""
         textFieldOutlineColour = LsGrey
@@ -252,6 +258,5 @@ class ReviseTermViewModel : ViewModel() {
         RevisionSessionManager.current_session.currentTerm.answeredPerfectly = false
         return false
     }
-
 
 }

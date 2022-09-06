@@ -845,7 +845,10 @@ class HomeActivity : AppCompatActivity() {
                                             Text(
                                                 modifier = Modifier
                                                     .padding(start = 5.dp, end = 5.dp),
-                                                text = stringResource(id = R.string.today_in, user.studyCountry),
+                                                text = stringResource(
+                                                    id = R.string.today_in,
+                                                    user.studyCountry
+                                                ),
                                                 style = MaterialTheme.typography.body1,
                                                 color = MaterialTheme.colors.secondary
                                             )

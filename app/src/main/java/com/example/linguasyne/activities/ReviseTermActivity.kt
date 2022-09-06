@@ -71,7 +71,7 @@ class ReviseTermActivity : AppCompatActivity() {
 
                     AnimateCorrectAnswer(
                         animate = viewModel.animateCorrect,
-                        animationSpec = tween(viewModel.animateDuration),
+                        animationSpec = tween(viewModel.animateDuration.toInt()),
                         initialScale = 0f,
                         transformOrigin = TransformOrigin.Center,
                     )
@@ -115,7 +115,6 @@ class ReviseTermActivity : AppCompatActivity() {
                 horizontalArrangement = Arrangement.SpaceEvenly,
             )
             {
-
                 AnimatedVisibility(
                     modifier = Modifier
                         .padding(2.dp),

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,14 +19,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.VocabSearchViewModel
-import kotlin.reflect.KFunction1
 import com.example.linguasyne.R
 
 class VocabSearchActivity : AppCompatActivity() {
@@ -119,12 +115,12 @@ class VocabSearchActivity : AppCompatActivity() {
                         style = MaterialTheme.typography.h1,
                     )
                     Text(
-                        text = stringResource(id = R.string.unlock_level) + "${vocab.unlock_level}",
+                        text = stringResource(id = R.string.unlock_level) + "${vocab.unlockLevel}",
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1,
                     )
                     Text(
-                        text = stringResource(id = R.string.current_level) + "${vocab.current_level_term}",
+                        text = stringResource(id = R.string.current_level) + "${vocab.currentLevelTerm}",
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1,
                     )

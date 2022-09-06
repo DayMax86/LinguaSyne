@@ -4,30 +4,30 @@ import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.enums.TermTypes
 import com.example.linguasyne.managers.LessonTypes
 
-class Vocab(term_id: String,
-            term_name: String,
-            term_unlock_level: Int,
-            term_translations: List<String>,
-            term_mnemonics: List<String>,
-            term_gender: String,
-            term_types: List<String>) : Term(term_id,term_name,term_unlock_level,term_translations,term_mnemonics) {
+class Vocab(termId: String,
+            termName: String,
+            termUnlockLevel: Int,
+            termTranslations: List<String>,
+            termMnemonics: List<String>,
+            termGender: String,
+            termTypes: List<String>) : Term(termId,termName,termUnlockLevel,termTranslations,termMnemonics) {
 
     var gender: Gender = Gender.NO
     val types = mutableListOf<TermTypes>()
-    val is_part_of = listOf<String>()
-    val constituent_terms = listOf<String>()
+    val isPartOf = listOf<String>()
+    val constituentTerms = listOf<String>()
 
-    override val class_type: LessonTypes = LessonTypes.VOCAB
+    override val classType: LessonTypes = LessonTypes.VOCAB
 
     init {
-        assignGender(term_gender)
-        assignTypes(term_types)
+        assignGender(termGender)
+        assignTypes(termTypes)
     }
 
 
 
-    private fun assignGender(term_gender: String) {
-            when (term_gender.toLowerCase()) {
+    private fun assignGender(termGender: String) {
+            when (termGender.toLowerCase()) {
                 "no" -> gender = Gender.NO
                 "mf" -> gender = Gender.MF
                 "m" -> gender = Gender.M
@@ -36,8 +36,8 @@ class Vocab(term_id: String,
 
     }
 
-    private fun assignTypes(term_types: List<String>){
-        term_types.forEach {
+    private fun assignTypes(termTypes: List<String>){
+        termTypes.forEach {
             when (it.toLowerCase()) {
                 "n" -> this.types.add(TermTypes.NOUN)
                 "adj" -> this.types.add(TermTypes.ADJ)

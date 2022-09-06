@@ -15,6 +15,7 @@ import com.example.linguasyne.ui.theme.LsTextBlue
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.example.linguasyne.classes.User
+import com.example.linguasyne.enums.AnimationLengths
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldPath
@@ -43,7 +44,7 @@ class CreateAccountViewModel : ViewModel() {
     var goToHome: Boolean by mutableStateOf(false)
 
     var animateSuccess: Boolean by mutableStateOf(false)
-    var animateDuration: Int by mutableStateOf(1000)
+    var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_LONG)
     var blurAmount: Int by mutableStateOf(0)
 
     var userImage: Uri? by mutableStateOf(null)

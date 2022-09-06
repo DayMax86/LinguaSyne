@@ -45,9 +45,7 @@ import androidx.compose.ui.unit.sp
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.White
 
-class CreateAccountActivity(
-    // Pass things the class needs e.g. viewmodel as constructor parameters
-) : AppCompatActivity() {
+class CreateAccountActivity() : AppCompatActivity() {
 
     val viewModel = CreateAccountViewModel()
 
@@ -78,7 +76,7 @@ class CreateAccountActivity(
 
                     AnimateSuccessfulLogin(
                         animate = viewModel.animateSuccess,
-                        animationSpec = tween(viewModel.animateDuration),
+                        animationSpec = tween(viewModel.animateDuration.toInt()),
                         initialScale = 0f,
                         transformOrigin = TransformOrigin.Center,
                     )
