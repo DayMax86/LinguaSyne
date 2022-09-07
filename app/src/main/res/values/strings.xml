@@ -41,6 +41,7 @@
     <string name="log_in">Log in</string>
     <string name="create_account_prompt">No account? Tap here to register</string>
     <string name="enter_translation">Enter translation</string>
+    <string name="enter_mnemonic">Enter mnemonic</string>
     <string name="select_gender">Select gender</string>
     <string name="submit">Submit</string>
     <string name="summary">Summary</string>

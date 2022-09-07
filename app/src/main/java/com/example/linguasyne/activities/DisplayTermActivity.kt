@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.*
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -34,7 +37,12 @@ import com.example.linguasyne.viewmodels.Sources
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.input.*
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
+import com.example.linguasyne.ui.theme.LsCorrectGreen
+import com.example.linguasyne.ui.theme.White
 
 open class DisplayTermActivity : AppCompatActivity() {
 
@@ -145,6 +153,13 @@ open class DisplayTermActivity : AppCompatActivity() {
                                     viewModel::handleMnemTextPress,
                                 )
                             }
+
+                            AnimateSuccessfulUpload(
+                                animate = viewModel.animateSuccess,
+                                animationSpec = tween(viewModel.animateDuration.toInt()),
+                                initialScale = 0f,
+                                transformOrigin = TransformOrigin.Center,
+                            )
 
                             TogglePopUpInput(showPopUpInput = viewModel.showPopUpInput)
 
@@ -495,6 +510,7 @@ open class DisplayTermActivity : AppCompatActivity() {
     ) {
         if (showPopUpInput) {
             DisplayPopUpInput(
+                tOrM = viewModel.selectedInputType,
                 onTextValueChanged = viewModel::handleTextChange,
                 userInput = viewModel.userInput,
                 textFieldOutlineColour = viewModel.mascOutlineColour,
@@ -505,6 +521,7 @@ open class DisplayTermActivity : AppCompatActivity() {
 
     @Composable
     fun DisplayPopUpInput(
+        tOrM: DisplayTermViewModel.TransOrMnem,
         onTextValueChanged: (String) -> Unit,
         userInput: String,
         textFieldOutlineColour: Color,
@@ -537,7 +554,17 @@ open class DisplayTermActivity : AppCompatActivity() {
                         onValueChange = { onTextValueChanged(it) },
                         label = {
                             Text(
-                                text = stringResource(id = R.string.enter_translation),
+                                text = stringResource(
+                                    id =
+                                    when (tOrM) {
+                                        DisplayTermViewModel.TransOrMnem.TRANSLATIONS -> {
+                                            R.string.enter_translation
+                                        }
+                                        DisplayTermViewModel.TransOrMnem.MNEMONICS -> {
+                                            R.string.enter_mnemonic
+                                        }
+                                    }
+                                ),
                                 color = MaterialTheme.colors.secondary
                             )
                         },
@@ -546,6 +573,7 @@ open class DisplayTermActivity : AppCompatActivity() {
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = textFieldOutlineColour,
                             unfocusedBorderColor = textFieldOutlineColour,
+                            textColor = MaterialTheme.colors.primary,
                         ),
                     )
                 }
@@ -560,13 +588,83 @@ open class DisplayTermActivity : AppCompatActivity() {
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colors.secondary,
                         contentColor = MaterialTheme.colors.onSurface,
-                    )
-                ) {
-
-                }
+                    ),
+                    content = {
+                        Text(text = stringResource(id = R.string.submit))
+                    }
+                )
 
             }
         }
+    }
+
+    @OptIn(ExperimentalAnimationApi::class)
+    @Composable
+    fun AnimateSuccessfulUpload(
+        animate: Boolean,
+        animationSpec: FiniteAnimationSpec<Float>,
+        initialScale: Float,
+        transformOrigin: TransformOrigin,
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.75f),
+            verticalArrangement = Arrangement.SpaceEvenly,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            )
+            {
+
+                AnimatedVisibility(
+                    modifier = Modifier
+                        .padding(2.dp),
+                    visible = animate,
+
+                    enter = scaleIn(
+                        animationSpec = animationSpec,
+                        initialScale = initialScale,
+                        transformOrigin = transformOrigin,
+                    ) + expandVertically(
+                        expandFrom = Alignment.CenterVertically
+                    ) + expandHorizontally(
+                        expandFrom = CenterHorizontally
+                    ),
+
+                    exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
+                ) {
+                    Row(
+                        Modifier
+                            .size(200.dp)
+                            .border(4.dp, MaterialTheme.colors.secondary, shape = CircleShape)
+                            .background(
+                                color = LsCorrectGreen, shape = CircleShape
+                            ),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row {
+                            Text(
+                                text = String(Character.toChars(0x2713)),
+                                //color = LsCorrectGreen,
+                                style =
+                                TextStyle(
+                                    color = White,
+                                    fontSize = 150.sp,
+                                ),
+
+                                )
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 
     @Composable
