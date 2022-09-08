@@ -13,7 +13,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".activities.HomeActivity">
+            tools:context=".activities.StartActivity">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline2"

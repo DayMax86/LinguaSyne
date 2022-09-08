@@ -9,19 +9,10 @@ import com.example.linguasyne.managers.VocabRepository
 
 class VocabSearchViewModel {
 
-    var vocabList by mutableStateOf(VocabRepository.allVocab as MutableList<Vocab>)
 
-    var launchTermView by mutableStateOf(false)
 
-    fun onActivityLaunch() {
-        vocabList = VocabRepository.allVocab as MutableList<Vocab>
-        Log.e("VocabSearch", "onActivityLaunch called, launchTermView = $launchTermView")
-    }
 
-    fun handlePress(item: Vocab) {
-        VocabRepository.filterById(item.id)
-        launchTermView = true
-        Log.e("VocabSearch", "handlePress called, launchTermView = $launchTermView")
-    }
+
+
 
 }

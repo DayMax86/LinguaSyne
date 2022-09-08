@@ -46,6 +46,12 @@ android {
 
 dependencies {
 
+    // Java language implementation
+    implementation("androidx.activity:activity:1.5.1")
+    // Kotlin
+    implementation("androidx.activity:activity-ktx:1.5.1")
+
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.5.0'
@@ -73,6 +79,10 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.5.1'
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
+    implementation "androidx.activity:activity:1.6.0-beta01"
+    implementation "androidx.activity:activity-compose:1.6.0-beta01"
+    implementation "androidx.activity:activity-ktx:1.6.0-beta01"
+    implementation "androidx.navigation:navigation-compose:2.5.2"
 
     //Snapper
     implementation "dev.chrisbanes.snapper:snapper:0.3.0"

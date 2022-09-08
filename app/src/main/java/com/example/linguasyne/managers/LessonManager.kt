@@ -9,17 +9,21 @@ object LessonManager {
     lateinit var currentLesson: Lesson
     var activeLesson: Boolean = false
 
-    fun createLesson(lesson_type: LessonTypes) {
+    private const val LESSON_SIZE = 5
+
+    suspend fun createLesson(lesson_type: LessonTypes) {
         val tempList: MutableList<Vocab> = mutableListOf()
         when (lesson_type) {
             LessonTypes.VOCAB -> {
-                VocabRepository.filterByUnlockLevel(FirebaseManager.currentUser!!.level)
+                VocabRepository.filterByUserNotYetUnlocked()
+                //VocabRepository.filterByUserUnlocked()
+                //VocabRepository.filterByUnlockLevel(FirebaseManager.currentUser!!.level)
                 var i = 0
                 for (v: Vocab in VocabRepository.currentVocab) {
-                    //If 5 items have been added to the temp list, create lesson data object and set to current lesson
+                    //If items have been added to the temp list, create lesson object and set to current lesson
                     if (!activeLesson) {
-                        //5 by default but this shouldn't be hardcoded!!
-                        if (i < 5 && i <= VocabRepository.currentVocab.size) {
+                        //5 by default
+                        if (i < LESSON_SIZE && i <= VocabRepository.currentVocab.size) {
                             tempList.add(v)
                             i++
                             //VocabRepository.currentVocab.minus(v)
@@ -43,7 +47,7 @@ object LessonManager {
             //Implement other lesson types here.
             else -> {}
         }
-        //The manager's current lesson has now been set, so HomeActivity can launch the appropriate activity which will display the right list
+        //The manager's current lesson has now been set, so StartActivity can launch the appropriate activity which will display the right list
     }
 
 }

@@ -1,22 +1,16 @@
 package com.example.linguasyne.viewmodels
 
-import android.graphics.drawable.Drawable
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.RevisionSession
-import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.enums.Gender
-import com.example.linguasyne.enums.TermTypes
 import com.example.linguasyne.managers.RevisionSessionManager
-import com.example.linguasyne.managers.TermDisplayManager
 import com.example.linguasyne.ui.theme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,17 +39,17 @@ class ReviseTermViewModel : ViewModel() {
     var animateCorrect: Boolean by mutableStateOf(false)
     var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_SHORT)
 
-    var summaryTotalCorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalCorrect)
-    var summaryTotalIncorrect: Int by mutableStateOf(RevisionSessionManager.current_session.totalIncorrect)
+    var summaryTotalCorrect: Int by mutableStateOf(RevisionSessionManager.currentSession.totalCorrect)
+    var summaryTotalIncorrect: Int by mutableStateOf(RevisionSessionManager.currentSession.totalIncorrect)
 
     fun initiateSession() {
-        updateTermTitle(RevisionSessionManager.current_session.currentStep)
+        updateTermTitle(RevisionSessionManager.currentSession.currentStep)
     }
 
     private fun updateTermTitle(cs: RevisionSession.AnswerTypes) {
 
-        ctName = RevisionSessionManager.current_session.currentTerm.name
-        ctTrans = RevisionSessionManager.current_session.currentTerm.translations[0]
+        ctName = RevisionSessionManager.currentSession.currentTerm.name
+        ctTrans = RevisionSessionManager.currentSession.currentTerm.translations[0]
 
         when (cs) {
             RevisionSession.AnswerTypes.ENG -> {
@@ -163,7 +157,7 @@ class ReviseTermViewModel : ViewModel() {
         femOutlineColour = LsGrey
 
         // Make sure the activity is displaying either the term name or translation
-        updateTermTitle(RevisionSessionManager.current_session.currentStep)
+        updateTermTitle(RevisionSessionManager.currentSession.currentStep)
     }
 
     fun handleInput(text: String) {
@@ -196,7 +190,7 @@ class ReviseTermViewModel : ViewModel() {
         }
 
         // If they got the gender correct...
-        val t = RevisionSessionManager.current_session.currentTerm as Vocab
+        val t = RevisionSessionManager.currentSession.currentTerm as Vocab
         if (selectedGender == t.gender) {
             when (selectedGender) {
                 Gender.M -> mascOutlineColour = LsCorrectGreen
@@ -234,19 +228,19 @@ class ReviseTermViewModel : ViewModel() {
         val answer: String = userInput.lowercase().filter {
             !it.isWhitespace()
         }
-        when (RevisionSessionManager.current_session.currentStep) {
+        when (RevisionSessionManager.currentSession.currentStep) {
             //Check answer according to whether it's an ENG or TRANS step being tested
             (RevisionSession.AnswerTypes.TRANS) -> {
-                if (answer == RevisionSessionManager.current_session.currentTerm.name) {
-                    RevisionSessionManager.current_session.currentTerm.transAnswered = true
+                if (answer == RevisionSessionManager.currentSession.currentTerm.name) {
+                    RevisionSessionManager.currentSession.currentTerm.transAnswered = true
                     return true
                 }
             }
             (RevisionSession.AnswerTypes.ENG) -> {
                 //Need to check for each of the translations in the list
-                for (trans in RevisionSessionManager.current_session.currentTerm.translations) {
+                for (trans in RevisionSessionManager.currentSession.currentTerm.translations) {
                     if (answer == trans.lowercase()) {
-                        RevisionSessionManager.current_session.currentTerm.engAnswered = true
+                        RevisionSessionManager.currentSession.currentTerm.engAnswered = true
                         return true
                     }
                 }
@@ -255,7 +249,7 @@ class ReviseTermViewModel : ViewModel() {
                 //
             }
         }
-        RevisionSessionManager.current_session.currentTerm.answeredPerfectly = false
+        RevisionSessionManager.currentSession.currentTerm.answeredPerfectly = false
         return false
     }
 

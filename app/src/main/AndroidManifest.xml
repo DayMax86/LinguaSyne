@@ -16,13 +16,13 @@
         <activity android:name=".activities.VocabSearchActivity" />
         <activity
             android:name=".activities.DisplayTermActivity"
-            android:parentActivityName=".activities.HomeActivity" />
+            android:parentActivityName=".activities.StartActivity" />
 
-        <activity android:name=".activities.HomeActivity"
+        <activity android:name=".activities.StartActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <activity android:name=".activities.ReviseTermActivity"
-            android:parentActivityName=".activities.HomeActivity" />
+            android:parentActivityName=".activities.StartActivity" />
 
         <activity android:name=".activities.RevisionSummaryActivity"
             android:parentActivityName=".activities.DisplayTermActivity" />

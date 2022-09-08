@@ -11,6 +11,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.tasks.await
 
 object FirebaseManager {
 
@@ -53,11 +55,23 @@ object FirebaseManager {
             .collection("vocab")
             .add(term)
             .addOnSuccessListener {
-                Log.d("HomeActivity", "Vocab item #" + term.id + " added to firebase")
+                Log.d("StartActivity", "Vocab item #" + term.id + " added to firebase")
             }
     }
 
-
+    suspend fun getUserVocabUnlocks(): List<Vocab> {
+        var fetchedTerms: List<Vocab>
+        coroutineScope {
+            fetchedTerms = FirebaseFirestore.getInstance()
+                .collection("users")
+                .document("${FirebaseManager.currentUser?.email}")
+                .collection("terms")
+                .get()
+                .await()
+                .toObjects(Vocab::class.java)
+        }
+        return fetchedTerms
+    }
 
     fun getDefaultUserImageUri(): Uri {
         return Uri.parse("https://firebasestorage.googleapis.com/v0/b/linguasyne.appspot.com/o/default%2FAngrySteveEmote.png?alt=media&token=b3ba69f5-0ba8-41f4-9449-b58327b7f4d0")
@@ -66,8 +80,8 @@ object FirebaseManager {
     fun signOutUser() {
         FirebaseAuth.getInstance().signOut()
         currentUser = null
-        Log.d("HomeActivity", "User signed out")
-        Log.d("HomeActivity", "Current user id: ${FirebaseAuth.getInstance().currentUser?.uid}")
+        Log.d("StartActivity", "User signed out")
+        Log.d("StartActivity", "Current user id: ${FirebaseAuth.getInstance().currentUser?.uid}")
     }
 
 }

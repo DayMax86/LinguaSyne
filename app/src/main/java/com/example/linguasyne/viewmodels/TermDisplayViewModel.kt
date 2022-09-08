@@ -7,12 +7,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.AnimationLengths
+import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
+import com.example.linguasyne.managers.LessonTypes
 import com.example.linguasyne.managers.VocabRepository
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsGrey
@@ -26,6 +29,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import okhttp3.internal.notify
+import okhttp3.internal.wait
 import java.util.ArrayList
 
 enum class Sources {
@@ -33,11 +38,13 @@ enum class Sources {
     SEARCH
 }
 
-class DisplayTermViewModel : ViewModel() {
+class DisplayTermViewModel(
+    private val navController: NavHostController
+) : ViewModel() {
 
     lateinit var vSource: Sources
 
-    var termToDisplay: Term by mutableStateOf(VocabRepository.currentVocab[0])
+    var termToDisplay: Term by mutableStateOf(VocabRepository.allVocab[0])
     var termsUploaded: Boolean = false
     var showPopUpInput: Boolean by mutableStateOf(false)
     var selectedInputType: TransOrMnem by mutableStateOf(TransOrMnem.TRANSLATIONS)
@@ -48,6 +55,7 @@ class DisplayTermViewModel : ViewModel() {
     var mascOutlineColour by mutableStateOf(LsGrey)
     private var fem by mutableStateOf(false)
     var femOutlineColour by mutableStateOf(LsGrey)
+    var textFieldOutlineColour by mutableStateOf(LsVocabTextBlue)
 
     val selectedDotColour: Color = LsVocabTextBlue
     val unselectedDotColour: Color = LsTeal200
@@ -56,19 +64,40 @@ class DisplayTermViewModel : ViewModel() {
     val animateDuration = AnimationLengths.ANIMATION_DURATION_LONG
     var blurAmount: Int by mutableStateOf(0)
 
+    var goToSearch: Boolean by mutableStateOf(false)
+
     fun onActivityLaunch(): Sources {
-        getTermData()
-        if (vSource == Sources.LESSON && !termsUploaded) {
-            for (term: Term in LessonManager.currentLesson.lessonList) {
-                addTermToUserCollection(term)
-                termsUploaded = true
+        viewModelScope
+            .launch {
+                //LessonManager.createLesson(LessonTypes.VOCAB)
+                if (fetchTermSource() == Sources.LESSON) {
+                    if (!termsUploaded) {
+                        for (term: Term in LessonManager.currentLesson.lessonList) {
+                            //Lessons should only be created for terms not previously unlocked so no check needed
+                            addTermToUserCollection(term)
+                            termsUploaded = true
+                        }
+                    }
+                }
+                getTermData()
             }
-        }
         return vSource
+    }
+
+    fun handleBackPress() {
+        viewModelScope
+            .launch {
+                if (!showPopUpInput) {
+                    FirebaseManager.loadVocabFromFirebase()
+                    navController.navigate(ComposableDestinations.TERM_SEARCH)
+                    //Call the onActivityEnd function
+                }
+            }
     }
 
     private fun getTermData() {
         fetchTermSource()
+        //Need to make sure the lesson has already been created before fetching the terms
         fetchTerm()
         fetchGenderImages()
     }
@@ -103,7 +132,7 @@ class DisplayTermViewModel : ViewModel() {
                     } catch (e: Exception) {
                         Log.e(
                             "DisplayTermViewModel",
-                            "$e"
+                            "fetchTerm error: $e"
                         )
                     }
                 }
@@ -132,7 +161,7 @@ class DisplayTermViewModel : ViewModel() {
                 } catch (e: Exception) {
                     Log.e(
                         "DisplayTermViewModel",
-                        "$e"
+                        "addToUserCollection error: $e"
                     )
                 }
             }
@@ -196,9 +225,18 @@ class DisplayTermViewModel : ViewModel() {
                     runSuccessAnimation()
 
                 } catch (e: Exception) {
-                    Log.e("DisplayTermViewModel", "$e")
+                    Log.e("DisplayTermViewModel", "AddCustomData error: $e")
                 }
             }
+    }
+
+    fun togglePopUp() {
+        showPopUpInput = !showPopUpInput
+        blurAmount = if (blurAmount == 0) {
+            5
+        } else {
+            0
+        }
     }
 
     private fun runSuccessAnimation() {

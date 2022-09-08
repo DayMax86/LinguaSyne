@@ -6,11 +6,10 @@ import com.example.linguasyne.classes.RevisionSession
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.enums.ReviewTimes
-import java.time.LocalDateTime
 
 object RevisionSessionManager {
 
-    lateinit var current_session: RevisionSession
+    lateinit var currentSession: RevisionSession
 
     @RequiresApi(Build.VERSION_CODES.O) //This is needed for the time references
     fun createSession() {
@@ -60,30 +59,30 @@ object RevisionSessionManager {
 
         //Sort the results (randomly by default but could be oldest first etc. etc.)
         //Set manager's current list
-        current_session = RevisionSession(sortSessionBy(tempList, SortOrder.RANDOM))
-        current_session.totalCorrect = 0
-        current_session.totalIncorrect = 0
+        currentSession = RevisionSession(sortSessionBy(tempList, SortOrder.RANDOM))
+        currentSession.totalCorrect = 0
+        currentSession.totalIncorrect = 0
 
-        current_session.currentStep = RevisionSession.AnswerTypes.ENG
-        current_session.currentTerm = TermDisplayManager.termList[0]
+        currentSession.currentStep = RevisionSession.AnswerTypes.ENG
+        currentSession.currentTerm = TermDisplayManager.termList[0]
     }
 
     fun advanceSession(): Term? { //Returns null if the session list has been exhausted
         //Has the term already had both steps completed?
-        if (current_session.currentTerm.engAnswered && current_session.currentTerm.transAnswered) {
+        if (currentSession.currentTerm.engAnswered && currentSession.currentTerm.transAnswered) {
             //Both steps are now complete so it can be removed from the list
             updateSessionTotals()
 
             val tl: MutableList<Term> = mutableListOf<Term>()
-            tl.add(current_session.currentTerm)
+            tl.add(currentSession.currentTerm)
             for (t: Term in tl) {
-                current_session.sessionList.remove(t)
+                currentSession.sessionList.remove(t)
             }
         }
 
         //Determine what the next term should be based on how many terms are left in the session
-        val sl = current_session.sessionList
-        val ct = current_session.currentTerm
+        val sl = currentSession.sessionList
+        val ct = currentSession.currentTerm
 
         //Are we at the end of the list and therefore need to loop back to the start?
         var endOfList = false
@@ -97,10 +96,10 @@ object RevisionSessionManager {
         if (sl.size >= 1) {
             if (endOfList) {
                 //Loop back to start because the end of the list has been reached the first time around
-                current_session.currentTerm = sl.elementAt(0)
+                currentSession.currentTerm = sl.elementAt(0)
             } else {
                 //Move to the next term in the list
-                current_session.currentTerm = sl.elementAt(sl.indexOf(ct) + 1)
+                currentSession.currentTerm = sl.elementAt(sl.indexOf(ct) + 1)
             }
         } else if (sl.isEmpty()) {
             //There must be no terms left in the session so it can be ended and the summary screen shown
@@ -108,23 +107,23 @@ object RevisionSessionManager {
         }
 
         //Return the term to display, or null if the session is complete
-        return current_session.currentTerm
+        return currentSession.currentTerm
     }
 
     private fun swapSteps() {
-        if (current_session.currentStep == RevisionSession.AnswerTypes.ENG)
-            current_session.currentStep = RevisionSession.AnswerTypes.TRANS
-        else if (current_session.currentStep == RevisionSession.AnswerTypes.TRANS) {
-            current_session.currentStep = RevisionSession.AnswerTypes.ENG
+        if (currentSession.currentStep == RevisionSession.AnswerTypes.ENG)
+            currentSession.currentStep = RevisionSession.AnswerTypes.TRANS
+        else if (currentSession.currentStep == RevisionSession.AnswerTypes.TRANS) {
+            currentSession.currentStep = RevisionSession.AnswerTypes.ENG
         }
     }
 
     private fun updateSessionTotals() {
         //Take number answered perfectly from sessionSize
-        if (current_session.currentTerm.answeredPerfectly) {
-            current_session.totalCorrect++
+        if (currentSession.currentTerm.answeredPerfectly) {
+            currentSession.totalCorrect++
         } else {
-            current_session.totalIncorrect++
+            currentSession.totalIncorrect++
         }
     }
 

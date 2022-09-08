@@ -12,6 +12,8 @@ class Vocab(termId: String,
             termGender: String,
             termTypes: List<String>) : Term(termId,termName,termUnlockLevel,termTranslations,termMnemonics) {
 
+    constructor() : this("", "", 0, emptyList(), emptyList(), "", emptyList())
+
     var gender: Gender = Gender.NO
     val types = mutableListOf<TermTypes>()
     val isPartOf = listOf<String>()

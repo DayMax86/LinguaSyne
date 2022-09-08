@@ -11,8 +11,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.NewsItem
 import com.example.linguasyne.classes.User
+import com.example.linguasyne.classes.Vocab
+import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.managers.*
 import com.example.linguasyne.ui.theme.LsTeal200
 import com.example.linguasyne.ui.theme.LsVocabTextBlue
@@ -27,15 +30,17 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    private val navController: NavHostController,
+) : ViewModel() {
 
     var user: User by mutableStateOf(FirebaseManager.currentUser!!)
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
 
-    var launchTermBase: Boolean by mutableStateOf(false)
+ /*   var launchTermBase: Boolean by mutableStateOf(false)
     var launchVocabLesson: Boolean by mutableStateOf(false)
     var launchRevisionSession: Boolean by mutableStateOf(false)
-    var launchLogin: Boolean by mutableStateOf(false)
+    var launchLogin: Boolean by mutableStateOf(false)*/
 
     var newsItems: List<NewsItem.Data> by mutableStateOf(emptyList())
     val selectedNewsColour: Color = LsVocabTextBlue
@@ -92,29 +97,31 @@ class HomeViewModel : ViewModel() {
                                     firestoreRef
                                         .update("imageUri", this)
                                         .await()
-                                        userImage = this
+                                    userImage = this
                                 }
                         }
                 }
 
             } catch (e: Exception) {
-                Log.e("HomeViewModel","$e")
+                Log.e("HomeViewModel", "$e")
             }
         }
     }
 
 
     fun createLesson() {
-        LessonManager.createLesson(LessonTypes.VOCAB)
-        launchVocabLesson =
-            false //Make sure to set this back to false in case the user starts a new lesson without restarting the home activity
+        viewModelScope.launch {
+            LessonManager.createLesson(LessonTypes.VOCAB)
+            /*launchVocabLesson =
+                false //Make sure to set this back to false in case the user starts a new lesson without restarting the home activity*/
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createSession() {
         RevisionSessionManager.createSession()
-        launchRevisionSession =
-            false //Set back to false so the user can launch another session without home activity restart
+        /*launchRevisionSession =
+            false //Set back to false so the user can launch another session without home activity restart*/
     }
 
     fun handleHelpClick() {
@@ -122,28 +129,27 @@ class HomeViewModel : ViewModel() {
     }
 
     fun handleVocabLessonClick() {
-        launchVocabLesson = true
+        createLesson()
+        navController.navigate(ComposableDestinations.TERM_DISPLAY)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun handleRevisionClick() {
-        launchRevisionSession = true
+        createSession()
+        navController.navigate(ComposableDestinations.REVISE)
     }
 
     fun handleTermBaseClick() {
-        launchTermBase = true
-    }
-
-    fun handleProfileImageClick() {
-        //Do something
+        navController.navigate(ComposableDestinations.TERM_SEARCH)
     }
 
     fun signOut() {
         FirebaseManager.signOutUser()
-        launchLogin = true
+        navController.navigate(ComposableDestinations.LOGIN)
     }
 
 
-    fun apiCall() {
+    private fun apiCall() {
         val apiCall = APIManager.create()
         apiCall.getNewsItems().enqueue(object : Callback<NewsResponse> {
 
@@ -166,6 +172,29 @@ class HomeViewModel : ViewModel() {
         }
         )
 
+    }
+
+    /*----------------------SEARCH SCREEN-------------------------*/
+
+    lateinit var vocabList: MutableList<Vocab>
+    var launchTermView by mutableStateOf(false)
+
+    fun onSearchLaunch() {
+        vocabList = VocabRepository.allVocab as MutableList<Vocab>
+    }
+
+    fun handleCardPress(item: Vocab) {
+        VocabRepository.filterById(item.id)
+        launchTermView()
+    }
+
+    fun handleBackPress() {
+        navController.navigate(ComposableDestinations.HOME)
+    }
+
+    private fun launchTermView() {
+        //navController.navigate(ComposableDestinations.TERM_DISPLAY)
+        launchTermView = true
     }
 
 }

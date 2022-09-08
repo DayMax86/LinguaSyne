@@ -14,7 +14,7 @@ class RevisionSessionCreationTests {
             FirebaseManager.currentUser = User("test@test.com")
             //When user level is 0 and first 3/21 terms in vocab have unlock level changed to > 0
             RevisionSessionManager.createSession()
-            assertEquals(18, RevisionSessionManager.current_session.sl.size)
+            assertEquals(18, RevisionSessionManager.currentSession.sl.size)
         }
     }
 }
