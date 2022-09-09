@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.Term
 import com.example.linguasyne.managers.LessonManager
+import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.ui.elements.DotsIndicator
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.ui.theme.LsCorrectGreen
@@ -150,19 +151,27 @@ fun TermDisplayScreen(navController: NavHostController) {
                 )
             }
 
-            AnimateSuccessfulUpload(
+            AnimateSuccess(
                 animate = viewModel.animateSuccess,
                 animationSpec = tween(viewModel.animateDuration.toInt()),
                 initialScale = 0f,
                 transformOrigin = TransformOrigin.Center,
             )
 
-            TogglePopUpInput(showPopUpInput = viewModel.showPopUpInput)
+            DisplayPopUpInput(
+                show = viewModel.showPopUpInput,
+                tOrM = viewModel.selectedInputType,
+                onTextValueChanged = viewModel::handleTextChange,
+                userInput = viewModel.userInput,
+                textFieldOutlineColour = viewModel.textFieldOutlineColour,
+                buttonOnClick = viewModel::handleButtonPress,
+                onBackBehaviour = viewModel::togglePopUp,
+            )
+
 
         }
     }
 }
-
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -499,25 +508,9 @@ fun DisplayTerm(
 
 }
 
-
-@Composable
-fun TogglePopUpInput(
-    showPopUpInput: Boolean,
-) {
-    if (showPopUpInput) {
-        DisplayPopUpInput(
-            tOrM = viewModel.selectedInputType,
-            onTextValueChanged = viewModel::handleTextChange,
-            userInput = viewModel.userInput,
-            textFieldOutlineColour = viewModel.textFieldOutlineColour,
-            buttonOnClick = viewModel::handleButtonPress,
-            onBackBehaviour = viewModel::togglePopUp,
-        )
-    }
-}
-
 @Composable
 fun DisplayPopUpInput(
+    show: Boolean,
     tOrM: DisplayTermViewModel.TransOrMnem,
     onTextValueChanged: (String) -> Unit,
     userInput: String,
@@ -525,165 +518,101 @@ fun DisplayPopUpInput(
     buttonOnClick: () -> Unit,
     onBackBehaviour: () -> Unit,
 ) {
+    if (show) {
+        BackHandler {
+            onBackBehaviour()
+        }
 
-    BackHandler {
-        onBackBehaviour()
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(0.5f)
-            .fillMaxHeight(0.5f)
-            .padding(all = 16.dp),
-    ) {
-
-        Card(
+        Column(
             modifier = Modifier
-                .clip(RoundedCornerShape(10.dp))
-                .padding(all = 10.dp)
-                .border(
-                    2.dp,
-                    MaterialTheme.colors.primary,
-                    shape = RoundedCornerShape(size = 10.dp)
-                ),
-            backgroundColor = MaterialTheme.colors.onBackground,
-            elevation = 6.dp,
-            shape = RoundedCornerShape(corner = CornerSize(10.dp)),
+                .fillMaxWidth(0.5f)
+                .fillMaxHeight(0.5f)
+                .padding(all = 16.dp),
         ) {
 
-            Column(
-                verticalArrangement = Arrangement.Center
-            ) {
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
-
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .padding(all = 16.dp)
-                            .fillMaxWidth(),
-                        value = userInput,
-                        onValueChange = { onTextValueChanged(it) },
-                        label = {
-                            Text(
-                                text = stringResource(
-                                    id =
-                                    when (tOrM) {
-                                        DisplayTermViewModel.TransOrMnem.TRANSLATIONS -> {
-                                            R.string.enter_translation
-                                        }
-                                        DisplayTermViewModel.TransOrMnem.MNEMONICS -> {
-                                            R.string.enter_mnemonic
-                                        }
-                                    }
-                                ),
-                                color = MaterialTheme.colors.secondary
-                            )
-                        },
-                        singleLine = false,
-                        textStyle = MaterialTheme.typography.body1,
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = textFieldOutlineColour,
-                            unfocusedBorderColor = textFieldOutlineColour,
-                            textColor = MaterialTheme.colors.primary,
-                        ),
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    Button(
-                        onClick = { buttonOnClick() },
-                        shape = RoundedCornerShape(100),
-                        modifier = Modifier
-                            .height(60.dp)
-                            .width(150.dp)
-                            .padding(bottom = 16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.secondary,
-                            contentColor = MaterialTheme.colors.onSurface,
-                        ),
-                        content = {
-                            Text(text = stringResource(id = R.string.submit))
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun AnimateSuccessfulUpload(
-    animate: Boolean,
-    animationSpec: FiniteAnimationSpec<Float>,
-    initialScale: Float,
-    transformOrigin: TransformOrigin,
-) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxHeight(0.75f),
-        verticalArrangement = Arrangement.SpaceEvenly,
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        )
-        {
-
-            AnimatedVisibility(
+            Card(
                 modifier = Modifier
-                    .padding(2.dp),
-                visible = animate,
-
-                enter = scaleIn(
-                    animationSpec = animationSpec,
-                    initialScale = initialScale,
-                    transformOrigin = transformOrigin,
-                ) + expandVertically(
-                    expandFrom = Alignment.CenterVertically
-                ) + expandHorizontally(
-                    expandFrom = Alignment.CenterHorizontally
-                ),
-
-                exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
+                    .clip(RoundedCornerShape(10.dp))
+                    .padding(all = 10.dp)
+                    .border(
+                        2.dp,
+                        MaterialTheme.colors.primary,
+                        shape = RoundedCornerShape(size = 10.dp)
+                    ),
+                backgroundColor = MaterialTheme.colors.onBackground,
+                elevation = 6.dp,
+                shape = RoundedCornerShape(corner = CornerSize(10.dp)),
             ) {
-                Row(
-                    Modifier
-                        .size(200.dp)
-                        .border(4.dp, MaterialTheme.colors.secondary, shape = CircleShape)
-                        .background(
-                            color = LsCorrectGreen, shape = CircleShape
-                        ),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Row {
-                        Text(
-                            text = String(Character.toChars(0x2713)),
-                            //color = LsCorrectGreen,
-                            style =
-                            TextStyle(
-                                color = White,
-                                fontSize = 150.sp,
-                            ),
 
-                            )
+                Column(
+                    verticalArrangement = Arrangement.Center
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    ) {
+
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .padding(all = 16.dp)
+                                .fillMaxWidth(),
+                            value = userInput,
+                            onValueChange = { onTextValueChanged(it) },
+                            label = {
+                                Text(
+                                    text = stringResource(
+                                        id =
+                                        when (tOrM) {
+                                            DisplayTermViewModel.TransOrMnem.TRANSLATIONS -> {
+                                                R.string.enter_translation
+                                            }
+                                            DisplayTermViewModel.TransOrMnem.MNEMONICS -> {
+                                                R.string.enter_mnemonic
+                                            }
+                                        }
+                                    ),
+                                    color = MaterialTheme.colors.secondary
+                                )
+                            },
+                            singleLine = false,
+                            textStyle = MaterialTheme.typography.body1,
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = textFieldOutlineColour,
+                                unfocusedBorderColor = textFieldOutlineColour,
+                                textColor = MaterialTheme.colors.primary,
+                            ),
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        Button(
+                            onClick = { buttonOnClick() },
+                            shape = RoundedCornerShape(100),
+                            modifier = Modifier
+                                .height(60.dp)
+                                .width(150.dp)
+                                .padding(bottom = 16.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.secondary,
+                                contentColor = MaterialTheme.colors.onSurface,
+                            ),
+                            content = {
+                                Text(text = stringResource(id = R.string.submit))
+                            }
+                        )
                     }
                 }
             }
         }
     }
 }
+
+
 
 
 

@@ -35,6 +35,7 @@ import com.example.linguasyne.classes.User
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.ui.elements.DotsIndicator
+import com.example.linguasyne.ui.elements.SelectImage
 import com.example.linguasyne.viewmodels.HomeViewModel
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
@@ -71,7 +72,7 @@ fun DisplayHome(
     onClickVocabLesson: () -> Unit,
     onClickRevision: () -> Unit,
     onClickTermBase: () -> Unit,
-    onClickProfileImage: (Uri) -> Unit,
+    onClickProfileImage: (Uri?) -> Unit,
     newsItems: List<NewsItem.Data>,
     selectedNewsColour: Color,
     unselectedNewsColour: Color,
@@ -560,36 +561,5 @@ fun DisplayHome(
 }
 
 
-@Composable
-fun SelectImage(
-    userImage: Uri?,
-    onImageSelected: (Uri) -> Unit,
-) {
 
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-            if (it != null) {
-                onImageSelected(it)
-            }
-        }
-
-    AsyncImage(
-        modifier = Modifier
-            .padding(top = 30.dp)
-            .clickable {
-                launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-            }
-            .border(
-                color = MaterialTheme.colors.primary,
-                width = 2.dp,
-                shape = CircleShape
-            )
-            .size(width = 150.dp, height = 150.dp)
-            .clip(shape = CircleShape),
-        model = userImage,
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-    )
-
-}
 

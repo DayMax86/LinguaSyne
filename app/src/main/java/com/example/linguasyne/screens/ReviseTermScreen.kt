@@ -27,17 +27,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.linguasyne.R
+import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.White
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 
 @Composable
-fun ReviseTermScreen() {
-    val viewModel = ReviseTermViewModel()
+fun ReviseTermScreen(navController: NavHostController) {
+    val viewModel = ReviseTermViewModel(navController)
 
-    LaunchSummary(needsLaunching = viewModel.launchSummary)
     viewModel.initiateSession()
     Surface(
         modifier = Modifier
@@ -59,7 +60,7 @@ fun ReviseTermScreen() {
             femImage = viewModel.femImage,
         )
 
-        AnimateCorrectAnswer(
+        AnimateSuccess(
             animate = viewModel.animateCorrect,
             animationSpec = tween(viewModel.animateDuration.toInt()),
             initialScale = 0f,
@@ -67,87 +68,6 @@ fun ReviseTermScreen() {
         )
 
     }
-}
-
-
-@Composable
-fun LaunchSummary(
-    needsLaunching: Boolean,
-) {
-    if (needsLaunching) {
-        this.finish()
-        val intent = Intent(this, RevisionSummaryActivity::class.java)
-        startActivity(intent)
-    }
-}
-
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun AnimateCorrectAnswer(
-    animate: Boolean,
-    animationSpec: FiniteAnimationSpec<Float>,
-    initialScale: Float,
-    transformOrigin: TransformOrigin,
-) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxHeight(0.33f),
-        verticalArrangement = Arrangement.SpaceEvenly,
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        )
-        {
-            AnimatedVisibility(
-                modifier = Modifier
-                    .padding(2.dp),
-                visible = animate,
-
-                enter = scaleIn(
-                    animationSpec = animationSpec,
-                    initialScale = initialScale,
-                    transformOrigin = transformOrigin,
-                ) + expandVertically(
-                    expandFrom = Alignment.CenterVertically
-                ) + expandHorizontally(
-                    expandFrom = Alignment.CenterHorizontally
-                ),
-
-                exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
-            ) {
-                Row(
-                    Modifier
-                        .size(200.dp)
-                        .border(4.dp, MaterialTheme.colors.secondary, shape = CircleShape)
-                        .background(
-                            color = LsCorrectGreen, shape = CircleShape
-                        ),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Row {
-                        Text(
-                            text = String(Character.toChars(0x2713)),
-                            //color = LsCorrectGreen,
-                            style =
-                            TextStyle(
-                                color = White,
-                                fontSize = 150.sp,
-                            ),
-
-                            )
-                    }
-                }
-            }
-        }
-
-    }
-
 }
 
 
@@ -231,9 +151,7 @@ fun ViewTerm(
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
 
-            Row(
-
-            ) {
+            Row {
                 Image(
                     painterResource(mascImage),
                     modifier = Modifier

@@ -6,6 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
@@ -34,22 +37,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
 import com.example.linguasyne.activities.StartActivity
+import com.example.linguasyne.ui.animations.AnimateSuccess
+import com.example.linguasyne.ui.elements.SelectImage
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.White
 import com.example.linguasyne.viewmodels.CreateAccountViewModel
 
 @Composable
-fun CreateAccountScreen(){
+fun CreateAccountScreen(navController: NavHostController){
 
-    val viewModel = CreateAccountViewModel()
-
-    ReturnToLogin(toReturn = viewModel.returnToLogin)
-    GoToHome(goToHome = viewModel.goToHome)
-
-
+    val viewModel = CreateAccountViewModel(navController)
 
     DisplayCreateAccount(
         viewModel.userEmailInput,
@@ -61,124 +62,43 @@ fun CreateAccountScreen(){
         buttonOnClick = viewModel::handleButtonPress,
         textOnClick = viewModel::handleTextPress,
         userImage = viewModel.userImage,
+        onClickProfileImage = viewModel::uploadUserImage,
         blurAmount = viewModel.blurAmount,
     )
 
-    AnimateSuccessfulLogin(
+    AnimateSuccess(
         animate = viewModel.animateSuccess,
         animationSpec = tween(viewModel.animateDuration.toInt()),
         initialScale = 0f,
         transformOrigin = TransformOrigin.Center,
     )
 
-    TogglePasswordStrengthIndicator(showProgressBar = viewModel.showProgressBar)
+    TogglePasswordStrengthIndicator(
+        showProgressBar = viewModel.showProgressBar,
+        passwordStrength = viewModel.passwordStrength,
+        progressBarValue = viewModel.progressBarValue,
+    )
 
 }
 
-
-
-@Composable
-fun ReturnToLogin(toReturn: Boolean) {
-    if (toReturn) {
-        this.finish()
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-    }
-}
-
-@Composable
-fun GoToHome(goToHome: Boolean) {
-    if (goToHome) {
-        this.finish()
-        val intent = Intent(this, StartActivity::class.java)
-        startActivity(intent)
-    }
-}
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun AnimateSuccessfulLogin(
-    animate: Boolean,
-    animationSpec: FiniteAnimationSpec<Float>,
-    initialScale: Float,
-    transformOrigin: TransformOrigin,
-) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxHeight(0.75f),
-        verticalArrangement = Arrangement.SpaceEvenly,
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        )
-        {
-
-            AnimatedVisibility(
-                modifier = Modifier
-                    .padding(2.dp),
-                visible = animate,
-
-                enter = scaleIn(
-                    animationSpec = animationSpec,
-                    initialScale = initialScale,
-                    transformOrigin = transformOrigin,
-                ) + expandVertically(
-                    expandFrom = Alignment.CenterVertically
-                ) + expandHorizontally(
-                    expandFrom = Alignment.CenterHorizontally
-                ),
-
-                exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
-            ) {
-                Row(
-                    Modifier
-                        .size(200.dp)
-                        .border(4.dp, MaterialTheme.colors.secondary, shape = CircleShape)
-                        .background(
-                            color = LsCorrectGreen, shape = CircleShape
-                        ),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Row {
-                        Text(
-                            text = String(Character.toChars(0x2713)),
-                            //color = LsCorrectGreen,
-                            style =
-                            TextStyle(
-                                color = White,
-                                fontSize = 150.sp,
-                            ),
-
-                            )
-                    }
-                }
-            }
-        }
-
-    }
-
-}
 
 @Composable
 fun TogglePasswordStrengthIndicator(
     showProgressBar: Boolean,
+    passwordStrength: Int,
+    progressBarValue: Float,
 ) {
     if (showProgressBar) {
         DisplayPasswordStrength(
-            passwordStrength = viewModel.passwordStrength,
-            progressBarValue = viewModel.progressBarValue,
+            passwordStrength = passwordStrength,
+            progressBarValue = progressBarValue,
         )
     }
 }
 
 @Composable
 fun DisplayPasswordStrength(
-    passwordStrength: String,
+    passwordStrength: Int,
     progressBarValue: Float,
 ) {
     Column(
@@ -203,7 +123,7 @@ fun DisplayPasswordStrength(
             ) {
 
                 Text(
-                    text = passwordStrength,
+                    text = stringResource(id = passwordStrength),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.primary,
                 )
@@ -235,6 +155,7 @@ fun DisplayCreateAccount(
     buttonOnClick: () -> Unit,
     textOnClick: () -> Unit,
     userImage: Uri?,
+    onClickProfileImage: (Uri) -> Unit,
     blurAmount: Int
 ) {
 
@@ -253,7 +174,7 @@ fun DisplayCreateAccount(
             AsyncImage(
                 modifier = Modifier
                     .clickable {
-                        selectImage() //Activity launch. ViewModel image uri set.
+                        onClickProfileImage
                     }
                     .border(
                         color = MaterialTheme.colors.primary,
@@ -300,7 +221,7 @@ fun DisplayCreateAccount(
                     modifier = Modifier
                         .fillMaxWidth(),
                     value = userPasswordInput,
-                    onValueChange = { handlePasswordChange(it,this@CreateAccountActivity.baseContext) },
+                    onValueChange = { handlePasswordChange(it) },
                     label = { Text(stringResource(R.string.password)) },
                     singleLine = true,
                     textStyle = MaterialTheme.typography.body1,
@@ -356,27 +277,4 @@ fun DisplayCreateAccount(
         }
     }
 
-}
-
-
-private fun selectImage() {
-
-    val intent = Intent(Intent.ACTION_GET_CONTENT)
-    intent.setType("image/*")
-    val PICK_IMAGE = 1
-    try {
-        startActivityForResult(intent, PICK_IMAGE)
-    } catch (e: ActivityNotFoundException) {
-        // display error state to the user
-        Toast.makeText(this, "${resources.getText(R.string.camera_error_toast)}", Toast.LENGTH_LONG).show()
-    }
-
-}
-
-@Deprecated("Deprecated in Java")
-override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    super.onActivityResult(requestCode, resultCode, data)
-
-    Log.d("ImageSelector", "Image has been selected")
-    viewModel.userImage = data?.data
 }

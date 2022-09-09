@@ -12,10 +12,11 @@ import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsErrorRed
 import com.example.linguasyne.ui.theme.LsTextBlue
-import android.content.Context
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.enums.AnimationLengths
+import com.example.linguasyne.enums.ComposableDestinations
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldPath
@@ -28,7 +29,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
-class CreateAccountViewModel : ViewModel() {
+class CreateAccountViewModel(
+    private val navController: NavHostController
+) : ViewModel() {
 
     var userEmailInput: String by mutableStateOf("")
     var userPasswordInput: String by mutableStateOf("")
@@ -36,11 +39,10 @@ class CreateAccountViewModel : ViewModel() {
     var emailOutlineColour by mutableStateOf(Color(0x3F0F0F0F))
     var passwordOutlineColour by mutableStateOf(Color(0x3F0F0F0F))
 
-    var passwordStrength: String by mutableStateOf("")
+    var passwordStrength: Int by mutableStateOf(0)
     var progressBarValue: Float by mutableStateOf(0f)
 
     var showProgressBar: Boolean by mutableStateOf(false)
-    var returnToLogin: Boolean by mutableStateOf(false)
     var goToHome: Boolean by mutableStateOf(false)
 
     var animateSuccess: Boolean by mutableStateOf(false)
@@ -54,7 +56,7 @@ class CreateAccountViewModel : ViewModel() {
         userEmailInput = text
     }
 
-    fun handlePasswordChange(text: String, context: Context) {
+    fun handlePasswordChange(text: String) {
         passwordOutlineColour = LsTextBlue
         userPasswordInput = text
 
@@ -67,38 +69,38 @@ class CreateAccountViewModel : ViewModel() {
             when (checkPasswordStrength(userPasswordInput)) {
                 PasswordStrengths.WHITESPACE -> {
                     passwordStrength =
-                        "${context.resources.getText(R.string.password_strength_spaces)}"
+                        (R.string.password_strength_spaces)
                     progressBarValue = 0f
                     passwordOutlineColour = LsErrorRed
                 }
                 PasswordStrengths.VERY_WEAK -> {
                     passwordStrength =
-                        "${context.resources.getText(R.string.password_strength_very_weak)}"
+                        (R.string.password_strength_very_weak)
                     progressBarValue = 0.2f
                     passwordOutlineColour = Color(0x2200FF00)
                 }
                 PasswordStrengths.WEAK -> {
                     passwordStrength =
-                        "${context.resources.getText(R.string.password_strength_weak)}"
+                        (R.string.password_strength_weak)
                     progressBarValue = 0.4f
                     passwordOutlineColour = Color(0x4400FF00)
                 }
                 PasswordStrengths.AVERAGE -> {
                     passwordStrength =
-                        "${context.resources.getText(R.string.password_strength_average)}"
+                        (R.string.password_strength_average)
                     progressBarValue = 0.6f
                     passwordOutlineColour = Color(0x6600FF00)
                 }
                 PasswordStrengths.STRONG -> {
                     passwordStrength =
-                        "${context.resources.getText(R.string.password_strength_strong)}"
+                        (R.string.password_strength_strong)
                     progressBarValue = 0.8f
                     passwordOutlineColour = Color(0x8800FF00)
                 }
                 PasswordStrengths.VERY_STRONG -> {
                     passwordOutlineColour = LsCorrectGreen
                     passwordStrength =
-                        "${context.resources.getText(R.string.password_strength_very_strong)}"
+                        (R.string.password_strength_very_strong)
                     progressBarValue = 1f
                 }
                 PasswordStrengths.ERROR -> {
@@ -106,7 +108,7 @@ class CreateAccountViewModel : ViewModel() {
                 }
                 PasswordStrengths.SHORT -> {
                     passwordStrength =
-                        "${context.resources.getText(R.string.password_strength_short)}"
+                        (R.string.password_strength_short)
                     progressBarValue = 0f
                     passwordOutlineColour = LsErrorRed
                 }
@@ -160,7 +162,7 @@ class CreateAccountViewModel : ViewModel() {
         }
     }
 
-    private fun uploadUserImage(localUri: Uri?) {
+    fun uploadUserImage(localUri: Uri?) {
         viewModelScope.launch {
             try {
                 val filename = "profileImage"
@@ -207,11 +209,14 @@ class CreateAccountViewModel : ViewModel() {
                 Log.e("LoginViewModel", "$e")
                 false
             }
+            if (goToHome) {
+                navController.navigate(ComposableDestinations.HOME)
+            }
         }
     }
 
     fun handleTextPress() {
-        returnToLogin = true
+        navController.navigate(ComposableDestinations.LOGIN)
     }
 
     private fun checkPasswordStrength(password: String): PasswordStrengths {

@@ -9,38 +9,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 @Composable
-fun RevisionSummaryScreen () {
+fun RevisionSummaryScreen(navController: NavHostController) {
 
-    val viewModel = ReviseTermViewModel()
+    val viewModel = ReviseTermViewModel(navController)
 
 
-        LinguaSyneTheme(
-            false,
+    LinguaSyneTheme(
+        false,
+    ) {
+        Surface(
+            modifier = Modifier.background(MaterialTheme.colors.background)
         ) {
-            Surface(
-                modifier = Modifier.background(MaterialTheme.colors.background)
-            ) {
-                Summary(
-                    RevisionSummaryActivity.SummaryValues(
-                        viewModel.summaryTotalCorrect,
-                        viewModel.summaryTotalIncorrect
-                    )
-                )
-            }
+            Summary(
+
+                viewModel.summaryTotalCorrect,
+                viewModel.summaryTotalIncorrect,
+                viewModel::onSummaryButtonPress,
+
+            )
         }
+    }
 
 }
 
-data class SummaryValues(val totalCorrect: Int, val totalIncorrect: Int)
-
 
 @Composable
-fun Summary(sv: SummaryValues) {
+fun Summary(
+    totalCorrect: Int,
+    totalIncorrect: Int,
+    onSummaryButtonPress: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .padding(all = 10.dp)
@@ -57,18 +61,18 @@ fun Summary(sv: SummaryValues) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = (stringResource(R.string.total_correct) + "${sv.totalCorrect}"),
+            text = (stringResource(R.string.total_correct) + "${totalCorrect}"),
             color = MaterialTheme.colors.primary
         )
         Text(
-            text = (stringResource(R.string.total_incorrect) + "${sv.totalIncorrect}"),
+            text = (stringResource(R.string.total_incorrect) + "${totalIncorrect}"),
             color = MaterialTheme.colors.primary
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-            onClick = { this@RevisionSummaryActivity.finish() },
+            onClick = { onSummaryButtonPress() },
             shape = RoundedCornerShape(100),
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
         )

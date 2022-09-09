@@ -28,22 +28,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
 import com.example.linguasyne.activities.StartActivity
+import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.White
 import com.example.linguasyne.viewmodels.LoginViewModel
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavHostController) {
 
-    val viewModel = LoginViewModel()
+    val viewModel = LoginViewModel(navController)
     viewModel.init()
 
-    GoToCreateAccount(goToCreateAccount = viewModel.goToCreateAccount)
-    GoToHome(goToHome = viewModel.goToHome)
     DisplayLogin(
         viewModel.userEmailInput,
         viewModel.userPasswordInput,
@@ -55,7 +55,7 @@ fun LoginScreen() {
         blurAmount = viewModel.blurAmount,
     )
 
-    AnimateSuccessfulLogin(
+    AnimateSuccess(
         animate = viewModel.animateSuccess,
         animationSpec = tween(viewModel.animateDuration.toInt()),
         initialScale = 0f,
@@ -194,92 +194,4 @@ fun DisplayLogin(
 
 }
 
-
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun AnimateSuccessfulLogin(
-    animate: Boolean,
-    animationSpec: FiniteAnimationSpec<Float>,
-    initialScale: Float,
-    transformOrigin: TransformOrigin,
-) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxHeight(0.75f),
-        verticalArrangement = Arrangement.SpaceEvenly,
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        )
-        {
-
-            AnimatedVisibility(
-                modifier = Modifier
-                    .padding(2.dp),
-                visible = animate,
-
-                enter = scaleIn(
-                    animationSpec = animationSpec,
-                    initialScale = initialScale,
-                    transformOrigin = transformOrigin,
-                ) + expandVertically(
-                    expandFrom = Alignment.CenterVertically
-                ) + expandHorizontally(
-                    expandFrom = Alignment.CenterHorizontally
-                ),
-
-                exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
-            ) {
-                Row(
-                    Modifier
-                        .size(200.dp)
-                        .border(4.dp, MaterialTheme.colors.secondary, shape = CircleShape)
-                        .background(
-                            color = LsCorrectGreen, shape = CircleShape
-                        ),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Row {
-                        Text(
-                            text = String(Character.toChars(0x2713)),
-                            //color = LsCorrectGreen,
-                            style =
-                            TextStyle(
-                                color = White,
-                                fontSize = 150.sp,
-                            ),
-
-                            )
-                    }
-                }
-            }
-        }
-
-    }
-
-}
-
-@Composable
-fun GoToCreateAccount(goToCreateAccount: Boolean) {
-    if (goToCreateAccount) {
-        // Launch the create account screen
-        this.finish()
-        val intent = Intent(this, CreateAccountActivity::class.java)
-        startActivity(intent)
-    }
-}
-
-@Composable
-fun GoToHome(goToHome: Boolean) {
-    if (goToHome) {
-        this.finish()
-        val intent = Intent(this, StartActivity::class.java)
-        startActivity(intent)
-    }
-}
 

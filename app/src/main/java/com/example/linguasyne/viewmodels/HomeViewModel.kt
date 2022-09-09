@@ -176,25 +176,6 @@ class HomeViewModel(
 
     /*----------------------SEARCH SCREEN-------------------------*/
 
-    lateinit var vocabList: MutableList<Vocab>
-    var launchTermView by mutableStateOf(false)
 
-    fun onSearchLaunch() {
-        vocabList = VocabRepository.allVocab as MutableList<Vocab>
-    }
-
-    fun handleCardPress(item: Vocab) {
-        VocabRepository.filterById(item.id)
-        launchTermView()
-    }
-
-    fun handleBackPress() {
-        navController.navigate(ComposableDestinations.HOME)
-    }
-
-    private fun launchTermView() {
-        //navController.navigate(ComposableDestinations.TERM_DISPLAY)
-        launchTermView = true
-    }
 
 }

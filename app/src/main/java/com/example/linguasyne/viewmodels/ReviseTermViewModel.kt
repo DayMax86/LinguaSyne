@@ -5,24 +5,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.RevisionSession
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.AnimationLengths
+import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.managers.RevisionSessionManager
 import com.example.linguasyne.ui.theme.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ReviseTermViewModel : ViewModel() {
+class ReviseTermViewModel(
+    private val navController: NavHostController
+) : ViewModel() {
 
     var currentTermTitle: String? by mutableStateOf("")
     private var ctName: String = ""
     private var ctTrans: String = ""
 
     var userInput: String by mutableStateOf("")
-    var launchSummary by mutableStateOf(false)
     var textFieldOutlineColour by mutableStateOf(LsGrey)
     var mascOutlineColour by mutableStateOf(LsGrey)
     var femOutlineColour by mutableStateOf(LsGrey)
@@ -141,9 +144,8 @@ class ReviseTermViewModel : ViewModel() {
         }
     }
 
-    fun animationDone() {
-        animateCorrect = false
-        // Load next data
+    fun onSummaryButtonPress() {
+        navController.navigate(ComposableDestinations.HOME)
     }
 
     private fun resetUi() {
@@ -169,7 +171,7 @@ class ReviseTermViewModel : ViewModel() {
         currentTermTitle = RevisionSessionManager.advanceSession()?.name.toString()
         if (currentTermTitle == "" || currentTermTitle == null || currentTermTitle == "null") {
             //There is no next term (reached end of list) so activity should end and summary be launched
-            launchSummary = true
+            navController.navigate(ComposableDestinations.SUMMARY)
         }
     }
 

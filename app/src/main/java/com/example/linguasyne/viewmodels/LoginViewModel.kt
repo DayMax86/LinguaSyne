@@ -13,8 +13,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.enums.AnimationLengths
+import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsErrorRed
 import com.google.firebase.auth.FirebaseAuth
@@ -26,15 +28,15 @@ import com.google.firebase.firestore.ktx.firestore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val navController: NavHostController
+) : ViewModel() {
 
     var userEmailInput: String by mutableStateOf("")
     var userPasswordInput: String by mutableStateOf("")
 
     var outlineColour by mutableStateOf(Color(0xFF0016E0))
 
-    var goToCreateAccount: Boolean by mutableStateOf(false)
-    var goToHome: Boolean by mutableStateOf(false)
     var loggedIn: Boolean? by mutableStateOf(null)
 
     var animateSuccess: Boolean by mutableStateOf(false)
@@ -44,7 +46,7 @@ class LoginViewModel : ViewModel() {
     fun init() {
         if (loginCheck()) {
             loadUserImage()
-            goToHome = true
+            goToHome()
         }
     }
 
@@ -78,7 +80,7 @@ class LoginViewModel : ViewModel() {
                 blurAmount = 5
                 delay(2500)
                 loadUserImage()
-                goToHome = true
+                goToHome()
                 true
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "$e")
@@ -120,8 +122,11 @@ class LoginViewModel : ViewModel() {
     }
 
     fun handleTextPress(int: Int) {
-        goToCreateAccount = true
+        navController.navigate(ComposableDestinations.CREATE_ACCOUNT)
     }
 
+    private fun goToHome(){
+        navController.navigate(ComposableDestinations.HOME)
+    }
 }
 

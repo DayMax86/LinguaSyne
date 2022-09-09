@@ -1,6 +1,5 @@
 package com.example.linguasyne.screens
 
-import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
@@ -19,18 +18,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.linguasyne.R
-import com.example.linguasyne.activities.DisplayTermActivity
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.VocabSearchViewModel
 
 @Composable
-fun SearchScreen() {
-    val viewModel = VocabSearchViewModel()
+fun SearchScreen(navController: NavHostController) {
+    val viewModel = VocabSearchViewModel(navController)
 
     viewModel.onSearchLaunch()
-    VocabCardPress(launchTermView = viewModel.launchTermView)
     LinguaSyneTheme(darkTheme = false) {
         Surface()
         {
@@ -43,13 +41,6 @@ fun SearchScreen() {
     }
 }
 
-@Composable
-fun VocabCardPress(launchTermView: Boolean) {
-    if (launchTermView) {
-        val intent = Intent(this, DisplayTermActivity::class.java)
-        startActivity(intent)
-    }
-}
 
 @Composable
 fun DisplayVocab(
