@@ -1,20 +1,23 @@
 package com.example.linguasyne.managers
 
 import com.example.linguasyne.classes.NewsItem
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import com.squareup.okhttp.Interceptor
+import com.squareup.okhttp.OkHttpClient
+import com.squareup.okhttp.Request
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Query
+import java.io.IOException
 
 val BASE_URL =
-    "http://api.mediastack.com/v1/"
+    "https://newscatcher.p.rapidapi.com/v1/"
 
 interface APIManager {
 
-    @GET("news?access_key=e5437ae1845a01e1a3c2ef67481b840f&countries=fr&limit=5&sources=lepoint")
+    @GET("search_free?q=lepoint&lang=fr&media=True")
+
     fun getNewsItems(): Call<NewsResponse>
 
     companion object Factory {

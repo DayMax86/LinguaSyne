@@ -13,21 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LinguaSyne">
 
-        <activity android:name=".activities.VocabSearchActivity" />
-        <activity
-            android:name=".activities.DisplayTermActivity"
-            android:parentActivityName=".activities.StartActivity" />
-
         <activity android:name=".activities.StartActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-
-        <activity android:name=".activities.ReviseTermActivity"
-            android:parentActivityName=".activities.StartActivity" />
-
-        <activity android:name=".activities.RevisionSummaryActivity"
-            android:parentActivityName=".activities.DisplayTermActivity" />
-
-        <activity android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +21,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CreateAccountActivity" />
     </application>
 
 </manifest>

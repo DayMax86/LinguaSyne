@@ -149,7 +149,7 @@ fun DisplayCreateAccount(
     userEmailInput: String,
     userPasswordInput: String,
     handleEmailChange: (String) -> Unit,
-    handlePasswordChange: (String, Context) -> Unit,
+    handlePasswordChange: (String) -> Unit,
     emailOutlineColour: Color,
     passwordOutlineColour: Color,
     buttonOnClick: () -> Unit,
