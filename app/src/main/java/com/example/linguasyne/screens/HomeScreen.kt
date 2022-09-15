@@ -3,6 +3,7 @@ package com.example.linguasyne.screens
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -55,9 +56,10 @@ fun HomeScreen(navController: NavHostController) {
         viewModel::handleRevisionClick,
         viewModel::handleTermBaseClick,
         viewModel::uploadUserImage,
-        viewModel.newsItems,
+       // viewModel.newsItems,
         viewModel.selectedNewsColour,
         viewModel.unselectedNewsColour,
+        viewModel::onBackPressed,
     )
 
 }
@@ -73,13 +75,18 @@ fun DisplayHome(
     onClickRevision: () -> Unit,
     onClickTermBase: () -> Unit,
     onClickProfileImage: (Uri?) -> Unit,
-    newsItems: List<NewsItem.Data>,
+    //newsItems: List<NewsItem.Data>,
     selectedNewsColour: Color,
     unselectedNewsColour: Color,
+    backBehaviour: () -> Unit,
 ) {
     Column(
 
     ) {
+
+        BackHandler {
+            backBehaviour()
+        }
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -143,7 +150,7 @@ fun DisplayHome(
                             },
                         )
 
-                        Button(
+                        /*Button(
                             modifier = Modifier
                                 .width(150.dp),
                             onClick = { },
@@ -203,7 +210,7 @@ fun DisplayHome(
                                 }
 
                             },
-                        )
+                        )*/
 
                     }
                 }
@@ -425,7 +432,7 @@ fun DisplayHome(
 
         /*---------------------------FOURTH LAYER------------------------------------------*/
 
-        Column(
+       /* Column(
 
         ) {
 
@@ -451,7 +458,7 @@ fun DisplayHome(
                         elevation = 6.dp,
                         backgroundColor = MaterialTheme.colors.onSurface,
                     ) {
-                        /*--Rounded corner card housing API info--*/
+                        *//*--Rounded corner card housing API info--*//*
 
                         Column(
                             modifier = Modifier
@@ -555,7 +562,7 @@ fun DisplayHome(
             }
 
 
-        }
+        }*/
     }
 
 }

@@ -31,7 +31,6 @@ class StartActivity : AppCompatActivity() {
             val navController = rememberNavController()
             val viewModel = StartViewModel(navController)
 
-
             val scope = rememberCoroutineScope()
             val scaffoldState =
                 rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
@@ -69,7 +68,7 @@ class StartActivity : AppCompatActivity() {
 
                             NavHost(
                                 navController = navController,
-                                startDestination = ComposableDestinations.HOME,
+                                startDestination = ComposableDestinations.LOADING,
                             ) {
                                 composable(ComposableDestinations.HOME) {
                                     HomeScreen(navController)
@@ -84,13 +83,18 @@ class StartActivity : AppCompatActivity() {
                                     LoginScreen(navController)
                                 }
                                 composable(ComposableDestinations.TERM_DISPLAY) {
-                                    TermDisplayScreen(navController)
+                                    VocabDisplayScreen(navController)
                                 }
                                 composable(ComposableDestinations.REVISE) {
                                     ReviseTermScreen(navController)
                                 }
                                 composable(ComposableDestinations.SUMMARY) {
                                     RevisionSummaryScreen(navController)
+                                }
+                                composable(ComposableDestinations.LOADING) {
+                                    Animate(viewModel.animateLoading)
+                                    viewModel.init()
+
                                 }
                             }
 
@@ -99,8 +103,9 @@ class StartActivity : AppCompatActivity() {
 
                     },
 
-                )
+                    )
             }
+
 
         }
     }

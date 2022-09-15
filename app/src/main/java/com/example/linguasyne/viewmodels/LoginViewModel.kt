@@ -44,27 +44,9 @@ class LoginViewModel(
     var blurAmount: Int by mutableStateOf(0)
 
     fun init() {
-        if (loginCheck()) {
-            loadUserImage()
-            goToHome()
-        }
+
     }
 
-    private fun loginCheck(): Boolean {
-        var loggedIn = false
-        viewModelScope.launch {
-            try {
-                val cu = FirebaseAuth.getInstance().currentUser
-                if (cu != null) {
-                    FirebaseManager.currentUser = User(cu.email!!)
-                    loggedIn = true
-                }
-            } catch (e: Exception) {
-                loggedIn = false
-            }
-        }
-        return loggedIn
-    }
 
     fun handleLogin() {
         viewModelScope.launch {

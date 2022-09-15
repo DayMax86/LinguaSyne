@@ -8,4 +8,5 @@ object ComposableDestinations {
     const val TERM_DISPLAY = "term_display"
     const val REVISE = "revise"
     const val SUMMARY = "summary"
+    const val LOADING = "loading"
 }

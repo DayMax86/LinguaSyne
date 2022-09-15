@@ -37,28 +37,26 @@ class HomeViewModel(
     var user: User by mutableStateOf(FirebaseManager.currentUser!!)
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
 
- /*   var launchTermBase: Boolean by mutableStateOf(false)
-    var launchVocabLesson: Boolean by mutableStateOf(false)
-    var launchRevisionSession: Boolean by mutableStateOf(false)
-    var launchLogin: Boolean by mutableStateOf(false)*/
-
-    var newsItems: List<NewsItem.Data> by mutableStateOf(emptyList())
+    //var newsItems: List<NewsItem.Data> by mutableStateOf(emptyList())
     val selectedNewsColour: Color = LsVocabTextBlue
     val unselectedNewsColour: Color = LsTeal200
 
     fun init() {
         FirebaseManager.loadVocabFromFirebase()
         loadUserImage()
-        apiCall()
+        //apiCall()
+    }
+
+    fun onBackPressed(){
+        //Back button disabled on home screen
     }
 
     private fun loadUserImage() {
         viewModelScope.launch {
             try {
                 val firebaseUser = FirebaseManager.currentUser
-                Log.e("HomeViewModel", firebaseUser!!.email)
                 val firestoreRef =
-                    Firebase.firestore.collection("users").document(firebaseUser.email)
+                    Firebase.firestore.collection("users").document(firebaseUser!!.email)
 
                 firestoreRef
                     .get()
@@ -90,7 +88,7 @@ class HomeViewModel(
                     storageRef.putFile(localUri)
                         .await()
                         .apply {
-                            FirebaseStorage.getInstance().getReference()
+                            FirebaseStorage.getInstance().reference
                                 .child("users/${FirebaseManager.currentUser!!.id}/image/$filename").downloadUrl
                                 .await()
                                 .apply {
@@ -109,9 +107,9 @@ class HomeViewModel(
     }
 
 
-    fun createLesson() {
+    private fun createLesson() {
         viewModelScope.launch {
-            LessonManager.createLesson(LessonTypes.VOCAB)
+            LessonManager.createLesson()
             /*launchVocabLesson =
                 false //Make sure to set this back to false in case the user starts a new lesson without restarting the home activity*/
         }
@@ -150,7 +148,7 @@ class HomeViewModel(
 
 
     private fun apiCall() {
-        val apiCall = APIManager.create()
+    /*    val apiCall = APIManager.create()
         apiCall.getNewsItems().enqueue(object : Callback<NewsResponse> {
 
             override fun onResponse(
@@ -170,11 +168,9 @@ class HomeViewModel(
             }
 
         }
-        )
+        )*/
 
     }
-
-    /*----------------------SEARCH SCREEN-------------------------*/
 
 
 

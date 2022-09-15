@@ -8,14 +8,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.enums.Gender
+import com.example.linguasyne.enums.TermTypes
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
-import com.example.linguasyne.managers.LessonTypes
 import com.example.linguasyne.managers.VocabRepository
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsGrey
@@ -44,7 +43,7 @@ class DisplayTermViewModel(
 
     lateinit var vSource: Sources
 
-    var termToDisplay: Term by mutableStateOf(VocabRepository.allVocab[0])
+    var termToDisplay: Vocab = Vocab("", "", 0, emptyList(), emptyList(), "", emptyList())
     var termsUploaded: Boolean = false
     var showPopUpInput: Boolean by mutableStateOf(false)
     var selectedInputType: TransOrMnem by mutableStateOf(TransOrMnem.TRANSLATIONS)
@@ -64,15 +63,12 @@ class DisplayTermViewModel(
     val animateDuration = AnimationLengths.ANIMATION_DURATION_LONG
     var blurAmount: Int by mutableStateOf(0)
 
-    var goToSearch: Boolean by mutableStateOf(false)
-
     fun onActivityLaunch(): Sources {
         viewModelScope
             .launch {
-                //LessonManager.createLesson(LessonTypes.VOCAB)
                 if (fetchTermSource() == Sources.LESSON) {
                     if (!termsUploaded) {
-                        for (term: Term in LessonManager.currentLesson.lessonList) {
+                        for (term: Vocab in LessonManager.currentLesson.lessonList) {
                             //Lessons should only be created for terms not previously unlocked so no check needed
                             addTermToUserCollection(term)
                             termsUploaded = true
@@ -96,10 +92,13 @@ class DisplayTermViewModel(
     }
 
     private fun getTermData() {
-        fetchTermSource()
-        //Need to make sure the lesson has already been created before fetching the terms
-        fetchTerm()
-        fetchGenderImages()
+        viewModelScope
+            .launch {
+                fetchTermSource()
+                //Need to make sure the lesson has already been created before fetching the terms
+                fetchTerm()
+                fetchGenderImages()
+            }
     }
 
     private fun fetchTermSource(): Sources {
@@ -127,13 +126,20 @@ class DisplayTermViewModel(
                             .collection("terms")
                             .get()
                             .await()
-                            .toObjects(Term::class.java)
+                            .toObjects(Vocab::class.java)
                             .first { it.id == VocabRepository.currentVocab[0].id }
                     } catch (e: Exception) {
+                        //User hasn't yet unlocked the term so fetch from the online repo.
                         Log.e(
                             "DisplayTermViewModel",
                             "fetchTerm error: $e"
                         )
+                        termToDisplay = FirebaseFirestore.getInstance()
+                            .collection("vocab")
+                            .get()
+                            .await()
+                            .toObjects(Vocab::class.java)
+                            .first { it.id == VocabRepository.currentVocab[0].id }
                     }
                 }
             }
@@ -144,7 +150,7 @@ class DisplayTermViewModel(
         }
     }
 
-    private fun addTermToUserCollection(term: Term) {
+    private fun addTermToUserCollection(term: Vocab) {
         viewModelScope
             .launch {
                 try {
@@ -192,7 +198,7 @@ class DisplayTermViewModel(
         selectedInputType = TransOrMnem.MNEMONICS
     }
 
-    private fun addCustomData(term: Term, destination: TransOrMnem) {
+    private fun addCustomData(term: Vocab, destination: TransOrMnem) {
         viewModelScope
             .launch {
                 try {
@@ -251,33 +257,30 @@ class DisplayTermViewModel(
     }
 
     private fun fetchGenderImages() {
-        if (termToDisplay is Vocab) {
-            //Go through all the genders
-            when ((termToDisplay as Vocab).gender) {
-                Gender.NO -> {
-                    masc = false
-                    mascOutlineColour = LsGrey
-                    fem = false
-                    femOutlineColour = LsGrey
-                }
-                Gender.F -> {
-                    masc = false
-                    mascOutlineColour = LsGrey
-                    fem = true
-                    femOutlineColour = LsCorrectGreen
-                }
-                Gender.M -> {
-                    masc = true
-                    mascOutlineColour = LsCorrectGreen
-                    fem = false
-                    femOutlineColour = LsGrey
-                }
-                Gender.MF -> {
-                    masc = true
-                    mascOutlineColour = LsCorrectGreen
-                    fem = true
-                    femOutlineColour = LsCorrectGreen
-                }
+        when (termToDisplay.gender) {
+            Gender.NO -> {
+                masc = false
+                mascOutlineColour = LsGrey
+                fem = false
+                femOutlineColour = LsGrey
+            }
+            Gender.F -> {
+                masc = false
+                mascOutlineColour = LsGrey
+                fem = true
+                femOutlineColour = LsCorrectGreen
+            }
+            Gender.M -> {
+                masc = true
+                mascOutlineColour = LsCorrectGreen
+                fem = false
+                femOutlineColour = LsGrey
+            }
+            Gender.MF -> {
+                masc = true
+                mascOutlineColour = LsCorrectGreen
+                fem = true
+                femOutlineColour = LsCorrectGreen
             }
         }
     }

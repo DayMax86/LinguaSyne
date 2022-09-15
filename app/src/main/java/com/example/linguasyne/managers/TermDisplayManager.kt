@@ -3,11 +3,11 @@ package com.example.linguasyne.managers
 import android.content.Context
 import android.content.Intent
 import com.example.linguasyne.classes.RevisionSession
-import com.example.linguasyne.classes.Term
+import com.example.linguasyne.classes.Vocab
 
 object TermDisplayManager {
 
-    var termList: List<Term> = RevisionSessionManager.currentSession.sl
+    var vocabList: List<Vocab> = RevisionSessionManager.currentSession.sl
 
 
 }

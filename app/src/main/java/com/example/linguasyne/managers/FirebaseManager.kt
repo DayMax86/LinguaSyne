@@ -2,7 +2,6 @@ package com.example.linguasyne.managers
 
 import android.net.Uri
 import android.util.Log
-import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.classes.Vocab
 import com.google.firebase.auth.FirebaseAuth
@@ -50,7 +49,7 @@ object FirebaseManager {
             }
     }
 
-    fun addVocabToFirebase(term: Term) {
+    fun addVocabToFirebase(term: Vocab) {
         FirebaseFirestore.getInstance()
             .collection("vocab")
             .add(term)

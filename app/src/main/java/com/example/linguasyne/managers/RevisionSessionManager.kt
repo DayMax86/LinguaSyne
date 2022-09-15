@@ -3,8 +3,8 @@ package com.example.linguasyne.managers
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.linguasyne.classes.RevisionSession
-import com.example.linguasyne.classes.Term
 import com.example.linguasyne.classes.User
+import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.ReviewTimes
 
 object RevisionSessionManager {
@@ -16,7 +16,7 @@ object RevisionSessionManager {
 
         //Find all the terms the user has unlocked from their Firebase data
         val user: User = FirebaseManager.currentUser!!
-        val tempList: MutableList<Term> = mutableListOf<Term>()
+        val tempList: MutableList<Vocab> = mutableListOf<Vocab>()
 
         //Find all the terms that are unlocked on or below the user's level
         val ul: Int = user.level
@@ -27,7 +27,7 @@ object RevisionSessionManager {
 
         //tempList should now contain all terms unlocked on or below the user's level
         //Now go through and filter out the ones that the user hasn't unlocked yet
-        val toRemoveList: MutableList<Term> = mutableListOf()
+        val toRemoveList: MutableList<Vocab> = mutableListOf()
         /* TEMPORARILY REMOVED UNTIL ISUNLOCKED IS IMPLEMENTED WITH LESSONS
         for (t: Term in tempList) {
             if (!t.isUnlocked) {
@@ -40,13 +40,13 @@ object RevisionSessionManager {
 
         //Finally filter by review time and we're left with terms that are due for revision.
         toRemoveList.clear()
-        for (t: Term in tempList) {
+        for (t: Vocab in tempList) {
             if (t.nextReview == ReviewTimes.NOW) {
                 toRemoveList.add(t)
             }
         }
 
-        for (t: Term in toRemoveList) {
+        for (t: Vocab in toRemoveList) {
             tempList.remove(t)
         }
 
@@ -64,18 +64,18 @@ object RevisionSessionManager {
         currentSession.totalIncorrect = 0
 
         currentSession.currentStep = RevisionSession.AnswerTypes.ENG
-        currentSession.currentTerm = TermDisplayManager.termList[0]
+        currentSession.currentTerm = TermDisplayManager.vocabList[0]
     }
 
-    fun advanceSession(): Term? { //Returns null if the session list has been exhausted
+    fun advanceSession(): Vocab? { //Returns null if the session list has been exhausted
         //Has the term already had both steps completed?
         if (currentSession.currentTerm.engAnswered && currentSession.currentTerm.transAnswered) {
             //Both steps are now complete so it can be removed from the list
             updateSessionTotals()
 
-            val tl: MutableList<Term> = mutableListOf<Term>()
+            val tl: MutableList<Vocab> = mutableListOf<Vocab>()
             tl.add(currentSession.currentTerm)
-            for (t: Term in tl) {
+            for (t: Vocab in tl) {
                 currentSession.sessionList.remove(t)
             }
         }
@@ -128,7 +128,7 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun sortSessionBy(session: MutableList<Term>, order: SortOrder): MutableList<Term> {
+    private fun sortSessionBy(session: MutableList<Vocab>, order: SortOrder): MutableList<Vocab> {
         when (order) {
             SortOrder.RANDOM -> {
                 session.shuffle()

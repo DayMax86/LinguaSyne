@@ -11,53 +11,45 @@ object LessonManager {
 
     private const val LESSON_SIZE = 5
 
-    suspend fun createLesson(lesson_type: LessonTypes) {
+    suspend fun createLesson() {
         val tempList: MutableList<Vocab> = mutableListOf()
-        when (lesson_type) {
-            LessonTypes.VOCAB -> {
-                VocabRepository.filterByUserNotYetUnlocked()
-                //VocabRepository.filterByUserUnlocked()
-                //VocabRepository.filterByUnlockLevel(FirebaseManager.currentUser!!.level)
-                var i = 0
-                for (v: Vocab in VocabRepository.currentVocab) {
-                    //If items have been added to the temp list, create lesson object and set to current lesson
-                    if (!activeLesson) {
-                        //5 by default
-                        if (i < LESSON_SIZE && i <= VocabRepository.currentVocab.size) {
-                            tempList.add(v)
-                            i++
-                            //VocabRepository.currentVocab.minus(v)
-                        } else {
-                            //5 items (or the maximum number of items possible if < 5 in vocab list) added to new lesson object
-                            currentLesson = Lesson(tempList, LessonTypes.VOCAB)
-                            i = 0
-                            //Mark the learnt terms as unlocked for the user
-                            v.isUnlocked = true
-                            //make sure the below is set to false again when the lesson ends.
-                            activeLesson = true
-                            //need to exit out of the for loop!
-                            return
-                        }
-                    } else {
-                        return
-                    }
 
+
+        VocabRepository.filterByUserNotYetUnlocked()
+        //VocabRepository.filterByUserUnlocked()
+        //VocabRepository.filterByUnlockLevel(FirebaseManager.currentUser!!.level)
+        var i = 0
+        for (v: Vocab in VocabRepository.currentVocab) {
+            //If items have been added to the temp list, create lesson object and set to current lesson
+            if (!activeLesson) {
+                //5 by default
+                if (i < LESSON_SIZE && i <= VocabRepository.currentVocab.size) {
+                    tempList.add(v)
+                    i++
+                    //VocabRepository.currentVocab.minus(v)
+                } else {
+                    //5 items (or the maximum number of items possible if < 5 in vocab list) added to new lesson object
+                    currentLesson = Lesson(tempList)
+                    i = 0
+                    //Mark the learnt terms as unlocked for the user
+                    v.isUnlocked = true
+                    //make sure the below is set to false again when the lesson ends.
+                    activeLesson = true
+                    //need to exit out of the for loop!
+                    return
                 }
+            } else {
+                return
             }
-            //Implement other lesson types here.
-            else -> {}
+
         }
+
+
         //The manager's current lesson has now been set, so StartActivity can launch the appropriate activity which will display the right list
     }
 
 }
 
 
-public enum class LessonTypes {
-    VOCAB,
-    VERBS,
-    PHRASES,
-    TERM
-}
 
 

@@ -1,8 +1,8 @@
 package com.example.linguasyne.classes
 
-class RevisionSession(var sl: MutableList<Term>) {
+class RevisionSession(var sl: MutableList<Vocab>) {
     var sessionList = sl
-    lateinit var currentTerm: Term
+    lateinit var currentTerm: Vocab
 
     lateinit var currentStep: AnswerTypes
 
