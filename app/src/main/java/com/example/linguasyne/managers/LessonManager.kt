@@ -11,9 +11,8 @@ object LessonManager {
 
     private const val LESSON_SIZE = 5
 
-    suspend fun createLesson() {
+    suspend fun createLesson(onComplete: () -> Unit,) {
         val tempList: MutableList<Vocab> = mutableListOf()
-
 
         VocabRepository.filterByUserNotYetUnlocked()
         //VocabRepository.filterByUserUnlocked()
@@ -30,11 +29,11 @@ object LessonManager {
                 } else {
                     //5 items (or the maximum number of items possible if < 5 in vocab list) added to new lesson object
                     currentLesson = Lesson(tempList)
-                    i = 0
                     //Mark the learnt terms as unlocked for the user
                     v.isUnlocked = true
                     //make sure the below is set to false again when the lesson ends.
                     activeLesson = true
+                    onComplete()
                     //need to exit out of the for loop!
                     return
                 }

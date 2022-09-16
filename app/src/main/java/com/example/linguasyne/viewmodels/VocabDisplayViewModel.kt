@@ -1,6 +1,7 @@
 package com.example.linguasyne.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -31,20 +32,18 @@ import kotlinx.coroutines.tasks.await
 import okhttp3.internal.notify
 import okhttp3.internal.wait
 import java.util.ArrayList
+import java.util.Comparator
 
-enum class Sources {
-    LESSON,
-    SEARCH
-}
-
-class DisplayTermViewModel(
+class VocabDisplayViewModel(
     private val navController: NavHostController
 ) : ViewModel() {
 
     lateinit var vSource: Sources
 
-    var termToDisplay: Vocab = Vocab("", "", 0, emptyList(), emptyList(), "", emptyList())
-    var termsUploaded: Boolean = false
+    var termToDisplay: Vocab by mutableStateOf(VocabRepository.currentVocab[0])
+
+    var showDisplay: Boolean by mutableStateOf(false)
+
     var showPopUpInput: Boolean by mutableStateOf(false)
     var selectedInputType: TransOrMnem by mutableStateOf(TransOrMnem.TRANSLATIONS)
 
@@ -63,21 +62,46 @@ class DisplayTermViewModel(
     val animateDuration = AnimationLengths.ANIMATION_DURATION_LONG
     var blurAmount: Int by mutableStateOf(0)
 
-    fun onActivityLaunch(): Sources {
+    var showLoadingAnimation: Boolean by mutableStateOf(false)
+
+    fun onActivityLaunch() {
+        showLoadingAnimation = true
         viewModelScope
             .launch {
-                if (fetchTermSource() == Sources.LESSON) {
-                    if (!termsUploaded) {
-                        for (term: Vocab in LessonManager.currentLesson.lessonList) {
-                            //Lessons should only be created for terms not previously unlocked so no check needed
+
+                vSource = fetchTermSource()
+
+                if (vSource == Sources.LESSON) {
+                    val userFirestoreVocab: List<Vocab> = FirebaseFirestore
+                        .getInstance()
+                        .collection("users")
+                        .document("${FirebaseManager.currentUser?.email}")
+                        .collection("terms")
+                        .get()
+                        .await()
+                        .toObjects(Vocab::class.java)
+                    //If this is a lesson, unlock the terms for the user and add them to their personal firebase list
+                    for (term: Vocab in LessonManager.currentLesson.lessonList) {
+                        //For each vocab item in the lesson list
+                        if (userFirestoreVocab.binarySearch(
+                                element = term,
+                                comparator = compareBy<Vocab> {
+                                    it.id
+                                }
+                            ) < 0 //The binary search returns a negative number if the element is not found
+                        ) {
+                            //For each vocab item in the user's firebase list
+                            term.isUnlocked = true
                             addTermToUserCollection(term)
-                            termsUploaded = true
                         }
                     }
                 }
                 getTermData()
+                showLoadingAnimation = false
+            }.apply {
+                showDisplay = true
             }
-        return vSource
+
     }
 
     fun handleBackPress() {
@@ -86,7 +110,7 @@ class DisplayTermViewModel(
                 if (!showPopUpInput) {
                     FirebaseManager.loadVocabFromFirebase()
                     navController.navigate(ComposableDestinations.TERM_SEARCH)
-                    //Call the onActivityEnd function
+                    onActivityEnd()
                 }
             }
     }
@@ -134,12 +158,7 @@ class DisplayTermViewModel(
                             "DisplayTermViewModel",
                             "fetchTerm error: $e"
                         )
-                        termToDisplay = FirebaseFirestore.getInstance()
-                            .collection("vocab")
-                            .get()
-                            .await()
-                            .toObjects(Vocab::class.java)
-                            .first { it.id == VocabRepository.currentVocab[0].id }
+                        termToDisplay = VocabRepository.currentVocab[0]
                     }
                 }
             }
@@ -173,10 +192,6 @@ class DisplayTermViewModel(
             }
     }
 
-    enum class TransOrMnem {
-        TRANSLATIONS,
-        MNEMONICS
-    }
 
     fun handleTextChange(text: String) {
         userInput = text
@@ -283,6 +298,17 @@ class DisplayTermViewModel(
                 femOutlineColour = LsCorrectGreen
             }
         }
+    }
+
+
+    enum class TransOrMnem {
+        TRANSLATIONS,
+        MNEMONICS
+    }
+
+    enum class Sources {
+        LESSON,
+        SEARCH
     }
 
 

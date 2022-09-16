@@ -47,7 +47,7 @@ class HomeViewModel(
         //apiCall()
     }
 
-    fun onBackPressed(){
+    fun onBackPressed() {
         //Back button disabled on home screen
     }
 
@@ -107,14 +107,6 @@ class HomeViewModel(
     }
 
 
-    private fun createLesson() {
-        viewModelScope.launch {
-            LessonManager.createLesson()
-            /*launchVocabLesson =
-                false //Make sure to set this back to false in case the user starts a new lesson without restarting the home activity*/
-        }
-    }
-
     @RequiresApi(Build.VERSION_CODES.O)
     fun createSession() {
         RevisionSessionManager.createSession()
@@ -127,8 +119,10 @@ class HomeViewModel(
     }
 
     fun handleVocabLessonClick() {
-        createLesson()
-        navController.navigate(ComposableDestinations.TERM_DISPLAY)
+        viewModelScope
+            .launch {
+                LessonManager.createLesson { navController.navigate(ComposableDestinations.TERM_DISPLAY) }
+            }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -148,30 +142,29 @@ class HomeViewModel(
 
 
     private fun apiCall() {
-    /*    val apiCall = APIManager.create()
-        apiCall.getNewsItems().enqueue(object : Callback<NewsResponse> {
+        /*    val apiCall = APIManager.create()
+            apiCall.getNewsItems().enqueue(object : Callback<NewsResponse> {
 
-            override fun onResponse(
-                call: Call<NewsResponse>,
-                response: Response<NewsResponse>
-            ) {
-                newsItems = response.body()!!.data
-                Log.d("HomeViewModel", "${newsItems.size}")
+                override fun onResponse(
+                    call: Call<NewsResponse>,
+                    response: Response<NewsResponse>
+                ) {
+                    newsItems = response.body()!!.data
+                    Log.d("HomeViewModel", "${newsItems.size}")
 
-                if (response.isSuccessful) {
-                    Log.d("HomeViewModel", "Successful response from API get")
+                    if (response.isSuccessful) {
+                        Log.d("HomeViewModel", "Successful response from API get")
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                Log.e("HomeViewModel", "ONFAILURE RESPONSE FROM API CALL: ${t.message}")
-            }
+                override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
+                    Log.e("HomeViewModel", "ONFAILURE RESPONSE FROM API CALL: ${t.message}")
+                }
 
-        }
-        )*/
+            }
+            )*/
 
     }
-
 
 
 }
