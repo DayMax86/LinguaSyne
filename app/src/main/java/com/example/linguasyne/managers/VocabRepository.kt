@@ -35,17 +35,15 @@ object VocabRepository {
 
     suspend fun filterByUserNotYetUnlocked() {
         val userUnlocks = FirebaseManager.getUserVocabUnlocks()
-        val tempList: List<Vocab> = allVocab
+        var tempList: List<Vocab> = emptyList()
         allVocab
-            .forEach { Vall ->
-                tempList.minus(userUnlocks
-                    .firstOrNull { Vuser ->
-                        Vuser.id == Vall.id
-                    })
-                Log.d(
-                    "VocabRepository",
-                    "UserList ID: ${tempList.first { it.id == Vall.id }.id}, AllVocab ID: ${Vall.id}"
-                )
+            .forEach { vAll ->
+                val e = userUnlocks.firstOrNull {
+                    it.id == vAll.id
+                }
+                if (e == null) {
+                    tempList = tempList.plusElement(vAll)
+                }
             }
         currentVocab = tempList
             .sortedBy { it.id }

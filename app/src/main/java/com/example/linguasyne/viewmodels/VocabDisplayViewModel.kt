@@ -108,9 +108,12 @@ class VocabDisplayViewModel(
         viewModelScope
             .launch {
                 if (!showPopUpInput) {
-                    FirebaseManager.loadVocabFromFirebase()
-                    navController.navigate(ComposableDestinations.TERM_SEARCH)
-                    onActivityEnd()
+                    if (vSource == Sources.LESSON) {
+                        navController.navigate(ComposableDestinations.HOME)
+                    } else {
+                        FirebaseManager.loadVocabFromFirebase()
+                        navController.navigate(ComposableDestinations.TERM_SEARCH)
+                    }
                 }
             }
     }
@@ -309,11 +312,6 @@ class VocabDisplayViewModel(
     enum class Sources {
         LESSON,
         SEARCH
-    }
-
-
-    fun onActivityEnd() {
-        LessonManager.activeLesson = false
     }
 
 

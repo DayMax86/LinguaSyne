@@ -43,8 +43,6 @@ object LessonManager {
 
         }
 
-
-        //The manager's current lesson has now been set, so StartActivity can launch the appropriate activity which will display the right list
     }
 
 }

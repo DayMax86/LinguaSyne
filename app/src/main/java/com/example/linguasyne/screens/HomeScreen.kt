@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,9 +40,7 @@ import kotlin.reflect.KSuspendFunction0
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(navController: NavHostController) {
-    val viewModel = HomeViewModel(navController)
-
-    viewModel.init()
+    val viewModel = remember {HomeViewModel(navController) }
 
     DisplayHome(
         viewModel.user,

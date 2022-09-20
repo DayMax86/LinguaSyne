@@ -9,6 +9,7 @@ import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -29,7 +30,7 @@ class StartActivity : AppCompatActivity() {
         setContent {
 
             val navController = rememberNavController()
-            val viewModel = StartViewModel(navController)
+            val viewModel = remember { StartViewModel(navController) }
 
             val scope = rememberCoroutineScope()
             val scaffoldState =
@@ -68,7 +69,7 @@ class StartActivity : AppCompatActivity() {
 
                             NavHost(
                                 navController = navController,
-                                startDestination = ComposableDestinations.LOADING,
+                                startDestination = if (viewModel.loginCheck()) ComposableDestinations.HOME else ComposableDestinations.LOGIN,
                             ) {
                                 composable(ComposableDestinations.HOME) {
                                     HomeScreen(navController)
@@ -93,21 +94,12 @@ class StartActivity : AppCompatActivity() {
                                 }
                                 composable(ComposableDestinations.LOADING) {
                                     Animate(viewModel.animateLoading)
-                                    viewModel.init()
-
                                 }
                             }
-
-
                         }
-
                     },
-
-                    )
+                )
             }
-
-
         }
     }
-
 }

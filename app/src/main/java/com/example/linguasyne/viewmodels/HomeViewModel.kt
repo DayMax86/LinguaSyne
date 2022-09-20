@@ -37,14 +37,15 @@ class HomeViewModel(
     var user: User by mutableStateOf(FirebaseManager.currentUser!!)
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
 
-    //var newsItems: List<NewsItem.Data> by mutableStateOf(emptyList())
+    var newsItems: List<NewsItem.Data> by mutableStateOf(emptyList())
     val selectedNewsColour: Color = LsVocabTextBlue
     val unselectedNewsColour: Color = LsTeal200
 
-    fun init() {
+    init {
         FirebaseManager.loadVocabFromFirebase()
         loadUserImage()
-        //apiCall()
+        //LessonManager.activeLesson = false
+        apiCall()
     }
 
     fun onBackPressed() {
@@ -61,12 +62,12 @@ class HomeViewModel(
                 firestoreRef
                     .get()
                     .await()
-                    .apply {
+                    .let {doc ->
                         //Successfully obtained user image uri from firebase
                         FirebaseManager.currentUser!!.imageUri =
-                            Uri.parse(this.get("imageUri") as String?)
+                            Uri.parse(doc.get("imageUri") as String?)
+                        userImage = FirebaseManager.currentUser!!.imageUri
                     }
-                userImage = FirebaseManager.currentUser!!.imageUri
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Image exception: $e")
                 userImage = FirebaseManager.getDefaultUserImageUri()
@@ -142,7 +143,7 @@ class HomeViewModel(
 
 
     private fun apiCall() {
-        /*    val apiCall = APIManager.create()
+            val apiCall = APIManager.create()
             apiCall.getNewsItems().enqueue(object : Callback<NewsResponse> {
 
                 override fun onResponse(
@@ -162,7 +163,7 @@ class HomeViewModel(
                 }
 
             }
-            )*/
+            )
 
     }
 

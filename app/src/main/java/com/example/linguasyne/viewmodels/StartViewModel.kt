@@ -19,34 +19,27 @@ class StartViewModel(
 
     var animateLoading by mutableStateOf(true)
 
-    fun init() {
-        animateLoading = true
-        viewModelScope
-            .launch {
-                delay(2000) //TODO() This fixes the issue, but a hardcoded time delay is not the solution!!
-                if (loginCheck()) {
-                    goToHome()
-                } else {
-                    goToLogin()
-                }
-                animateLoading = false
-            }
+    fun login() {
+        //animateLoading = true
+        //delay(2000) //TODO() This fixes the issue, but a hardcoded time delay is not the solution!!
+        if (loginCheck()) {
+            goToHome()
+        } else {
+            goToLogin()
+        }
+        //animateLoading = false
     }
 
-    private fun loginCheck(): Boolean {
-        var loggedIn = false
-        viewModelScope.launch {
-            try {
-                val cu = FirebaseAuth.getInstance().currentUser
-                if (cu != null) {
-                    FirebaseManager.currentUser = User(cu.email!!)
-                    loggedIn = true
-                }
-            } catch (e: Exception) {
-                loggedIn = false
+    fun loginCheck(): Boolean {
+        return try {
+            FirebaseAuth.getInstance().currentUser?.let {
+                FirebaseManager.currentUser = User(it.email ?: "")
+                true
             }
+            false
+        } catch (e: Exception) {
+            false
         }
-        return loggedIn
     }
 
     private fun goToHome() {

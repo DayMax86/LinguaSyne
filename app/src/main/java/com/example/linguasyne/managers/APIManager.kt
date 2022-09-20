@@ -9,6 +9,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Headers
 import java.io.IOException
 
 val BASE_URL =
@@ -17,7 +19,10 @@ val BASE_URL =
 interface APIManager {
 
     @GET("search_free?q=lepoint&lang=fr&media=True")
-
+    @Headers(
+        "X-RapidAPI-Key: 387f51c318msh541d76400b314c1p15f5a6jsn28aba00ec1bf",
+        "X-RapidAPI-Host: newscatcher.p.rapidapi.com",
+    )
     fun getNewsItems(): Call<NewsResponse>
 
     companion object Factory {

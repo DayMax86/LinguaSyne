@@ -29,8 +29,8 @@ class Vocab(vocabId: String,
     var isUnlocked: Boolean = false
     var gender: Gender = Gender.NO
     val types = mutableListOf<TermTypes>()
-    val isPartOf = listOf<String>()
-    val constituentTocabs = listOf<String>()
+    val partOf = listOf<String>()
+    val constituentTerms = listOf<String>()
 
     var engAnswered: Boolean = false
     var transAnswered: Boolean = false
