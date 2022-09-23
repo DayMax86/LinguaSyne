@@ -1,5 +1,6 @@
 package com.example.linguasyne.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,41 +14,20 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class StartViewModel(
-    private val navController: NavHostController,
-) : ViewModel() {
-
-    var animateLoading by mutableStateOf(true)
-
-    fun login() {
-        //animateLoading = true
-        //delay(2000) //TODO() This fixes the issue, but a hardcoded time delay is not the solution!!
-        if (loginCheck()) {
-            goToHome()
-        } else {
-            goToLogin()
-        }
-        //animateLoading = false
-    }
+class StartViewModel : ViewModel() {
 
     fun loginCheck(): Boolean {
-        return try {
+        var loggedIn = false
+        try {
             FirebaseAuth.getInstance().currentUser?.let {
                 FirebaseManager.currentUser = User(it.email ?: "")
-                true
+                loggedIn = true
             }
-            false
         } catch (e: Exception) {
-            false
+            Log.e("StartViewModel", "$e")
+            loggedIn = false
         }
-    }
-
-    private fun goToHome() {
-        navController.navigate(ComposableDestinations.HOME)
-    }
-
-    private fun goToLogin() {
-        navController.navigate(ComposableDestinations.LOGIN)
+        return loggedIn
     }
 
 }

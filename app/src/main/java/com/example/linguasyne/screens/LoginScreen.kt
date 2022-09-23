@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -41,8 +42,7 @@ import com.example.linguasyne.viewmodels.LoginViewModel
 @Composable
 fun LoginScreen(navController: NavHostController) {
 
-    val viewModel = LoginViewModel(navController)
-    viewModel.init()
+    val viewModel = remember { LoginViewModel(navController) }
 
     DisplayLogin(
         viewModel.userEmailInput,

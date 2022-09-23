@@ -12,9 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.linguasyne.classes.NewsItem
 import com.example.linguasyne.classes.User
-import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.managers.*
 import com.example.linguasyne.ui.theme.LsTeal200
@@ -25,9 +23,6 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class HomeViewModel(
@@ -37,15 +32,12 @@ class HomeViewModel(
     var user: User by mutableStateOf(FirebaseManager.currentUser!!)
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
 
-    var newsItems: List<NewsItem.Data> by mutableStateOf(emptyList())
     val selectedNewsColour: Color = LsVocabTextBlue
     val unselectedNewsColour: Color = LsTeal200
 
     init {
         FirebaseManager.loadVocabFromFirebase()
         loadUserImage()
-        //LessonManager.activeLesson = false
-        apiCall()
     }
 
     fun onBackPressed() {
@@ -143,27 +135,6 @@ class HomeViewModel(
 
 
     private fun apiCall() {
-            val apiCall = APIManager.create()
-            apiCall.getNewsItems().enqueue(object : Callback<NewsResponse> {
-
-                override fun onResponse(
-                    call: Call<NewsResponse>,
-                    response: Response<NewsResponse>
-                ) {
-                    newsItems = response.body()!!.data
-                    Log.d("HomeViewModel", "${newsItems.size}")
-
-                    if (response.isSuccessful) {
-                        Log.d("HomeViewModel", "Successful response from API get")
-                    }
-                }
-
-                override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
-                    Log.e("HomeViewModel", "ONFAILURE RESPONSE FROM API CALL: ${t.message}")
-                }
-
-            }
-            )
 
     }
 

@@ -1,17 +1,6 @@
 package com.example.linguasyne
 
-import android.util.Log
-import com.example.linguasyne.classes.NewsItem
-import com.example.linguasyne.managers.APIManager
-import com.example.linguasyne.managers.NewsResponse
-import com.example.linguasyne.viewmodels.HomeViewModel
-import junit.framework.Assert.assertEquals
-import org.junit.Assert
-import org.junit.Test
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
+/*
 class APITests {
 
     @Test
@@ -35,4 +24,4 @@ class APITests {
 
     }
 
-}
+}*/

@@ -64,7 +64,7 @@ class VocabDisplayViewModel(
 
     var showLoadingAnimation: Boolean by mutableStateOf(false)
 
-    fun onActivityLaunch() {
+    init {
         showLoadingAnimation = true
         viewModelScope
             .launch {
@@ -85,10 +85,11 @@ class VocabDisplayViewModel(
                         //For each vocab item in the lesson list
                         if (userFirestoreVocab.binarySearch(
                                 element = term,
-                                comparator = compareBy<Vocab> {
+                                comparator = compareBy {
                                     it.id
                                 }
                             ) < 0 //The binary search returns a negative number if the element is not found
+                            && !term.isUnlocked
                         ) {
                             //For each vocab item in the user's firebase list
                             term.isUnlocked = true

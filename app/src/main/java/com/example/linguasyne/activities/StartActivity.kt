@@ -30,7 +30,7 @@ class StartActivity : AppCompatActivity() {
         setContent {
 
             val navController = rememberNavController()
-            val viewModel = remember { StartViewModel(navController) }
+            val viewModel = remember { StartViewModel() }
 
             val scope = rememberCoroutineScope()
             val scaffoldState =
@@ -69,7 +69,8 @@ class StartActivity : AppCompatActivity() {
 
                             NavHost(
                                 navController = navController,
-                                startDestination = if (viewModel.loginCheck()) ComposableDestinations.HOME else ComposableDestinations.LOGIN,
+                                startDestination = if (viewModel.loginCheck())
+                                    ComposableDestinations.HOME else ComposableDestinations.LOGIN,
                             ) {
                                 composable(ComposableDestinations.HOME) {
                                     HomeScreen(navController)
@@ -91,9 +92,6 @@ class StartActivity : AppCompatActivity() {
                                 }
                                 composable(ComposableDestinations.SUMMARY) {
                                     RevisionSummaryScreen(navController)
-                                }
-                                composable(ComposableDestinations.LOADING) {
-                                    Animate(viewModel.animateLoading)
                                 }
                             }
                         }

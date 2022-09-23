@@ -37,43 +37,37 @@ class LoginViewModel(
 
     var outlineColour by mutableStateOf(Color(0xFF0016E0))
 
-    var loggedIn: Boolean? by mutableStateOf(null)
-
     var animateSuccess: Boolean by mutableStateOf(false)
     var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_LONG)
     var blurAmount: Int by mutableStateOf(0)
 
-    fun init() {
-
-    }
-
-
     fun handleLogin() {
         viewModelScope.launch {
-            loggedIn = try {
+            try {
                 Firebase.auth
                     .signInWithEmailAndPassword(userEmailInput, userPasswordInput)
                     .await()
+                    .apply {
+                        val user = User(userEmailInput)
+                        FirebaseManager.currentUser = user
+                        //Feedback to user that login was successful
+                        animateSuccess = true
+                        blurAmount = 5
+                        delay(2500)
+                        //loadUserImage()
+                        goToHome()
+                    }
                 //If the user changes the email input between sign in and now it will likely crash!
-                val user = User(userEmailInput)
-                FirebaseManager.currentUser = user
-                //Feedback to user that login was successful
-                animateSuccess = true
-                blurAmount = 5
-                delay(2500)
-                loadUserImage()
-                goToHome()
-                true
+
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "$e")
                 //Feedback to user that login failed
                 outlineColour = LsErrorRed
-                false
             }
         }
     }
 
-    private fun loadUserImage() {
+    /*private fun loadUserImage() {
         viewModelScope.launch {
             try {
                 val firebaseUser = FirebaseManager.currentUser
@@ -92,7 +86,7 @@ class LoginViewModel(
                 Log.e("LoginViewModel", "Image exception: $e")
             }
         }
-    }
+    }*/
 
 
     fun handleEmailChange(text: String) {
@@ -107,7 +101,7 @@ class LoginViewModel(
         navController.navigate(ComposableDestinations.CREATE_ACCOUNT)
     }
 
-    private fun goToHome(){
+    private fun goToHome() {
         navController.navigate(ComposableDestinations.HOME)
     }
 }

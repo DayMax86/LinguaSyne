@@ -43,7 +43,6 @@ import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 fun VocabDisplayScreen(navController: NavHostController) {
 
     val viewModel = VocabDisplayViewModel(navController)
-    viewModel.onActivityLaunch()
 
     ShowMainDisplay(
         show = viewModel.showDisplay,

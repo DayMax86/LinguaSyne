@@ -1,6 +1,10 @@
 package com.example.linguasyne
 
+import com.example.linguasyne.classes.Vocab
+import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,15 +31,33 @@ class CreateLessonTest {
     }
 }
 
-/*@RunWith(JUnit4::class)
-class SortLessonTest {
+class TestAddLessonContentToFirebase {
     @Test
-    fun sortLesson_isCorrect() {
-        val lt: LessonTypes = LessonTypes.VOCAB
-        val u = User("test@test.com")
-        FirebaseManager.current_user = u
-        LessonManager.createLesson(lt)
-        LessonManager.sortById()
+    suspend fun ContentAdded_isCorrect() {
+
+        val userFirestoreVocab: List<Vocab> = FirebaseFirestore
+            .getInstance()
+            .collection("users")
+            .document("${FirebaseManager.currentUser?.email}")
+            .collection("terms")
+            .get()
+            .await()
+            .toObjects(Vocab::class.java)
+        //If this is a lesson, unlock the terms for the user and add them to their personal firebase list
+        for (term: Vocab in LessonManager.currentLesson.lessonList) {
+            //For each vocab item in the lesson list
+            if (userFirestoreVocab.binarySearch(
+                    element = term,
+                    comparator = compareBy {
+                        it.id
+                    }
+                ) < 0 //The binary search returns a negative number if the element is not found
+            ) {
+                //For each vocab item in the user's firebase list
+                term.isUnlocked = true
+            }
+            assertEquals(term.isUnlocked, true)
         }
+
     }
-}*/
+}
