@@ -25,7 +25,7 @@ class ApiViewModel : ViewModel() {
     }
 
     var news = mutableStateListOf<NewsItem>()
-    val BASE_URL =
+    private val BASE_URL =
         "https://newscatcher.p.rapidapi.com/v1/"
 
     private val newsService: NewsApi = Retrofit.Builder()
@@ -60,6 +60,7 @@ class ApiViewModel : ViewModel() {
         val total_pages: Int,
         val user_input: UserInput
     ) {
+
         data class Article(
             val _id: String,
             val _score: Double,

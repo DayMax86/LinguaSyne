@@ -2,6 +2,7 @@ package com.example.linguasyne.ui.elements
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -29,23 +31,24 @@ import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 @Composable
 fun ApiBox(
     user: User,
-    selectedNewsColour: Color,
-    unselectedNewsColour: Color,
+    viewModel: ApiViewModel,
+    lazyListState: LazyListState,
+    /*selectedNewsColour: Color,
+    unselectedNewsColour: Color,*/
 ) {
 
-    val viewModel = remember { ApiViewModel() }
 
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
 
-        val lazyListState = rememberLazyListState()
+
         LazyRow(
-            modifier = Modifier
+            //modifier = Modifier
                 //.padding(10.dp)
-                .fillMaxWidth()
-                .wrapContentHeight(),
+                //.fillMaxWidth()
+                //.wrapContentHeight(),
             state = lazyListState,
             flingBehavior = rememberSnapperFlingBehavior(lazyListState),
         )
@@ -107,16 +110,18 @@ fun ApiBox(
                                 modifier = Modifier
                                     //.fillParentMaxWidth()
                                     //.fillMaxSize()
+                                    .fillMaxWidth()
                                     .padding(all = 5.dp)
                                     .border(
                                         2.dp,
                                         color = MaterialTheme.colors.secondary,
                                         shape = RoundedCornerShape(5.dp)
-                                    ),
-                                /*.clip(RoundedCornerShape(5.dp))
-                                .clipToBounds()*/
+                                    )
+                                    .clip(RoundedCornerShape(5.dp))
+                                    .clipToBounds(),
                                 model = item.image,
                                 contentDescription = null,
+                                contentScale = ContentScale.Fit,
                             )
 
 
@@ -145,28 +150,6 @@ fun ApiBox(
                 }
             }
 
-        }
-
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.Bottom,
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.Bottom,
-            ) {
-
-                DotsIndicator(
-                    totalDots = viewModel.news.size,
-                    selectedIndex = lazyListState.firstVisibleItemIndex,
-                    selectedColor = selectedNewsColour,
-                    unSelectedColor = unselectedNewsColour,
-                )
-
-            }
         }
 
 

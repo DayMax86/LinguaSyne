@@ -1,6 +1,8 @@
 package com.example.linguasyne.screens
 
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
@@ -35,11 +37,11 @@ import com.example.linguasyne.ui.theme.White
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ReviseTermScreen(navController: NavHostController) {
     val viewModel = ReviseTermViewModel(navController)
 
-    viewModel.initiateSession()
     Surface(
         modifier = Modifier
             .background(MaterialTheme.colors.background)

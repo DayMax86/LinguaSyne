@@ -1,5 +1,7 @@
 package com.example.linguasyne.viewmodels
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,11 +14,16 @@ import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.enums.Gender
+import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.RevisionSessionManager
 import com.example.linguasyne.ui.theme.*
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import okhttp3.internal.wait
 
+@RequiresApi(Build.VERSION_CODES.O)
 class ReviseTermViewModel(
     private val navController: NavHostController
 ) : ViewModel() {
@@ -42,11 +49,18 @@ class ReviseTermViewModel(
     var animateCorrect: Boolean by mutableStateOf(false)
     var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_SHORT)
 
-    var summaryTotalCorrect: Int by mutableStateOf(RevisionSessionManager.currentSession.totalCorrect)
-    var summaryTotalIncorrect: Int by mutableStateOf(RevisionSessionManager.currentSession.totalIncorrect)
+    var summaryTotalCorrect: Int by mutableStateOf(0)
+    var summaryTotalIncorrect: Int by mutableStateOf(0)
 
-    fun initiateSession() {
-        updateTermTitle(RevisionSessionManager.currentSession.currentStep)
+    init {
+        viewModelScope
+            .launch {
+                RevisionSessionManager.createSession(FirebaseManager.getUserVocabUnlocks())
+                summaryTotalCorrect = RevisionSessionManager.currentSession.totalCorrect
+                summaryTotalIncorrect = RevisionSessionManager.currentSession.totalIncorrect
+            }.invokeOnCompletion {
+                updateTermTitle(RevisionSessionManager.currentSession.currentStep)
+            }
     }
 
     private fun updateTermTitle(cs: RevisionSession.AnswerTypes) {
@@ -192,7 +206,7 @@ class ReviseTermViewModel(
         }
 
         // If they got the gender correct...
-        val t = RevisionSessionManager.currentSession.currentTerm as Vocab
+        val t = RevisionSessionManager.currentSession.currentTerm
         if (selectedGender == t.gender) {
             when (selectedGender) {
                 Gender.M -> mascOutlineColour = LsCorrectGreen

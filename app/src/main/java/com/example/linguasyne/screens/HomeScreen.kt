@@ -4,15 +4,22 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -22,6 +29,7 @@ import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.ui.elements.ApiBox
 import com.example.linguasyne.ui.elements.DotsIndicator
 import com.example.linguasyne.ui.elements.SelectImage
+import com.example.linguasyne.viewmodels.ApiViewModel
 import com.example.linguasyne.viewmodels.HomeViewModel
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 
@@ -29,6 +37,7 @@ import dev.chrisbanes.snapper.ExperimentalSnapperApi
 @Composable
 fun HomeScreen(navController: NavHostController) {
     val viewModel = remember { HomeViewModel(navController) }
+    val apiViewModel = remember { ApiViewModel() }
 
     DisplayHome(
         viewModel.user,
@@ -41,6 +50,7 @@ fun HomeScreen(navController: NavHostController) {
         viewModel.selectedNewsColour,
         viewModel.unselectedNewsColour,
         viewModel::onBackPressed,
+        apiViewModel,
     )
 
 }
@@ -59,7 +69,10 @@ fun DisplayHome(
     selectedNewsColour: Color,
     unselectedNewsColour: Color,
     backBehaviour: () -> Unit,
+    apiViewModel: ApiViewModel,
 ) {
+    val lazyListState = rememberLazyListState()
+
     Column(
 
     ) {
@@ -318,29 +331,56 @@ fun DisplayHome(
 
         /*---------------------------FOURTH LAYER------------------------------------------*/
 
-        Column(
 
+        Column(
+            modifier = Modifier
+                .padding(bottom = 32.dp)
         ) {
 
             Row(
                 modifier = Modifier
                     .padding(5.dp)
                     .wrapContentHeight(),
-
-                ) {
+            ) {
 
                 ApiBox(
                     user = FirebaseManager.currentUser ?: User(""),
-                    selectedNewsColour = selectedNewsColour,
-                    unselectedNewsColour = unselectedNewsColour,
+                    viewModel = apiViewModel,
+                    lazyListState = lazyListState,
                 )
-
             }
-
 
         }
 
 
+    }
+
+    Box(
+        modifier = Modifier
+            .padding(bottom = 16.dp)
+            .fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.Bottom,
+            ) {
+
+                DotsIndicator(
+                    totalDots = apiViewModel.news.size,
+                    selectedIndex = lazyListState.firstVisibleItemIndex,
+                    selectedColor = selectedNewsColour,
+                    unSelectedColor = unselectedNewsColour,
+                )
+
+            }
+        }
     }
 
 }

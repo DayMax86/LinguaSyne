@@ -1,10 +1,13 @@
 package com.example.linguasyne.classes
 
-class RevisionSession(var sl: MutableList<Vocab>) {
-    var sessionList = sl
-    lateinit var currentTerm: Vocab
+data class RevisionSession(var sl: MutableList<Vocab>) {
 
-    lateinit var currentStep: AnswerTypes
+    constructor() : this (mutableListOf())
+
+    var sessionList = sl
+    var currentTerm: Vocab = Vocab()
+
+    var currentStep: AnswerTypes = AnswerTypes.ENG //Assign as default to avoid non-initialized error
 
     var totalCorrect: Int = 0
     var totalIncorrect: Int = 0

@@ -99,14 +99,6 @@ class HomeViewModel(
         }
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun createSession() {
-        RevisionSessionManager.createSession()
-        /*launchRevisionSession =
-            false //Set back to false so the user can launch another session without home activity restart*/
-    }
-
     fun handleHelpClick() {
         //Do something
     }
@@ -120,7 +112,6 @@ class HomeViewModel(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun handleRevisionClick() {
-        createSession()
         navController.navigate(ComposableDestinations.REVISE)
     }
 
@@ -140,3 +131,7 @@ class HomeViewModel(
 
 
 }
+
+
+
+
