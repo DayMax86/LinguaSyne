@@ -72,7 +72,7 @@ class VocabDisplayViewModel(
                 vSource = fetchTermSource()
 
                 if (vSource == Sources.LESSON) {
-                    val userFirestoreVocab: List<Vocab> = FirebaseFirestore
+                    FirebaseFirestore
                         .getInstance()
                         .collection("users")
                         .document("${FirebaseManager.currentUser?.email}")
@@ -81,20 +81,10 @@ class VocabDisplayViewModel(
                         .await()
                         .toObjects(Vocab::class.java)
                     //If this is a lesson, unlock the terms for the user and add them to their personal firebase list
-                    for (term: Vocab in LessonManager.currentLesson.lessonList) {
-                        //For each vocab item in the lesson list
-                        if (userFirestoreVocab.binarySearch(
-                                element = term,
-                                comparator = compareBy {
-                                    it.id
-                                }
-                            ) < 0 //The binary search returns a negative number if the element is not found
-                            && !term.isUnlocked
-                        ) {
-                            //For each vocab item in the user's firebase list
-                            term.isUnlocked = true
-                            addTermToUserCollection(term)
-                        }
+                    //The terms only appear in a lesson once (this is ensured when the lesson is created)...
+                    //...so they can be added to the user's collection without checking for pre-existing terms, saving computation power/time
+                    for (v: Vocab in LessonManager.currentLesson.lessonList) {
+                            addTermToUserCollection(v)
                     }
                 }
                 getTermData()
@@ -102,7 +92,6 @@ class VocabDisplayViewModel(
             }.apply {
                 showDisplay = true
             }
-
     }
 
     fun handleBackPress() {
@@ -110,6 +99,7 @@ class VocabDisplayViewModel(
             .launch {
                 if (!showPopUpInput) {
                     if (vSource == Sources.LESSON) {
+                        LessonManager.activeLesson = false
                         navController.navigate(ComposableDestinations.HOME)
                     } else {
                         FirebaseManager.loadVocabFromFirebase()

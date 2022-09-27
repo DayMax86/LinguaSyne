@@ -26,7 +26,6 @@ class Vocab(vocabId: String,
     var translations = vocabTranslations
     var mnemonics = vocabMnemonics
     
-    var isUnlocked: Boolean = false
     var gender: Gender = Gender.NO
     val types = mutableListOf<TermTypes>()
     val partOf = listOf<String>()

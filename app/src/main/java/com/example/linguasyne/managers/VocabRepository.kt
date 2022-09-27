@@ -34,24 +34,23 @@ object VocabRepository {
     }
 
     suspend fun filterByUserNotYetUnlocked() {
-        val userUnlocks = FirebaseManager.getUserVocabUnlocks()
-        var tempList: List<Vocab> = emptyList()
-        allVocab
-            .forEach { vAll ->
-                val e = userUnlocks.firstOrNull {
-                    it.id == vAll.id
-                }
-                if (e == null) {
-                    tempList = tempList.plusElement(vAll)
+        var tempList: List<Vocab> = allVocab
+        coroutineScope {
+            val userUnlocks = FirebaseManager.getUserVocabUnlocks()
+            //TODO() This is an inefficient algorithm - it may bottleneck with large lists
+            allVocab.forEach { av ->
+                userUnlocks.forEach { uU ->
+                    if (av.id == uU.id) {
+                        tempList = tempList.minus(av)
+                    }
                 }
             }
+        }
         currentVocab = tempList
-            .sortedBy { it.id }
     }
 
-    suspend fun filterByUserUnlocked() {
+    /*suspend fun filterByUserUnlocked() {
         val userUnlocks = FirebaseManager.getUserVocabUnlocks()
-        val tempList: List<Vocab> = emptyList()
         allVocab
             .forEach { Vall ->
                 tempList.plus(userUnlocks
@@ -65,6 +64,6 @@ object VocabRepository {
             }
         currentVocab = tempList
             .sortedBy { it.id }
-    }
+    }*/
 
 }

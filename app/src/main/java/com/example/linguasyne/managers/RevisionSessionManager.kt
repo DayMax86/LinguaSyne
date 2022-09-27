@@ -31,8 +31,10 @@ object RevisionSessionManager {
         val toRemoveList: MutableList<Vocab> = mutableListOf()
 
         //TODO() A different instance of the vocab item is being created so this has to be done by matching the IDs
-        userUnlocks.forEach {
-            tempList.remove(it)
+        userUnlocks.forEach { uU ->
+            tempList.removeIf{
+                it.id == uU.id
+            }
         }
 
         //Finally filter by review time and we're left with terms that are due for revision.

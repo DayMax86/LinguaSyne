@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -42,7 +43,7 @@ import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 @Composable
 fun VocabDisplayScreen(navController: NavHostController) {
 
-    val viewModel = VocabDisplayViewModel(navController)
+    val viewModel =  remember { VocabDisplayViewModel(navController) }
 
     ShowMainDisplay(
         show = viewModel.showDisplay,
