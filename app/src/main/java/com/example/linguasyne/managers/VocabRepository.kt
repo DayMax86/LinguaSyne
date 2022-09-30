@@ -5,15 +5,9 @@ import com.example.linguasyne.classes.Vocab
 import kotlinx.coroutines.coroutineScope
 
 object VocabRepository {
-    var listChange: (() -> Unit)? = null
-
     var allVocab: List<Vocab> = emptyList()
 
     var currentVocab: List<Vocab> = emptyList()
-        set(value) {
-            field = value
-            listChange?.invoke()
-        }
 
     fun filterByName(search_termName: String) {
         currentVocab = allVocab
@@ -28,8 +22,8 @@ object VocabRepository {
     }
 
     fun filterByUnlockLevel(searchTermLevel: Int) {
-        currentVocab = allVocab
-            .filter { it.unlockLevel == searchTermLevel }
+        currentVocab = currentVocab
+            .filter { it.unlockLevel <= searchTermLevel}
             .sortedBy { it.id }
     }
 
@@ -47,23 +41,8 @@ object VocabRepository {
             }
         }
         currentVocab = tempList
+            .sortedBy { it.id }
     }
 
-    /*suspend fun filterByUserUnlocked() {
-        val userUnlocks = FirebaseManager.getUserVocabUnlocks()
-        allVocab
-            .forEach { Vall ->
-                tempList.plus(userUnlocks
-                    .firstOrNull { Vuser ->
-                        Vuser.id == Vall.id
-                    })
-                Log.d(
-                    "VocabRepository",
-                    "UserList ID: ${tempList.firstOrNull { it.id == Vall.id }?.id}, AllVocab ID: ${Vall.id}"
-                )
-            }
-        currentVocab = tempList
-            .sortedBy { it.id }
-    }*/
 
 }

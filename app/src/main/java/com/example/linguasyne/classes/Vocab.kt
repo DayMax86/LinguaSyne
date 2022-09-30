@@ -9,23 +9,22 @@ import java.time.LocalDateTime
 import java.time.LocalDateTime.*
 import java.time.Month
 
-class Vocab(vocabId: String,
-            vocabName: String,
-            vocabUnlockLevel: Int,
-            vocabTranslations: List<String>,
-            vocabMnemonics: List<String>,
-            vocabGender: String,
-            vocabTypes: List<String>) {
-
-    constructor() : this("", "", 0, emptyList(), emptyList(), "", emptyList())
-
+class Vocab(
+    vocabId: String = "",
+    vocabName: String = "",
+    vocabUnlockLevel: Int = 0,
+    vocabTranslations: List<String> = emptyList(),
+    vocabMnemonics: List<String> = emptyList(),
+    vocabGender: String = "",
+    vocabTypes: List<String> = emptyList(),
+) {
 
     var id: String = vocabId
     var name: String = vocabName
-    var unlockLevel: Int? = vocabUnlockLevel
+    var unlockLevel: Int = vocabUnlockLevel
     var translations = vocabTranslations
     var mnemonics = vocabMnemonics
-    
+
     var gender: Gender = Gender.NO
     val types = mutableListOf<TermTypes>()
     val partOf = listOf<String>()
@@ -37,7 +36,6 @@ class Vocab(vocabId: String,
     var answeredPerfectly: Boolean = true
 
     var currentLevelTerm: Int = 0
-    @RequiresApi(Build.VERSION_CODES.O)
     var nextReview: Int = ReviewTimes.NOW
 
     init {
@@ -55,7 +53,7 @@ class Vocab(vocabId: String,
 
     }
 
-    private fun assignTypes(vocabTypes: List<String>){
+    private fun assignTypes(vocabTypes: List<String>) {
         vocabTypes.forEach {
             when (it.toLowerCase()) {
                 "n" -> this.types.add(TermTypes.NOUN)

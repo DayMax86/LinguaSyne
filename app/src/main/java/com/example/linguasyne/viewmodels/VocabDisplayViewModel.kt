@@ -25,6 +25,7 @@ import com.google.common.primitives.UnsignedBytes.toInt
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -35,7 +36,7 @@ import java.util.ArrayList
 import java.util.Comparator
 
 class VocabDisplayViewModel(
-    private val navController: NavHostController
+    private val navController: NavHostController,
 ) : ViewModel() {
 
     lateinit var vSource: Sources
@@ -82,9 +83,13 @@ class VocabDisplayViewModel(
                         .toObjects(Vocab::class.java)
                     //If this is a lesson, unlock the terms for the user and add them to their personal firebase list
                     //The terms only appear in a lesson once (this is ensured when the lesson is created)...
-                    //...so they can be added to the user's collection without checking for pre-existing terms, saving computation power/time
-                    for (v: Vocab in LessonManager.currentLesson.lessonList) {
+                    //...so they can be added to the user's collection without checking for pre-existing terms
+                    if (LessonManager.currentLesson.lessonList.isEmpty()) {
+                        //Display message to the user that they have no lessons available!
+                    } else {
+                        for (v: Vocab in LessonManager.currentLesson.lessonList) {
                             addTermToUserCollection(v)
+                        }
                     }
                 }
                 getTermData()
@@ -115,7 +120,6 @@ class VocabDisplayViewModel(
                 fetchTermSource()
                 //Need to make sure the lesson has already been created before fetching the terms
                 fetchTerm()
-                fetchGenderImages()
             }
     }
 
@@ -265,7 +269,7 @@ class VocabDisplayViewModel(
 
     }
 
-    private fun fetchGenderImages() {
+/*    private fun fetchGenderImages() {
         when (termToDisplay.gender) {
             Gender.NO -> {
                 masc = false
@@ -292,7 +296,7 @@ class VocabDisplayViewModel(
                 femOutlineColour = LsCorrectGreen
             }
         }
-    }
+    }*/
 
 
     enum class TransOrMnem {

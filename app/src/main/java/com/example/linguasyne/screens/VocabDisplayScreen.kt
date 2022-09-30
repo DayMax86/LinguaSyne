@@ -30,9 +30,12 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.Vocab
+import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.ui.elements.DotsIndicator
+import com.example.linguasyne.ui.theme.LsCorrectGreen
+import com.example.linguasyne.ui.theme.LsGrey
 import com.example.linguasyne.viewmodels.VocabDisplayViewModel
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
@@ -43,7 +46,7 @@ import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 @Composable
 fun VocabDisplayScreen(navController: NavHostController) {
 
-    val viewModel =  remember { VocabDisplayViewModel(navController) }
+    val viewModel = remember { VocabDisplayViewModel(navController) }
 
     ShowMainDisplay(
         show = viewModel.showDisplay,
@@ -109,8 +112,6 @@ fun MainDisplay(
                             {
                                 DisplayTerm(
                                     item,
-                                    viewModel.mascOutlineColour,
-                                    viewModel.femOutlineColour,
                                     viewModel::handleTransTextPress,
                                     viewModel::handleMnemTextPress,
                                     viewModel::handleBackPress,
@@ -159,8 +160,6 @@ fun MainDisplay(
             ) {
                 DisplayTerm(
                     viewModel.termToDisplay,
-                    viewModel.mascOutlineColour,
-                    viewModel.femOutlineColour,
                     viewModel::handleTransTextPress,
                     viewModel::handleMnemTextPress,
                     viewModel::handleBackPress,
@@ -194,8 +193,6 @@ fun MainDisplay(
 @Composable
 fun DisplayTerm(
     vocab: Vocab,
-    mascOutlineColour: Color,
-    femOutlineColour: Color,
     onAddTransPress: () -> Unit,
     onAddMnemPress: () -> Unit,
     backBehaviour: () -> Unit,
@@ -269,7 +266,15 @@ fun DisplayTerm(
                     Image(
                         modifier = Modifier
                             .padding(1.dp)
-                            .border(2.dp, mascOutlineColour, RoundedCornerShape(10))
+                            .border(
+                                2.dp,
+                                if (vocab.gender == Gender.M || vocab.gender == Gender.MF) {
+                                    LsCorrectGreen
+                                } else {
+                                    LsGrey
+                                },
+                                RoundedCornerShape(10)
+                            )
                             .padding(5.dp)
                             .height(100.dp),
                         painter = painterResource(id = R.drawable.opaquemars),
@@ -283,7 +288,15 @@ fun DisplayTerm(
                     Image(
                         modifier = Modifier
                             .padding(1.dp)
-                            .border(2.dp, femOutlineColour, RoundedCornerShape(10))
+                            .border(
+                                2.dp,
+                                if (vocab.gender == Gender.F || vocab.gender == Gender.MF) {
+                                    LsCorrectGreen
+                                } else {
+                                    LsGrey
+                                },
+                                RoundedCornerShape(10)
+                            )
                             .padding(5.dp)
                             .height(100.dp),
                         painter = painterResource(id = R.drawable.opaquevenus),
@@ -318,18 +331,20 @@ fun DisplayTerm(
                     color = MaterialTheme.colors.secondary,
                 )
 
-                Text(
-                    modifier = Modifier
-                        .clickable {
-                            onAddTransPress()
-                        }
-                        .padding(all = 10.dp),
-                    text = stringResource(R.string.add_translation),
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.secondary,
-                )
-
+                if (!LessonManager.activeLesson) {
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                onAddTransPress()
+                            }
+                            .padding(all = 10.dp),
+                        text = stringResource(R.string.add_translation),
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.secondary,
+                    )
+                }
             }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -379,16 +394,18 @@ fun DisplayTerm(
                     color = MaterialTheme.colors.secondary,
                 )
 
-                Text(
-                    modifier = Modifier
-                        .clickable {
-                            onAddMnemPress()
-                        }
-                        .padding(all = 10.dp),
-                    text = stringResource(R.string.add_mnemonic),
-                    style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.secondary,
-                )
+                if (!LessonManager.activeLesson) {
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                onAddMnemPress()
+                            }
+                            .padding(all = 10.dp),
+                        text = stringResource(R.string.add_mnemonic),
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.secondary,
+                    )
+                }
 
             }
             Column(
@@ -547,6 +564,7 @@ fun DisplayPopUpInput(
                 .fillMaxWidth(0.5f)
                 .fillMaxHeight(0.5f)
                 .padding(all = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Card(

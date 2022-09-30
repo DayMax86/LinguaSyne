@@ -8,7 +8,7 @@ import org.junit.Test
 
 class RevisionSessionCreationTests {
 
-    class ExampleUnitTest {
+/*    class ExampleUnitTest {
         @Test
         fun createRevisionSessionTest() {
             FirebaseManager.currentUser = User("test@test.com")
@@ -16,7 +16,7 @@ class RevisionSessionCreationTests {
             RevisionSessionManager.createSession()
             assertEquals(18, RevisionSessionManager.currentSession.sl.size)
         }
-    }
+    }*/
 }
 
 

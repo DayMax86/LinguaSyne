@@ -54,9 +54,9 @@ class TestAddLessonContentToFirebase {
                 ) < 0 //The binary search returns a negative number if the element is not found
             ) {
                 //For each vocab item in the user's firebase list
-                term.isUnlocked = true
+
             }
-            assertEquals(term.isUnlocked, true)
+
         }
 
     }

@@ -1,10 +1,8 @@
 package com.example.linguasyne.screens
 
-import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
-import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,12 +10,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,14 +24,11 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.ui.animations.AnimateSuccess
-import com.example.linguasyne.ui.theme.LsCorrectGreen
-import com.example.linguasyne.ui.theme.White
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 
@@ -129,6 +124,12 @@ fun ViewTerm(
                     focusedBorderColor = textFieldOutlineColour,
                     unfocusedBorderColor = textFieldOutlineColour,
                 ),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions {
+                    onClickSubmit()
+                }
             )
 
 
@@ -205,7 +206,7 @@ fun ViewTerm(
                 onClick = { onClickSubmit() },
                 shape = RoundedCornerShape(100),
                 modifier = Modifier.size(200.dp, 45.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
             )
             {
                 Text(

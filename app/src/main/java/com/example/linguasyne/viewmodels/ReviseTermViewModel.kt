@@ -181,7 +181,7 @@ class ReviseTermViewModel(
         textFieldOutlineColour = LsPurple500
     }
 
-    private fun advance() {
+    private suspend fun advance() {
         currentTermTitle = RevisionSessionManager.advanceSession()?.name.toString()
         if (currentTermTitle == "" || currentTermTitle == null || currentTermTitle == "null") {
             //There is no next term (reached end of list) so activity should end and summary be launched
