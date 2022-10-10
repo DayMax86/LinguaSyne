@@ -14,8 +14,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -67,6 +73,54 @@ fun ReviseTermScreen(navController: NavHostController) {
     }
 }
 
+
+@Composable
+fun ReviseDrawerContent() {
+
+    Column(
+        modifier = Modifier
+            .width(intrinsicSize = IntrinsicSize.Max),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable {
+                    //endSessionEarly()
+                },
+            horizontalArrangement = Arrangement.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.end_session),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                    maxLines = 1,
+                )
+                Icon(
+                    Icons.Default.Done,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 6.dp)
+                        .size(20.dp, 20.dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary
+                )
+            }
+
+        }
+
+        Divider(
+            modifier = Modifier
+                .height(1.dp),
+            color = MaterialTheme.colors.onBackground,
+        )
+    }
+
+}
 
 @Composable
 fun ViewTerm(

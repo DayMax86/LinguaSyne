@@ -1,7 +1,6 @@
 package com.example.linguasyne.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +18,7 @@ import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.managers.VocabRepository
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsGrey
-import com.example.linguasyne.ui.theme.LsTeal200
+import com.example.linguasyne.ui.theme.LsLightTeal
 import com.example.linguasyne.ui.theme.LsVocabTextBlue
 import com.google.common.primitives.UnsignedBytes.toInt
 import com.google.firebase.firestore.FieldValue
@@ -57,7 +56,7 @@ class VocabDisplayViewModel(
     var textFieldOutlineColour by mutableStateOf(LsVocabTextBlue)
 
     val selectedDotColour: Color = LsVocabTextBlue
-    val unselectedDotColour: Color = LsTeal200
+    val unselectedDotColour: Color = LsLightTeal
 
     var animateSuccess: Boolean by mutableStateOf(false)
     val animateDuration = AnimationLengths.ANIMATION_DURATION_LONG
@@ -268,35 +267,6 @@ class VocabDisplayViewModel(
         }
 
     }
-
-/*    private fun fetchGenderImages() {
-        when (termToDisplay.gender) {
-            Gender.NO -> {
-                masc = false
-                mascOutlineColour = LsGrey
-                fem = false
-                femOutlineColour = LsGrey
-            }
-            Gender.F -> {
-                masc = false
-                mascOutlineColour = LsGrey
-                fem = true
-                femOutlineColour = LsCorrectGreen
-            }
-            Gender.M -> {
-                masc = true
-                mascOutlineColour = LsCorrectGreen
-                fem = false
-                femOutlineColour = LsGrey
-            }
-            Gender.MF -> {
-                masc = true
-                mascOutlineColour = LsCorrectGreen
-                fem = true
-                femOutlineColour = LsCorrectGreen
-            }
-        }
-    }*/
 
 
     enum class TransOrMnem {

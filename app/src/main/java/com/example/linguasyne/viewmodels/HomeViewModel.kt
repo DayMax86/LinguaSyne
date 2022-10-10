@@ -9,13 +9,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.managers.*
-import com.example.linguasyne.ui.theme.LsTeal200
+import com.example.linguasyne.ui.theme.LsLightTeal
 import com.example.linguasyne.ui.theme.LsVocabTextBlue
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -27,17 +26,21 @@ import kotlinx.coroutines.tasks.await
 
 class HomeViewModel(
     private val navController: NavHostController,
-) : ViewModel() {
+) : BaseViewModel() {
 
     var user: User by mutableStateOf(FirebaseManager.currentUser!!)
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
 
     val selectedNewsColour: Color = LsVocabTextBlue
-    val unselectedNewsColour: Color = LsTeal200
+    val unselectedNewsColour: Color = LsLightTeal
 
     init {
         FirebaseManager.loadVocabFromFirebase()
         loadUserImage()
+    }
+
+    override fun drawerContent() {
+
     }
 
     fun onBackPressed() {

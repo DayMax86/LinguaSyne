@@ -32,7 +32,7 @@ fun SelectImage(
 
     AsyncImage(
         modifier = Modifier
-            .padding(top = 30.dp)
+            //.padding(top = 30.dp)
             .clickable {
                 launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
             }

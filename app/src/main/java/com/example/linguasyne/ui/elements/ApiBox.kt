@@ -25,6 +25,7 @@ import com.example.linguasyne.classes.User
 import com.example.linguasyne.viewmodels.ApiViewModel
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
+import dev.chrisbanes.snapper.SnapperLayoutInfo.*
 
 
 @OptIn(ExperimentalSnapperApi::class)
@@ -36,26 +37,27 @@ fun ApiBox(
     /*selectedNewsColour: Color,
     unselectedNewsColour: Color,*/
 ) {
+    LazyRow(
+        //modifier = Modifier
+        //.padding(10.dp)
+        //.fillMaxWidth()
+        //.wrapContentHeight(),
+        state = lazyListState,
+        flingBehavior = rememberSnapperFlingBehavior(
+            lazyListState = lazyListState,
+          /*  snapIndex = dev.chrisbanes.snapper.SnapperLayoutInfo.determineTargetIndex(
+                velocity = 0.5f,
+            )
 
-
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-    ) {
-
-
-        LazyRow(
-            //modifier = Modifier
-                //.padding(10.dp)
-                //.fillMaxWidth()
-                //.wrapContentHeight(),
-            state = lazyListState,
-            flingBehavior = rememberSnapperFlingBehavior(lazyListState),
-        )
-        {
-            items(
-                viewModel.news
-            ) { item ->
+        */),
+    )
+    {
+        items(
+            viewModel.news
+        ) { item ->
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+            ) {
                 Card(
                     modifier = Modifier
                         .clip(RoundedCornerShape(10.dp))
@@ -89,8 +91,6 @@ fun ApiBox(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                 ) {
-
-
                                     Text(
                                         modifier = Modifier
                                             .padding(start = 5.dp, end = 5.dp),
@@ -99,10 +99,8 @@ fun ApiBox(
                                             user.studyCountry
                                         ),
                                         style = MaterialTheme.typography.body1,
-                                        color = MaterialTheme.colors.secondary
+                                        color = MaterialTheme.colors.primary
                                     )
-
-
                                 }
                             }
 
@@ -124,13 +122,10 @@ fun ApiBox(
                                 contentScale = ContentScale.Fit,
                             )
 
-
-
                             Row(
                                 modifier = Modifier
                                     .padding(all = 5.dp),
                             ) {
-
                                 Text(
                                     modifier = Modifier
                                         .clipToBounds(),
@@ -149,10 +144,6 @@ fun ApiBox(
 
                 }
             }
-
         }
-
-
     }
-
 }

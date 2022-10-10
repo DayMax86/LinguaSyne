@@ -9,8 +9,7 @@ import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,6 +30,7 @@ class StartActivity : AppCompatActivity() {
 
             val navController = rememberNavController()
             val viewModel = remember { StartViewModel() }
+            var drawerContent: @Composable () -> Unit by remember { mutableStateOf({}) }
 
             val scope = rememberCoroutineScope()
             val scaffoldState =
@@ -44,7 +44,7 @@ class StartActivity : AppCompatActivity() {
                     scaffoldState = scaffoldState,
                     drawerContent = {
                         MainDrawerContent(
-                            //TODO() How to customise the contents without having to pass the parameters?
+                            screenContent = drawerContent,
                         )
                         /*MainDrawerContent(
                             viewModel::handleTermBaseClick,
@@ -73,6 +73,7 @@ class StartActivity : AppCompatActivity() {
                                     ComposableDestinations.HOME else ComposableDestinations.LOGIN,
                             ) {
                                 composable(ComposableDestinations.HOME) {
+                                    drawerContent = { HomeDrawerContent() }
                                     HomeScreen(navController)
                                 }
                                 composable(ComposableDestinations.TERM_SEARCH) {
@@ -82,12 +83,14 @@ class StartActivity : AppCompatActivity() {
                                     CreateAccountScreen(navController)
                                 }
                                 composable(ComposableDestinations.LOGIN) {
+                                    //Drawer content for forgotten password
                                     LoginScreen(navController)
                                 }
                                 composable(ComposableDestinations.TERM_DISPLAY) {
                                     VocabDisplayScreen(navController)
                                 }
                                 composable(ComposableDestinations.REVISE) {
+                                    drawerContent = { ReviseDrawerContent() }
                                     ReviseTermScreen(navController)
                                 }
                                 composable(ComposableDestinations.SUMMARY) {

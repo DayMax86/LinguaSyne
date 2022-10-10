@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.enums.ReviewTimes
 import com.example.linguasyne.enums.TermTypes
+import com.google.firebase.Timestamp
 import java.time.LocalDateTime
 import java.time.LocalDateTime.*
 import java.time.Month
@@ -27,8 +28,6 @@ class Vocab(
 
     var gender: Gender = Gender.NO
     val types = mutableListOf<TermTypes>()
-    val partOf = listOf<String>()
-    val constituentTerms = listOf<String>()
 
     var engAnswered: Boolean = false
     var transAnswered: Boolean = false
@@ -36,7 +35,8 @@ class Vocab(
     var answeredPerfectly: Boolean = true
 
     var currentLevelTerm: Int = 0
-    var nextReview: Int = ReviewTimes.NOW
+    var nextReviewTime: Timestamp = Timestamp.now()
+    var nextReviewHours: Int = ReviewTimes.NOW
 
     init {
         assignGender(vocabGender)
@@ -65,5 +65,10 @@ class Vocab(
             }
         }
     }
+
+    /*@RequiresApi(Build.VERSION_CODES.O)
+    private fun convertNextReviewTimestampToHours(){
+        nextReviewTime
+    }*/
 
 }

@@ -4,22 +4,20 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -55,6 +53,138 @@ fun HomeScreen(navController: NavHostController) {
 
 }
 
+@Composable
+fun HomeDrawerContent() {
+
+    Column(
+        modifier = Modifier
+            .width(intrinsicSize = IntrinsicSize.Max),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Row(
+            /*modifier = Modifier.clickable { //TODO() FOR DEVELOPER USE ONLY!! Will be removed in release version.
+    CSVManager.importVocabCSV(this@StartActivity.applicationContext)
+},*/
+            horizontalArrangement = Arrangement.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.about),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                    maxLines = 1,
+                )
+                Icon(
+                    Icons.Default.Info,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 6.dp)
+                        .size(20.dp, 20.dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary
+                )
+            }
+
+        }
+
+        Divider(
+            modifier = Modifier
+                .height(1.dp),
+            color = MaterialTheme.colors.onBackground,
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .width(intrinsicSize = IntrinsicSize.Max),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable {
+                    //launchTermBase()
+                },
+            horizontalArrangement = Arrangement.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.term_base),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                    maxLines = 1,
+                )
+                Icon(
+                    Icons.Default.Search,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 6.dp)
+                        .size(20.dp, 20.dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary
+                )
+            }
+
+        }
+
+        Divider(
+            modifier = Modifier
+                .height(1.dp),
+            color = MaterialTheme.colors.onBackground,
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .width(intrinsicSize = IntrinsicSize.Max),
+        horizontalAlignment = Alignment.Start,
+    ) {
+
+        Row(
+            modifier = Modifier
+                .clickable {
+                    //signOut()
+                },
+            horizontalArrangement = Arrangement.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.sign_out),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                    maxLines = 1,
+                )
+                Icon(
+                    Icons.Default.AccountCircle,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 6.dp)
+                        .size(20.dp, 20.dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary
+                )
+            }
+
+        }
+        Divider(
+            modifier = Modifier
+                .height(1.dp),
+            color = MaterialTheme.colors.onBackground,
+        )
+    }
+
+}
 
 @OptIn(ExperimentalSnapperApi::class)
 @Composable
@@ -74,227 +204,137 @@ fun DisplayHome(
     val lazyListState = rememberLazyListState()
 
     Column(
-
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
         BackHandler {
             backBehaviour()
         }
 
-        Column(
+        /*---------------------------FIRST LAYER------------------------------------------*/
+        Row(
             modifier = Modifier
                 .fillMaxWidth(),
+                //.padding(top = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            /*---------------------------FIRST LAYER------------------------------------------*/
-            Row(
+
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                    .height(IntrinsicSize.Max)
+                    .width(IntrinsicSize.Max),
             ) {
 
-                Row(
+                Text(
                     modifier = Modifier
-                        .padding(start = 10.dp),
-                ) {
-                    /*--Left column with 'lessons' and 3 buttons--*/
+                        .padding(start = 10.dp, bottom = 5.dp),
+                    text = stringResource(id = R.string.lessons),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                )
 
-                    Column(
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                    ) {
-
-                        Text(
+                Button(
+                    modifier = Modifier
+                        .width(150.dp),
+                    onClick = { onClickVocabLesson() },
+                    shape = RoundedCornerShape(100),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.secondary,
+                        contentColor = MaterialTheme.colors.onSurface,
+                    ),
+                    content = {
+                        Row(
                             modifier = Modifier
-                                .padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
-                            text = stringResource(id = R.string.lessons),
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.secondary,
-                        )
-
-                        Button(
-                            modifier = Modifier
-                                .width(150.dp),
-                            onClick = { onClickVocabLesson() },
-                            shape = RoundedCornerShape(100),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.secondary,
-                                contentColor = MaterialTheme.colors.onSurface,
-                            ),
-                            content = {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                ) {
-                                    Row(
-
-                                    ) {
-                                        Text(stringResource(id = R.string.vocab))
-                                    }
-
-                                    Row(
-
-                                    ) {
-                                        Text("50")
-                                    }
-                                }
-
-                            },
-                        )
-
-                        Column(
-
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
+                            Row(
 
-                            Text(
-                                modifier = Modifier
-                                    .padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
-                                text = stringResource(id = R.string.revision),
-                                style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.secondary,
-                            )
+                            ) {
+                                Text(stringResource(id = R.string.vocab))
+                            }
 
-                            Button(
-                                modifier = Modifier
-                                    .width(150.dp),
-                                onClick = { onClickRevision() },
-                                shape = RoundedCornerShape(100),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = MaterialTheme.colors.secondary,
-                                    contentColor = MaterialTheme.colors.onSurface,
-                                ),
-                                content = {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                    ) {
-                                        Row(
+                            Row(
 
-                                        ) {
-                                            Text(stringResource(id = R.string.to_revise))
-                                        }
-
-                                        Row(
-
-                                        ) {
-                                            Text("50")
-                                        }
-                                    }
-
-                                },
-                            )
+                            ) {
+                                Text("50")
+                            }
                         }
 
-                        Button(
-                            modifier = Modifier
-                                .width(150.dp),
-                            onClick = { },
-                            shape = RoundedCornerShape(100),
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.secondary,
-                                contentColor = MaterialTheme.colors.onSurface,
-                            ),
-                            content = {
+                    },
+                )
+
+                Column(
+
+                ) {
+
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
+                        text = stringResource(id = R.string.revision),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary,
+                    )
+
+                    Button(
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .width(150.dp),
+                        onClick = { onClickRevision() },
+                        shape = RoundedCornerShape(100),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.secondary,
+                            contentColor = MaterialTheme.colors.onSurface,
+                        ),
+                        content = {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
                                 Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center,
+
                                 ) {
-                                    Row(
-
-                                    ) {
-                                        Text(stringResource(id = R.string.exam))
-                                    }
-
+                                    Text(stringResource(id = R.string.to_revise))
                                 }
 
-                            },
-                        )
+                                Row(
 
+                                ) {
+                                    Text("50")
+                                }
+                            }
 
-                    }
+                        },
+                    )
                 }
+
 
                 Row(
                     modifier = Modifier
-                        .padding(end = 10.dp),
+                        .padding(bottom = 2.dp),
+                    horizontalArrangement = Arrangement.Center,
                 ) {
-                    /*--Right column with profile info--*/
 
-                    Column(
+                    Text(
+                        //Fire emoji
+                        text = String(Character.toChars(0x1F525)),
+                    )
 
-                    ) {
-
-
-                        SelectImage(
-                            onImageSelected = onClickProfileImage,
-                            userImage = userImage
-                        )
-
-                        FirebaseManager.currentUser?.let {
-                            Text(
-                                modifier = Modifier
-                                    .padding(top = 10.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.primary,
-                                text = it.email
-                            )
-                        }
-
-                        Text(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally),
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.primary,
-                            text = stringResource(id = R.string.level) + "${user.level}"
-                        )
-
-                    }
-
-                }
-
-            }
-        }
-
-
-        Column(
-
-        ) {
-            /*---------------------------THIRD LAYER------------------------------------------*/
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Row(
-
-                ) {
-                    /*--Left column with 'streak' icon and text--*/
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                    ) {
-
-                        Text(
-                            //Fire emoji
-                            text = String(Character.toChars(0x1F525)),
-                        )
-
-                        Text(
-                            modifier = Modifier
-                                .padding(start = 2.dp),
-                            text = stringResource(
-                                id = R.string.day_streak,
-                                user.streak
-                            ),
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.secondary
-                        )
-
-                    }
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 2.dp),
+                        text = stringResource(
+                            id = R.string.day_streak,
+                            user.streak
+                        ),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.secondary
+                    )
 
                 }
 
@@ -326,61 +366,85 @@ fun DisplayHome(
                 }
 
             }
-        }
 
 
-        /*---------------------------FOURTH LAYER------------------------------------------*/
 
-
-        Column(
-            modifier = Modifier
-                .padding(bottom = 32.dp)
-        ) {
 
             Row(
                 modifier = Modifier
-                    .padding(5.dp)
-                    .wrapContentHeight(),
+                    .height(IntrinsicSize.Max)
+                    .width(IntrinsicSize.Max),
+                //.padding(end = 10.dp),
+                horizontalArrangement = Arrangement.Center
             ) {
+                /*--Right column with profile info--*/
 
-                ApiBox(
-                    user = FirebaseManager.currentUser ?: User(""),
-                    viewModel = apiViewModel,
-                    lazyListState = lazyListState,
-                )
+                Column(
+
+                ) {
+
+
+                    SelectImage(
+                        onImageSelected = onClickProfileImage,
+                        userImage = userImage
+                    )
+
+                    FirebaseManager.currentUser?.let {
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 10.dp)
+                                .align(Alignment.CenterHorizontally),
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary,
+                            text = it.email
+                        )
+                    }
+
+                    Text(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primaryVariant,
+                        text = stringResource(id = R.string.level) + "${user.level}"
+                    )
+
+                }
+
             }
 
         }
 
 
-    }
-
-    Box(
-        modifier = Modifier
-            .padding(bottom = 16.dp)
-            .fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        Row(
+        /*---------------------------THIRD LAYER------------------------------------------*/
+        Column(
             modifier = Modifier
+                .fillMaxHeight(.8f) //
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.Bottom,
-            ) {
 
+            ApiBox(
+                user = FirebaseManager.currentUser ?: User(""),
+                viewModel = apiViewModel,
+                lazyListState = lazyListState,
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.Center,
+            ) {
                 DotsIndicator(
                     totalDots = apiViewModel.news.size,
                     selectedIndex = lazyListState.firstVisibleItemIndex,
                     selectedColor = selectedNewsColour,
                     unSelectedColor = unselectedNewsColour,
                 )
-
             }
+
         }
+
     }
 
 }

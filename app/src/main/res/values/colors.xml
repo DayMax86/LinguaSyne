@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="text_blue">#0016E0</color>
-    <color name="bg_teal">#3DFDE0</color>
+    <color name="mid_purple">#BB86FC</color>
+    <color name="light_purple">#d5b4fd</color>
+    <color name="dark_purple">#9466ff</color>
+    <color name="LsLightTeal">#9bfdf4</color>
+    <color name="mid_teal">#8cdede</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_blue">#4255ff</color>
+    <color name="bg_teal">#aefef2</color>
     <color name="hint_blue">#800016E0</color>
-    <color name="vocab_bg_teal">#3DFDE0</color>
-    <color name="vocab_text_blue">#0016E0</color>
-    <color name="verb_bg_pink">#d817e0</color>
-    <color name="verb_text_white">#FFFFFFFF</color>
-    <color name="phrase_bg_purple">#666bcf</color>
-    <color name="phrase_text_teal">#3DFDE0</color>
-    <color name="exam_text_white">#FFFFFFFF</color>
-    <color name="exam_bg_blue">#00388b</color>
 
 
     <color name="ivory">#FFFFF0</color>

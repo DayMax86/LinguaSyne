@@ -529,7 +529,7 @@ fun DisplayTerm(
                     Text(
                         modifier = Modifier
                             .padding(all = 10.dp),
-                        text = vocab.nextReview.toString(),
+                        text = vocab.nextReviewHours.toString(),
                         style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.secondary,
                     )

@@ -10,18 +10,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.RevisionSession
-import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.RevisionSessionManager
 import com.example.linguasyne.ui.theme.*
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import okhttp3.internal.wait
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ReviseTermViewModel(
@@ -104,7 +100,7 @@ class ReviseTermViewModel(
                 mascOutlineColour = LsGrey
             } else if (!mascSelected) {
                 mascSelected = true
-                mascOutlineColour = LsPurple500
+                mascOutlineColour = LsDarkPurple
             }
         }
     }
@@ -117,7 +113,7 @@ class ReviseTermViewModel(
                 femOutlineColour = LsGrey
             } else if (!femSelected) {
                 femSelected = true
-                femOutlineColour = LsPurple500
+                femOutlineColour = LsDarkPurple
             }
         }
     }
@@ -178,7 +174,7 @@ class ReviseTermViewModel(
 
     fun handleInput(text: String) {
         userInput = text
-        textFieldOutlineColour = LsPurple500
+        textFieldOutlineColour = LsDarkPurple
     }
 
     private suspend fun advance() {

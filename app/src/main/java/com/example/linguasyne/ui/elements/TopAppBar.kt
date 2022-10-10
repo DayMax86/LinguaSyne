@@ -3,14 +3,13 @@ package com.example.linguasyne.ui.elements
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.linguasyne.R
@@ -22,7 +21,7 @@ fun SharedTopAppBar(
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
 ) {
-    androidx.compose.material.TopAppBar(
+    TopAppBar(
         title = {
             Text(
                 text = stringResource(id = R.string.app_name),
@@ -53,7 +52,26 @@ fun SharedTopAppBar(
                     ),
                 contentDescription = ""
             )
+        },
+        actions = {
+            TopAppBarActionButton(
+                imageVector = Icons.Default.Info,
+                description = "Help",
+            ) { /**/ }
         }
     )
 
+}
+
+@Composable
+fun TopAppBarActionButton(
+    imageVector: ImageVector,
+    description: String,
+    onClick: () -> Unit
+) {
+    IconButton(onClick = {
+        onClick()
+    }) {
+        Icon(imageVector = imageVector, contentDescription = description)
+    }
 }
