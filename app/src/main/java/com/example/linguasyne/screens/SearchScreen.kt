@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.linguasyne.R
@@ -72,7 +73,7 @@ fun VocabItem(
 ) {
     Card(
         modifier = Modifier
-            .padding(all = 10.dp)
+            .padding(all = 8.dp)
             .border(
                 2.dp,
                 MaterialTheme.colors.secondary,
@@ -81,25 +82,31 @@ fun VocabItem(
             .fillMaxWidth()
             .clickable {
                 onClick(vocab)
-                Log.e("VocabSearch", "within .clickable")
             },
         elevation = 5.dp,
         backgroundColor = MaterialTheme.colors.onBackground,
         shape = RoundedCornerShape(corner = CornerSize(10.dp)),
     )
     {
-        Row {
+        Row(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Text(
+                text = vocab.name,
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.h1,
+                overflow = TextOverflow.Visible,
+                softWrap = true,
+            )
+
             Column(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth()
-                    .align(Alignment.CenterVertically)
+                horizontalAlignment = Alignment.End
             ) {
-                Text(
-                    text = vocab.name,
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.h1,
-                )
+
                 Text(
                     text = stringResource(id = R.string.unlock_level) + "${vocab.unlockLevel}",
                     color = MaterialTheme.colors.secondary,
@@ -110,8 +117,8 @@ fun VocabItem(
                     color = MaterialTheme.colors.secondary,
                     style = MaterialTheme.typography.body1,
                 )
-
             }
+
 
         }
     }

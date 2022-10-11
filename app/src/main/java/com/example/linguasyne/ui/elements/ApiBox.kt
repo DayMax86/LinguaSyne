@@ -131,7 +131,7 @@ fun ApiBox(
                                         .clipToBounds(),
                                     text = item.title,
                                     style = MaterialTheme.typography.body1,
-                                    color = MaterialTheme.colors.secondary,
+                                    color = MaterialTheme.colors.primary,
                                     overflow = TextOverflow.Visible,
                                     softWrap = true,
                                 )

@@ -9,10 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.Vocab
-import com.example.linguasyne.enums.AnimationLengths
-import com.example.linguasyne.enums.ComposableDestinations
-import com.example.linguasyne.enums.Gender
-import com.example.linguasyne.enums.TermTypes
+import com.example.linguasyne.enums.*
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.managers.VocabRepository
@@ -63,6 +60,8 @@ class VocabDisplayViewModel(
     var blurAmount: Int by mutableStateOf(0)
 
     var showLoadingAnimation: Boolean by mutableStateOf(false)
+
+    var progressBarValue: Float by mutableStateOf(0f)
 
     init {
         showLoadingAnimation = true
@@ -119,8 +118,11 @@ class VocabDisplayViewModel(
                 fetchTermSource()
                 //Need to make sure the lesson has already been created before fetching the terms
                 fetchTerm()
+                fetchTermProgress()
             }
     }
+
+
 
     private fun fetchTermSource(): Sources {
         vSource =
@@ -163,6 +165,48 @@ class VocabDisplayViewModel(
             else -> {/**/
             }
 
+        }
+    }
+
+    private fun fetchTermProgress() {
+        val reviewTimesEnumSize = 11
+        progressBarValue = when (termToDisplay.nextReviewHours) {
+            ReviewTimes.NOW -> {
+                (1f / reviewTimesEnumSize) * 1
+            }
+            ReviewTimes.ONE_DAY -> {
+                (1f / reviewTimesEnumSize) * 2
+            }
+            ReviewTimes.TWO_DAYS -> {
+                (1f / reviewTimesEnumSize) * 3
+            }
+            ReviewTimes.ONE_WEEK -> {
+                (1f / reviewTimesEnumSize) * 4
+            }
+            ReviewTimes.TWO_WEEKS -> {
+                (1f / reviewTimesEnumSize) * 5
+            }
+            ReviewTimes.ONE_MONTH -> {
+                (1f / reviewTimesEnumSize) * 6
+            }
+            ReviewTimes.TWO_MONTHS -> {
+                (1f / reviewTimesEnumSize) * 7
+            }
+            ReviewTimes.FOUR_MONTHS -> {
+                (1f / reviewTimesEnumSize) * 8
+            }
+            ReviewTimes.EIGHT_MONTHS -> {
+                (1f / reviewTimesEnumSize) * 9
+            }
+            ReviewTimes.ONE_YEAR -> {
+                (1f / reviewTimesEnumSize) * 10
+            }
+            ReviewTimes.NEVER -> {
+                (1f / reviewTimesEnumSize) * 11
+            }
+            else -> {
+                0f
+            }
         }
     }
 

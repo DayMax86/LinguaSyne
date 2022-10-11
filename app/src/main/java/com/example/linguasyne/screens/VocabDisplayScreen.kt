@@ -35,6 +35,7 @@ import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.ui.elements.DotsIndicator
 import com.example.linguasyne.ui.theme.LsCorrectGreen
+import com.example.linguasyne.ui.theme.LsDarkPurple
 import com.example.linguasyne.ui.theme.LsGrey
 import com.example.linguasyne.viewmodels.VocabDisplayViewModel
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
@@ -115,6 +116,7 @@ fun MainDisplay(
                                     viewModel::handleTransTextPress,
                                     viewModel::handleMnemTextPress,
                                     viewModel::handleBackPress,
+                                    viewModel.progressBarValue,
                                 )
                             }
 
@@ -163,6 +165,7 @@ fun MainDisplay(
                     viewModel::handleTransTextPress,
                     viewModel::handleMnemTextPress,
                     viewModel::handleBackPress,
+                    viewModel.progressBarValue,
                 )
             }
 
@@ -196,13 +199,16 @@ fun DisplayTerm(
     onAddTransPress: () -> Unit,
     onAddMnemPress: () -> Unit,
     backBehaviour: () -> Unit,
+    termProgress: Float,
 ) {
 
     BackHandler {
         backBehaviour()
     }
 
-    Column() {
+    Column(
+
+    ) {
 
         Column(
             modifier = Modifier
@@ -236,7 +242,7 @@ fun DisplayTerm(
 
                         Text(
                             text = vocab.translations[0],
-                            color = MaterialTheme.colors.secondary,
+                            color = MaterialTheme.colors.primaryVariant,
                             style = MaterialTheme.typography.body1,
                             textAlign = TextAlign.Center,
                         )
@@ -269,7 +275,7 @@ fun DisplayTerm(
                             .border(
                                 2.dp,
                                 if (vocab.gender == Gender.M || vocab.gender == Gender.MF) {
-                                    LsCorrectGreen
+                                    LsDarkPurple
                                 } else {
                                     LsGrey
                                 },
@@ -291,7 +297,7 @@ fun DisplayTerm(
                             .border(
                                 2.dp,
                                 if (vocab.gender == Gender.F || vocab.gender == Gender.MF) {
-                                    LsCorrectGreen
+                                    LsDarkPurple
                                 } else {
                                     LsGrey
                                 },
@@ -328,7 +334,7 @@ fun DisplayTerm(
                         .padding(all = 10.dp),
                     text = stringResource(R.string.translations),
                     style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.secondary,
+                    color = MaterialTheme.colors.primary,
                 )
 
                 if (!LessonManager.activeLesson) {
@@ -361,7 +367,7 @@ fun DisplayTerm(
                 vocab.translations.forEach {
                     Text(
                         modifier = Modifier
-                            .padding(all = 5.dp),
+                            .padding(all = 8.dp),
                         text = "$it,",
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1,
@@ -391,7 +397,7 @@ fun DisplayTerm(
                         .padding(all = 10.dp),
                     text = stringResource(R.string.mnemonics),
                     style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.secondary,
+                    color = MaterialTheme.colors.primary,
                 )
 
                 if (!LessonManager.activeLesson) {
@@ -423,7 +429,7 @@ fun DisplayTerm(
             ) {
                 vocab.mnemonics.forEach {
                     Text(
-                        modifier = Modifier.padding(all = 5.dp),
+                        modifier = Modifier.padding(all = 8.dp),
                         text = it.replace("%'", ","),
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1,
@@ -448,16 +454,16 @@ fun DisplayTerm(
                     .align(Alignment.CenterHorizontally)
                     .padding(all = 10.dp),
                 text = stringResource(id = R.string.your_progress),
-                style = MaterialTheme.typography.body2,
-                color = MaterialTheme.colors.secondary,
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.primary,
             )
 
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp, end = 10.dp),
+                    .padding(start = 16.dp, end = 16.dp),
                 //progress = (term.current_level_term.toFloat()) / 100
-                progress = 0.8f // TODO() TEST VALUE
+                progress = termProgress // TODO() TEST VALUE
             )
 
             Row(
@@ -473,7 +479,10 @@ fun DisplayTerm(
                     Text(
                         modifier = Modifier
                             .padding(start = 5.dp),
-                        text = vocab.currentLevelTerm.toString(),
+                        //text = vocab.currentLevelTerm.toString(),
+                        text = stringResource(id = R.string.unlocked),
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.secondary,
                     )
                 }
 
@@ -484,7 +493,10 @@ fun DisplayTerm(
                     Text(
                         modifier = Modifier
                             .padding(end = 5.dp),
-                        text = (vocab.currentLevelTerm + 1).toString(),
+                        //text = (vocab.currentLevelTerm + 1).toString(),
+                        text = stringResource(id = R.string.memorised),
+                        style = MaterialTheme.typography.body2,
+                        color = MaterialTheme.colors.secondary,
                     )
                 }
             }

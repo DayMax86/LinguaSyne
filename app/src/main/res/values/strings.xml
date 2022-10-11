@@ -60,6 +60,8 @@
     <string name="add_translation">+ Add custom translation</string>
     <string name="add_mnemonic">+ Add custom mnemonic</string>
     <string name="end_session">End current session</string>
+    <string name="unlocked">Unlocked</string>
+    <string name="memorised">Memorised</string>
 
 
 </resources>

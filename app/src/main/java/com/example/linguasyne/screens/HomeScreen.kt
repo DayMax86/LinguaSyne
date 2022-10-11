@@ -219,7 +219,7 @@ fun DisplayHome(
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-                //.padding(top = 16.dp),
+            //.padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
 
@@ -313,6 +313,32 @@ fun DisplayHome(
                     )
                 }
 
+                Row(
+
+                ) {
+                    /*--Right column with 'term base' icon and text--*/
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+
+                        Text(
+                            //Books emoji
+                            text = String(Character.toChars(0x1F4DA)),
+                        )
+
+                        Text(
+                            modifier = Modifier
+                                .padding(start = 2.dp)
+                                .clickable { onClickTermBase() },
+                            text = stringResource(id = R.string.term_base),
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary,
+                        )
+
+                    }
+
+                }
 
                 Row(
                     modifier = Modifier
@@ -338,33 +364,6 @@ fun DisplayHome(
 
                 }
 
-                Row(
-
-                ) {
-                    /*--Right column with 'term base' icon and text--*/
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                    ) {
-
-                        Text(
-                            //Books emoji
-                            text = String(Character.toChars(0x1F4DA)),
-                        )
-
-                        Text(
-                            modifier = Modifier
-                                .padding(start = 2.dp)
-                                .clickable { onClickTermBase() },
-                            text = stringResource(id = R.string.term_base),
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.secondary,
-                        )
-
-                    }
-
-                }
-
             }
 
 
@@ -380,7 +379,8 @@ fun DisplayHome(
                 /*--Right column with profile info--*/
 
                 Column(
-
+                    modifier = Modifier
+                        .padding(top = 10.dp)
                 ) {
 
 

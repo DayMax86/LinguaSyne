@@ -36,7 +36,7 @@ class Vocab(
 
     var currentLevelTerm: Int = 0
     var nextReviewTime: Timestamp = Timestamp.now()
-    var nextReviewHours: Int = ReviewTimes.NOW
+    var nextReviewHours: Int = 0
 
     init {
         assignGender(vocabGender)
