@@ -62,14 +62,17 @@ fun ReviseTermScreen(navController: NavHostController) {
             mascImage = viewModel.mascImage,
             femImage = viewModel.femImage,
         )
-
-        AnimateSuccess(
-            animate = viewModel.animateCorrect,
-            animationSpec = tween(viewModel.animateDuration.toInt()),
-            initialScale = 0f,
-            transformOrigin = TransformOrigin.Center,
-        )
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            AnimateSuccess(
+                animate = viewModel.animateCorrect,
+                animationSpec = tween(viewModel.animateDuration.toInt()),
+                initialScale = 0f,
+                transformOrigin = TransformOrigin.Center,
+            )
+        }
     }
 }
 
@@ -177,6 +180,10 @@ fun ViewTerm(
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = textFieldOutlineColour,
                     unfocusedBorderColor = textFieldOutlineColour,
+                    textColor = MaterialTheme.colors.primary,
+                    unfocusedLabelColor = MaterialTheme.colors.secondary,
+                    placeholderColor = MaterialTheme.colors.secondary,
+                    focusedLabelColor = MaterialTheme.colors.secondary,
                 ),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done

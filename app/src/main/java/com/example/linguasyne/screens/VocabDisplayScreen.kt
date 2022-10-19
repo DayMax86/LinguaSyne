@@ -1,6 +1,7 @@
 package com.example.linguasyne.screens
 
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.res.painterResource
@@ -76,6 +78,9 @@ fun MainDisplay(
     viewModel: VocabDisplayViewModel,
     source: VocabDisplayViewModel.Sources
 ) {
+
+    val scrollState = rememberScrollState()
+
     when (source) {
         VocabDisplayViewModel.Sources.LESSON -> {
             Column(
@@ -118,6 +123,7 @@ fun MainDisplay(
                                     viewModel::handleBackPress,
                                     viewModel.progressBarValue,
                                 )
+
                             }
 
                         }
@@ -152,8 +158,10 @@ fun MainDisplay(
             }
         }
         VocabDisplayViewModel.Sources.SEARCH -> {
+
             Surface(
                 modifier = Modifier
+                    .verticalScroll(scrollState)
                     .blur(
                         viewModel.blurAmount.dp,
                         viewModel.blurAmount.dp,
@@ -166,6 +174,30 @@ fun MainDisplay(
                     viewModel::handleMnemTextPress,
                     viewModel::handleBackPress,
                     viewModel.progressBarValue,
+                )
+
+
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Top,
+            ) {
+                TopFadedBox(
+                    show =
+                    (scrollState.value > 0)
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                BottomFadedBox(
+                    show =
+                    (scrollState.value < scrollState.maxValue) && (scrollState.maxValue > 0)
                 )
             }
 
@@ -189,6 +221,54 @@ fun MainDisplay(
 
         }
         else -> {}
+    }
+}
+
+@Composable
+fun TopFadedBox(
+    show: Boolean,
+) {
+    if (show) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            LsGrey,
+                            Color.Transparent,
+                            )
+                    )
+                ),
+        )
+        {
+            //
+        }
+    }
+}
+
+@Composable
+fun BottomFadedBox(
+    show: Boolean,
+) {
+    if (show) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            LsGrey,
+                        )
+                    )
+                ),
+        )
+        {
+            //
+        }
     }
 }
 
@@ -364,15 +444,18 @@ fun DisplayTerm(
                         shape = RoundedCornerShape(16.dp),
                     )
             ) {
-                vocab.translations.forEach {
-                    Text(
-                        modifier = Modifier
-                            .padding(all = 8.dp),
-                        text = "$it,",
-                        color = MaterialTheme.colors.secondary,
-                        style = MaterialTheme.typography.body1,
-                    )
-                }
+
+                Text(
+                    modifier = Modifier
+                        .padding(all = 8.dp),
+                    text = vocab.translations.joinToString(
+                        separator = ", ",
+                        truncated = "",
+                    ),
+                    color = MaterialTheme.colors.secondary,
+                    style = MaterialTheme.typography.body1,
+                )
+
             }
 
         }
@@ -427,14 +510,17 @@ fun DisplayTerm(
                         shape = RoundedCornerShape(16.dp),
                     )
             ) {
-                vocab.mnemonics.forEach {
-                    Text(
-                        modifier = Modifier.padding(all = 8.dp),
-                        text = it.replace("%'", ","),
-                        color = MaterialTheme.colors.secondary,
-                        style = MaterialTheme.typography.body1,
-                    )
-                }
+
+                Text(
+                    modifier = Modifier.padding(all = 8.dp),
+                    text = vocab.mnemonics.joinToString(
+                        separator = "\n\n",
+                        //truncated = "",
+                    ).replace("%'", ","),
+                    color = MaterialTheme.colors.secondary,
+                    style = MaterialTheme.typography.body1,
+                )
+
             }
 
 

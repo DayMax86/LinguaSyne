@@ -29,7 +29,7 @@ fun AnimateSuccess(
 
     Column(
         modifier = Modifier
-            .fillMaxHeight(0.75f),
+            .fillMaxHeight(0.5f),
         verticalArrangement = Arrangement.SpaceEvenly,
     ) {
 
