@@ -267,7 +267,10 @@ fun ViewTerm(
                 onClick = { onClickSubmit() },
                 shape = RoundedCornerShape(100),
                 modifier = Modifier.size(200.dp, 45.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary,
+                    contentColor = MaterialTheme.colors.onSurface,
+                ),
             )
             {
                 Text(

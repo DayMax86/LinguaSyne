@@ -39,9 +39,9 @@ class HomeViewModel(
         loadUserImage()
     }
 
-    override fun drawerContent() {
+/*    override fun drawerContent() {
 
-    }
+    }*/
 
     fun onBackPressed() {
         //Back button disabled on home screen
@@ -126,12 +126,6 @@ class HomeViewModel(
         FirebaseManager.signOutUser()
         navController.navigate(ComposableDestinations.LOGIN)
     }
-
-
-    private fun apiCall() {
-
-    }
-
 
 }
 

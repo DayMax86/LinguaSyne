@@ -38,8 +38,13 @@ val Typography = Typography(
         fontFamily = linguaSyneDefault,
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
+    ),
 
-
+    caption = TextStyle(
+      fontFamily = linguaSyneDefault,
+      fontWeight = FontWeight.Normal,
+      fontSize = 14.sp,
+        color = LsDarkPurple,
     )
 
 )

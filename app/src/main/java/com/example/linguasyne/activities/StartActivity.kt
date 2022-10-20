@@ -29,7 +29,7 @@ class StartActivity : AppCompatActivity() {
         setContent {
 
             val navController = rememberNavController()
-            val viewModel = remember { StartViewModel() }
+            val viewModel = remember { StartViewModel(navController) }
             var drawerContent: @Composable () -> Unit by remember { mutableStateOf({}) }
 
             val scope = rememberCoroutineScope()
@@ -73,7 +73,7 @@ class StartActivity : AppCompatActivity() {
                                     ComposableDestinations.HOME else ComposableDestinations.LOGIN,
                             ) {
                                 composable(ComposableDestinations.HOME) {
-                                    drawerContent = { HomeDrawerContent() }
+                                    drawerContent = { HomeDrawerContent(viewModel::signOut) }
                                     HomeScreen(navController)
                                 }
                                 composable(ComposableDestinations.TERM_SEARCH) {
@@ -83,7 +83,7 @@ class StartActivity : AppCompatActivity() {
                                     CreateAccountScreen(navController)
                                 }
                                 composable(ComposableDestinations.LOGIN) {
-                                    //Drawer content for forgotten password
+                                    drawerContent = { LoginDrawerContent() }
                                     LoginScreen(navController)
                                 }
                                 composable(ComposableDestinations.TERM_DISPLAY) {

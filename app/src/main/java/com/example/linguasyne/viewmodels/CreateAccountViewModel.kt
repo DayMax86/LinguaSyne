@@ -19,7 +19,6 @@ import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.enums.ComposableDestinations
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -206,7 +205,7 @@ class CreateAccountViewModel(
                 delay(2500)
                 true
             } catch (e: Exception) {
-                Log.e("LoginViewModel", "$e")
+                Log.e("Login", "$e")
                 false
             }
             if (goToHome) {
@@ -270,16 +269,17 @@ class CreateAccountViewModel(
             return PasswordStrengths.WHITESPACE
         }
 
-        when (score) {
-            in 0..4 -> return PasswordStrengths.VERY_WEAK
-            in 5..9 -> return PasswordStrengths.WEAK
-            in 10..19 -> return PasswordStrengths.AVERAGE
-            in 20..24 -> return PasswordStrengths.STRONG
-            in 25..100 -> return PasswordStrengths.VERY_STRONG
-            else -> return PasswordStrengths.ERROR
+        return when (score) {
+            in 0..4 -> PasswordStrengths.VERY_WEAK
+            in 5..9 -> PasswordStrengths.WEAK
+            in 10..19 -> PasswordStrengths.AVERAGE
+            in 20..24 -> PasswordStrengths.STRONG
+            in 25..100 -> PasswordStrengths.VERY_STRONG
+            else -> PasswordStrengths.ERROR
         }
 
     }
+
 
     private enum class PasswordStrengths {
         VERY_WEAK,

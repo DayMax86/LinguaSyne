@@ -14,7 +14,9 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class StartViewModel : ViewModel() {
+class StartViewModel(
+    private val navController: NavHostController,
+) : ViewModel() {
 
     fun loginCheck(): Boolean {
         var loggedIn = false
@@ -28,6 +30,11 @@ class StartViewModel : ViewModel() {
             loggedIn = false
         }
         return loggedIn
+    }
+
+    fun signOut() {
+        FirebaseManager.signOutUser()
+        navController.navigate(ComposableDestinations.LOGIN)
     }
 
 }

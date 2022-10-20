@@ -1,16 +1,6 @@
 package com.example.linguasyne.screens
 
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.*
-import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,9 +9,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -32,25 +24,20 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
-import com.example.linguasyne.activities.StartActivity
 import com.example.linguasyne.ui.animations.AnimateSuccess
-import com.example.linguasyne.ui.elements.SelectImage
-import com.example.linguasyne.ui.theme.LsCorrectGreen
-import com.example.linguasyne.ui.theme.White
 import com.example.linguasyne.viewmodels.CreateAccountViewModel
 
 @Composable
-fun CreateAccountScreen(navController: NavHostController){
+fun CreateAccountScreen(navController: NavHostController) {
 
-    val viewModel = CreateAccountViewModel(navController)
+    val viewModel = remember { CreateAccountViewModel(navController) }
 
     DisplayCreateAccount(
         viewModel.userEmailInput,
@@ -103,10 +90,13 @@ fun DisplayPasswordStrength(
 ) {
     Column(
         modifier = Modifier
+            .fillMaxHeight(0.35f)
+            .background(color = MaterialTheme.colors.background)
+            //.border(2.dp, MaterialTheme.colors.primary)
             .padding(all = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(350.dp))
+        Spacer(modifier = Modifier.height(100.dp))
 
         Row(
             horizontalArrangement = Arrangement.Start
@@ -156,124 +146,135 @@ fun DisplayCreateAccount(
     textOnClick: () -> Unit,
     userImage: Uri?,
     onClickProfileImage: (Uri) -> Unit,
-    blurAmount: Int
+    blurAmount: Int,
 ) {
+
 
     Column(
         modifier = Modifier
             .blur(blurAmount.dp, blurAmount.dp, BlurredEdgeTreatment.Rectangle)
-            .fillMaxHeight()
+            .fillMaxHeight(),
     ) {
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 10.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            AsyncImage(
-                modifier = Modifier
-                    .clickable {
-                        onClickProfileImage //TODO()
-                    }
-                    .border(
-                        color = MaterialTheme.colors.primary,
-                        width = 2.dp,
-                        shape = CircleShape
-                    )
-                    .size(width = 150.dp, height = 150.dp)
-                    .clip(shape = CircleShape),
-                model = userImage,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
-        }
-
-
         Column(
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(all = 10.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = userEmailInput,
-                    onValueChange = { handleEmailChange(it) },
-                    label = { Text(stringResource(R.string.email_address)) },
-                    singleLine = true,
-                    textStyle = MaterialTheme.typography.body1,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = emailOutlineColour
-                    ),
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .padding(all = 10.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    value = userPasswordInput,
-                    onValueChange = { handlePasswordChange(it) },
-                    label = { Text(stringResource(R.string.password)) },
-                    singleLine = true,
-                    textStyle = MaterialTheme.typography.body1,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = passwordOutlineColour
-                    ),
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                )
-
-            }
-        }
-
-        Spacer(modifier = Modifier.padding(bottom = 200.dp))
-
-        Row(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(all = 10.dp),
-            horizontalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 10.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+
+                AsyncImage(
+                    modifier = Modifier
+                        .clickable {
+                            onClickProfileImage //TODO()
+                        }
+                        .border(
+                            color = MaterialTheme.colors.secondary,
+                            width = 4.dp,
+                            shape = CircleShape
+                        )
+                        .size(width = 200.dp, height = 200.dp)
+                        .clip(shape = CircleShape),
+                    model = userImage ?: R.drawable.default_profile_image,
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                )
+
+            }
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(all = 10.dp)
+                    .fillMaxWidth(),
+                value = userEmailInput,
+                onValueChange = { handleEmailChange(it) },
+                label = { Text(text = stringResource(id = R.string.email_address)) },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.body1,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = emailOutlineColour,
+                    unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
+                    textColor = MaterialTheme.colors.primary,
+                    unfocusedLabelColor = MaterialTheme.colors.secondary,
+                    placeholderColor = MaterialTheme.colors.secondary,
+                    focusedLabelColor = MaterialTheme.colors.secondary,
+                ),
+            )
+
+            OutlinedTextField(
+                modifier = Modifier
+                    .padding(all = 10.dp)
+                    .fillMaxWidth(),
+                value = userPasswordInput,
+                onValueChange = { handlePasswordChange(it) },
+                label = { Text(text = stringResource(id = R.string.password)) },
+                singleLine = true,
+                textStyle = MaterialTheme.typography.body1,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = passwordOutlineColour,
+                    unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
+                    textColor = MaterialTheme.colors.primary,
+                    unfocusedLabelColor = MaterialTheme.colors.secondary,
+                    placeholderColor = MaterialTheme.colors.secondary,
+                    focusedLabelColor = MaterialTheme.colors.secondary,
+                ),
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions {
+                    buttonOnClick()
+                }
+            )
 
 
             Button(
                 onClick = { buttonOnClick() },
                 shape = RoundedCornerShape(100),
-                modifier = Modifier.size(200.dp, 45.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
+                modifier = Modifier
+                    .size(200.dp, 55.dp)
+                    .padding(top = 10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary,
+                    contentColor = MaterialTheme.colors.onSurface,
+                )
             )
             {
-                Text(stringResource(R.string.create_account))
-            }
-
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 10.dp),
-            horizontalArrangement = Arrangement.Center
-        )
-        {
-            Row(
-                modifier = Modifier
-                    .padding(all = 10.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                ClickableText(
-                    text = AnnotatedString(stringResource(R.string.return_to_login)),
-                    onClick = { textOnClick() },
+                Text(
+                    text = stringResource(id = R.string.create_account),
                 )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+
+                Row(
+
+                ) {
+                    ClickableText(
+                        text = AnnotatedString(
+                            text = stringResource(id = R.string.return_to_login),
+                        ),
+                        onClick = { textOnClick() },
+                        style = MaterialTheme.typography.caption,
+
+                        )
+                }
+
+            }
+
         }
     }
 

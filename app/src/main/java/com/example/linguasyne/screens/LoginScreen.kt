@@ -6,12 +6,18 @@ import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -64,6 +71,52 @@ fun LoginScreen(navController: NavHostController) {
 }
 
 @Composable
+fun LoginDrawerContent(
+
+) {
+
+    Column(
+        modifier = Modifier
+            .width(intrinsicSize = IntrinsicSize.Max),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.about),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                    maxLines = 1,
+                )
+                Icon(
+                    Icons.Default.Info,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 6.dp)
+                        .size(20.dp, 20.dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary
+                )
+            }
+
+        }
+
+        Divider(
+            modifier = Modifier
+                .height(1.dp),
+            color = MaterialTheme.colors.onBackground,
+        )
+    }
+
+}
+
+@Composable
 fun DisplayLogin(
     userEmailInput: String,
     userPasswordInput: String,
@@ -100,54 +153,58 @@ fun DisplayLogin(
                             width = 4.dp,
                             shape = CircleShape
                         )
-                        .size(width = 225.dp, height = 225.dp)
+                        .size(width = 200.dp, height = 200.dp)
                         .clip(shape = CircleShape),
-                    model = R.drawable.linguasyne_logo,
+                    model = R.drawable.linguasyne_logo_expanded,
                     contentDescription = null,
-                    contentScale = ContentScale.None,
+                    contentScale = ContentScale.FillBounds,
                 )
             }
 
             OutlinedTextField(
                 modifier = Modifier
+                    .padding(all = 10.dp)
                     .fillMaxWidth(),
                 value = userEmailInput,
                 onValueChange = { handleEmailChange(it) },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.email_address),
-                        color = MaterialTheme.colors.secondary,
-                    )
-                },
+                label = { Text(text = stringResource(id = R.string.email_address)) },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.body1,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = outlineColour,
-                    unfocusedBorderColor = Color.Gray,
+                    unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
                     textColor = MaterialTheme.colors.primary,
+                    unfocusedLabelColor = MaterialTheme.colors.secondary,
+                    placeholderColor = MaterialTheme.colors.secondary,
+                    focusedLabelColor = MaterialTheme.colors.secondary,
                 ),
             )
 
             OutlinedTextField(
                 modifier = Modifier
+                    .padding(all = 10.dp)
                     .fillMaxWidth(),
                 value = userPasswordInput,
                 onValueChange = { handlePasswordChange(it) },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.password),
-                        color = MaterialTheme.colors.secondary,
-                    )
-                },
+                label = { Text(text = stringResource(id = R.string.password)) },
                 singleLine = true,
                 textStyle = MaterialTheme.typography.body1,
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = outlineColour,
-                    unfocusedBorderColor = Color.Gray,
+                    unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
                     textColor = MaterialTheme.colors.primary,
+                    unfocusedLabelColor = MaterialTheme.colors.secondary,
+                    placeholderColor = MaterialTheme.colors.secondary,
+                    focusedLabelColor = MaterialTheme.colors.secondary,
                 ),
                 visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions {
+                    buttonOnClick()
+                }
             )
 
 
@@ -155,8 +212,7 @@ fun DisplayLogin(
                 onClick = { buttonOnClick() },
                 shape = RoundedCornerShape(100),
                 modifier = Modifier
-                    .height(60.dp)
-                    .width(150.dp)
+                    .size(140.dp, 55.dp)
                     .padding(top = 10.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.secondary,
@@ -181,9 +237,12 @@ fun DisplayLogin(
 
                 ) {
                     ClickableText(
-                        text = AnnotatedString(stringResource(id = R.string.create_account_prompt)),
+                        text = AnnotatedString(
+                            text = stringResource(id = R.string.create_account_prompt),
+                        ),
                         onClick = textOnClick,
-                        style = MaterialTheme.typography.body1,
+                        style = MaterialTheme.typography.caption,
+
                     )
                 }
 

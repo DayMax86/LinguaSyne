@@ -54,7 +54,9 @@ fun HomeScreen(navController: NavHostController) {
 }
 
 @Composable
-fun HomeDrawerContent() {
+fun HomeDrawerContent(
+    signOut: () -> Unit,
+) {
 
     Column(
         modifier = Modifier
@@ -150,7 +152,7 @@ fun HomeDrawerContent() {
         Row(
             modifier = Modifier
                 .clickable {
-                    //signOut()
+                    signOut()
                 },
             horizontalArrangement = Arrangement.Start,
         ) {
