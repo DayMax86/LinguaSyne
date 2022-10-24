@@ -6,8 +6,9 @@ import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -25,10 +26,12 @@ import com.example.linguasyne.R
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.ui.elements.ApiBox
-import com.example.linguasyne.ui.elements.DotsIndicator
 import com.example.linguasyne.ui.elements.SelectImage
 import com.example.linguasyne.viewmodels.ApiViewModel
 import com.example.linguasyne.viewmodels.HomeViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.rememberPagerState
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -45,150 +48,15 @@ fun HomeScreen(navController: NavHostController) {
         viewModel::handleRevisionClick,
         viewModel::handleTermBaseClick,
         viewModel::uploadUserImage,
-        viewModel.selectedNewsColour,
-        viewModel.unselectedNewsColour,
+        viewModel.activeIndicatorColour,
+        viewModel.inactiveIndicatorColour,
         viewModel::onBackPressed,
         apiViewModel,
     )
 
 }
 
-@Composable
-fun HomeDrawerContent(
-    signOut: () -> Unit,
-) {
-
-    Column(
-        modifier = Modifier
-            .width(intrinsicSize = IntrinsicSize.Max),
-        horizontalAlignment = Alignment.Start,
-    ) {
-        Row(
-            /*modifier = Modifier.clickable { //TODO() FOR DEVELOPER USE ONLY!! Will be removed in release version.
-    CSVManager.importVocabCSV(this@StartActivity.applicationContext)
-},*/
-            horizontalArrangement = Arrangement.Start,
-        ) {
-
-            Row(
-                modifier = Modifier
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.Start,
-            ) {
-                Text(
-                    text = stringResource(id = R.string.about),
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.primary,
-                    maxLines = 1,
-                )
-                Icon(
-                    Icons.Default.Info,
-                    modifier = Modifier
-                        .padding(start = 10.dp, top = 6.dp)
-                        .size(20.dp, 20.dp),
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.secondary
-                )
-            }
-
-        }
-
-        Divider(
-            modifier = Modifier
-                .height(1.dp),
-            color = MaterialTheme.colors.onBackground,
-        )
-    }
-
-    Column(
-        modifier = Modifier
-            .width(intrinsicSize = IntrinsicSize.Max),
-        horizontalAlignment = Alignment.Start,
-    ) {
-        Row(
-            modifier = Modifier
-                .clickable {
-                    //launchTermBase()
-                },
-            horizontalArrangement = Arrangement.Start,
-        ) {
-
-            Row(
-                modifier = Modifier
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.Start,
-            ) {
-                Text(
-                    text = stringResource(id = R.string.term_base),
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.primary,
-                    maxLines = 1,
-                )
-                Icon(
-                    Icons.Default.Search,
-                    modifier = Modifier
-                        .padding(start = 10.dp, top = 6.dp)
-                        .size(20.dp, 20.dp),
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.secondary
-                )
-            }
-
-        }
-
-        Divider(
-            modifier = Modifier
-                .height(1.dp),
-            color = MaterialTheme.colors.onBackground,
-        )
-    }
-
-    Column(
-        modifier = Modifier
-            .width(intrinsicSize = IntrinsicSize.Max),
-        horizontalAlignment = Alignment.Start,
-    ) {
-
-        Row(
-            modifier = Modifier
-                .clickable {
-                    signOut()
-                },
-            horizontalArrangement = Arrangement.Start,
-        ) {
-
-            Row(
-                modifier = Modifier
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.Start,
-            ) {
-                Text(
-                    text = stringResource(id = R.string.sign_out),
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.primary,
-                    maxLines = 1,
-                )
-                Icon(
-                    Icons.Default.AccountCircle,
-                    modifier = Modifier
-                        .padding(start = 10.dp, top = 6.dp)
-                        .size(20.dp, 20.dp),
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.secondary
-                )
-            }
-
-        }
-        Divider(
-            modifier = Modifier
-                .height(1.dp),
-            color = MaterialTheme.colors.onBackground,
-        )
-    }
-
-}
-
-@OptIn(ExperimentalSnapperApi::class)
+@OptIn(ExperimentalSnapperApi::class, ExperimentalPagerApi::class)
 @Composable
 fun DisplayHome(
     user: User,
@@ -198,18 +66,17 @@ fun DisplayHome(
     onClickRevision: () -> Unit,
     onClickTermBase: () -> Unit,
     onClickProfileImage: (Uri?) -> Unit,
-    selectedNewsColour: Color,
-    unselectedNewsColour: Color,
+    activeIndicatorColour: Color,
+    inactiveIndicatorColour: Color,
     backBehaviour: () -> Unit,
     apiViewModel: ApiViewModel,
 ) {
-    val lazyListState = rememberLazyListState()
 
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.SpaceEvenly,
+            .fillMaxWidth()
+            .padding(top = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -217,32 +84,106 @@ fun DisplayHome(
             backBehaviour()
         }
 
-        /*---------------------------FIRST LAYER------------------------------------------*/
-        Row(
+        TopHomeScreen(
+            onClickVocabLesson,
+            onClickRevision,
+            onClickTermBase,
+            user,
+            onClickProfileImage,
+            userImage
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        BottomHomeScreen(
+            user,
+            apiViewModel,
+            activeIndicatorColour,
+            inactiveIndicatorColour
+        )
+
+    }
+
+}
+
+@Composable
+private fun TopHomeScreen(
+    onClickVocabLesson: () -> Unit,
+    onClickRevision: () -> Unit,
+    onClickTermBase: () -> Unit,
+    user: User,
+    onClickProfileImage: (Uri?) -> Unit,
+    userImage: Uri?
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        //.padding(top = 16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            //.padding(top = 16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+                .height(IntrinsicSize.Max)
+                .width(IntrinsicSize.Max),
         ) {
 
-            Column(
+            Text(
                 modifier = Modifier
-                    .height(IntrinsicSize.Max)
-                    .width(IntrinsicSize.Max),
+                    .padding(start = 10.dp, bottom = 5.dp),
+                text = stringResource(id = R.string.lessons),
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.primary,
+            )
+
+            Button(
+                modifier = Modifier
+                    .width(150.dp),
+                onClick = { onClickVocabLesson() },
+                shape = RoundedCornerShape(100),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary,
+                    contentColor = MaterialTheme.colors.onSurface,
+                ),
+                content = {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Row(
+
+                        ) {
+                            Text(stringResource(id = R.string.vocab))
+                        }
+
+                        Row(
+
+                        ) {
+                            Text("50")
+                        }
+                    }
+
+                },
+            )
+
+            Column(
+
             ) {
 
                 Text(
                     modifier = Modifier
-                        .padding(start = 10.dp, bottom = 5.dp),
-                    text = stringResource(id = R.string.lessons),
+                        .padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
+                    text = stringResource(id = R.string.revision),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.primary,
                 )
 
                 Button(
                     modifier = Modifier
+                        .padding(bottom = 8.dp)
                         .width(150.dp),
-                    onClick = { onClickVocabLesson() },
+                    onClick = { onClickRevision() },
                     shape = RoundedCornerShape(100),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colors.secondary,
@@ -257,7 +198,7 @@ fun DisplayHome(
                             Row(
 
                             ) {
-                                Text(stringResource(id = R.string.vocab))
+                                Text(stringResource(id = R.string.to_revise))
                             }
 
                             Row(
@@ -269,188 +210,156 @@ fun DisplayHome(
 
                     },
                 )
+            }
 
-                Column(
+            Row(
 
+            ) {
+
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
 
                     Text(
+                        //Books emoji
+                        text = String(Character.toChars(0x1F4DA)),
+                    )
+
+                    Text(
                         modifier = Modifier
-                            .padding(start = 10.dp, top = 5.dp, bottom = 5.dp),
-                        text = stringResource(id = R.string.revision),
+                            .padding(start = 2.dp)
+                            .clickable { onClickTermBase() },
+                        text = stringResource(id = R.string.term_base),
                         style = MaterialTheme.typography.body1,
                         color = MaterialTheme.colors.primary,
-                    )
-
-                    Button(
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                            .width(150.dp),
-                        onClick = { onClickRevision() },
-                        shape = RoundedCornerShape(100),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.secondary,
-                            contentColor = MaterialTheme.colors.onSurface,
-                        ),
-                        content = {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                            ) {
-                                Row(
-
-                                ) {
-                                    Text(stringResource(id = R.string.to_revise))
-                                }
-
-                                Row(
-
-                                ) {
-                                    Text("50")
-                                }
-                            }
-
-                        },
-                    )
-                }
-
-                Row(
-
-                ) {
-                    /*--Right column with 'term base' icon and text--*/
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                    ) {
-
-                        Text(
-                            //Books emoji
-                            text = String(Character.toChars(0x1F4DA)),
-                        )
-
-                        Text(
-                            modifier = Modifier
-                                .padding(start = 2.dp)
-                                .clickable { onClickTermBase() },
-                            text = stringResource(id = R.string.term_base),
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.primary,
-                        )
-
-                    }
-
-                }
-
-                Row(
-                    modifier = Modifier
-                        .padding(bottom = 2.dp),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-
-                    Text(
-                        //Fire emoji
-                        text = String(Character.toChars(0x1F525)),
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 2.dp),
-                        text = stringResource(
-                            id = R.string.day_streak,
-                            user.streak
-                        ),
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.secondary
                     )
 
                 }
 
             }
 
-
-
-
             Row(
                 modifier = Modifier
-                    .height(IntrinsicSize.Max)
-                    .width(IntrinsicSize.Max),
-                //.padding(end = 10.dp),
-                horizontalArrangement = Arrangement.Center
+                    .padding(bottom = 2.dp),
+                horizontalArrangement = Arrangement.Center,
             ) {
-                /*--Right column with profile info--*/
 
-                Column(
+                Text(
+                    //Fire emoji
+                    text = String(Character.toChars(0x1F525)),
+                )
+
+                Text(
                     modifier = Modifier
-                        .padding(top = 10.dp)
-                ) {
-
-
-                    SelectImage(
-                        onImageSelected = onClickProfileImage,
-                        userImage = userImage
-                    )
-
-                    FirebaseManager.currentUser?.let {
-                        Text(
-                            modifier = Modifier
-                                .padding(top = 10.dp)
-                                .align(Alignment.CenterHorizontally),
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.primary,
-                            text = it.email
-                        )
-                    }
-
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.primaryVariant,
-                        text = stringResource(id = R.string.level) + "${user.level}"
-                    )
-
-                }
+                        .padding(start = 2.dp),
+                    text = stringResource(
+                        id = R.string.day_streak,
+                        user.streak
+                    ),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.secondary
+                )
 
             }
 
         }
 
 
-        /*---------------------------THIRD LAYER------------------------------------------*/
-        Column(
+
+
+        Row(
             modifier = Modifier
-                .fillMaxHeight(.8f) //
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .height(IntrinsicSize.Max)
+                .width(IntrinsicSize.Max),
+            //.padding(end = 10.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
 
-            ApiBox(
-                user = FirebaseManager.currentUser ?: User(""),
-                viewModel = apiViewModel,
-                lazyListState = lazyListState,
-            )
-
-            Row(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.Center,
+                    .padding(top = 10.dp)
             ) {
-                DotsIndicator(
-                    totalDots = apiViewModel.news.size,
-                    selectedIndex = lazyListState.firstVisibleItemIndex,
-                    selectedColor = selectedNewsColour,
-                    unSelectedColor = unselectedNewsColour,
+
+
+                SelectImage(
+                    onImageSelected = onClickProfileImage,
+                    userImage = userImage
                 )
+
+                FirebaseManager.currentUser?.let {
+                    Text(
+                        modifier = Modifier
+                            .padding(top = 10.dp)
+                            .align(Alignment.CenterHorizontally),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary,
+                        text = it.email
+                    )
+                }
+
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primaryVariant,
+                    text = stringResource(id = R.string.level) + "${user.level}"
+                )
+
             }
 
         }
 
     }
-
 }
 
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun BottomHomeScreen(
+    user: User,
+    apiViewModel: ApiViewModel,
+    activeIndicatorColour: Color,
+    inactiveIndicatorColour: Color
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .padding(bottom = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom,
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(top = 16.dp),
+            text = stringResource(
+                id = R.string.today_in,
+                user.studyCountry
+            ),
+            style = MaterialTheme.typography.body1,
+            color = MaterialTheme.colors.primary
+        )
 
+        val pagerState = rememberPagerState()
+        val scrollState = rememberScrollState()
+
+        ApiBox(
+            modifier = Modifier
+                .verticalScroll(state = scrollState)
+                .weight(1f),
+            viewModel = apiViewModel,
+            pagerState = pagerState
+        )
+
+        HorizontalPagerIndicator(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 8.dp, bottom = 16.dp),
+            pagerState = pagerState,
+            activeColor = activeIndicatorColour,
+            inactiveColor = inactiveIndicatorColour,
+        )
+
+    }
+}
 
 

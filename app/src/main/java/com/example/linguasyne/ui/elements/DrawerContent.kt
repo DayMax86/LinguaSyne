@@ -163,3 +163,186 @@ fun MainDrawerContent(
 
     }
 }
+
+@Composable
+fun HomeDrawerContent(
+    signOut: () -> Unit,
+) {
+
+    Column(
+        modifier = Modifier
+            .width(intrinsicSize = IntrinsicSize.Max),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Row(
+            /*modifier = Modifier.clickable { //TODO() FOR DEVELOPER USE ONLY!! Will be removed in release version.
+    CSVManager.importVocabCSV(this@StartActivity.applicationContext)
+},*/
+            horizontalArrangement = Arrangement.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.about),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                    maxLines = 1,
+                )
+                Icon(
+                    Icons.Default.Info,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 6.dp)
+                        .size(20.dp, 20.dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary
+                )
+            }
+
+        }
+
+        Divider(
+            modifier = Modifier
+                .height(1.dp),
+            color = MaterialTheme.colors.onBackground,
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .width(intrinsicSize = IntrinsicSize.Max),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable {
+                    //launchTermBase()
+                },
+            horizontalArrangement = Arrangement.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.term_base),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                    maxLines = 1,
+                )
+                Icon(
+                    Icons.Default.Search,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 6.dp)
+                        .size(20.dp, 20.dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary
+                )
+            }
+
+        }
+
+        Divider(
+            modifier = Modifier
+                .height(1.dp),
+            color = MaterialTheme.colors.onBackground,
+        )
+    }
+
+    Column(
+        modifier = Modifier
+            .width(intrinsicSize = IntrinsicSize.Max),
+        horizontalAlignment = Alignment.Start,
+    ) {
+
+        Row(
+            modifier = Modifier
+                .clickable {
+                    signOut()
+                },
+            horizontalArrangement = Arrangement.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.sign_out),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                    maxLines = 1,
+                )
+                Icon(
+                    Icons.Default.AccountCircle,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 6.dp)
+                        .size(20.dp, 20.dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary
+                )
+            }
+
+        }
+        Divider(
+            modifier = Modifier
+                .height(1.dp),
+            color = MaterialTheme.colors.onBackground,
+        )
+    }
+
+}
+
+@Composable
+fun ReviseDrawerContent() {
+
+    Column(
+        modifier = Modifier
+            .width(intrinsicSize = IntrinsicSize.Max),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable {
+                    //endSessionEarly()
+                },
+            horizontalArrangement = Arrangement.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.end_session),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                    maxLines = 1,
+                )
+                Icon(
+                    Icons.Default.Done,
+                    modifier = Modifier
+                        .padding(start = 10.dp, top = 6.dp)
+                        .size(20.dp, 20.dp),
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.secondary
+                )
+            }
+
+        }
+
+        Divider(
+            modifier = Modifier
+                .height(1.dp),
+            color = MaterialTheme.colors.onBackground,
+        )
+    }
+
+}

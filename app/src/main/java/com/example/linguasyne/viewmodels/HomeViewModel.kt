@@ -14,8 +14,7 @@ import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.managers.*
-import com.example.linguasyne.ui.theme.LsLightTeal
-import com.example.linguasyne.ui.theme.LsVocabTextBlue
+import com.example.linguasyne.ui.theme.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -31,8 +30,8 @@ class HomeViewModel(
     var user: User by mutableStateOf(FirebaseManager.currentUser!!)
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
 
-    val selectedNewsColour: Color = LsVocabTextBlue
-    val unselectedNewsColour: Color = LsLightTeal
+    val activeIndicatorColour: Color = LsDarkPurple
+    val inactiveIndicatorColour: Color = LsGrey
 
     init {
         FirebaseManager.loadVocabFromFirebase()

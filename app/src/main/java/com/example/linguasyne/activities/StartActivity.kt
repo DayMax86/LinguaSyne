@@ -16,7 +16,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.screens.*
+import com.example.linguasyne.ui.elements.HomeDrawerContent
 import com.example.linguasyne.ui.elements.MainDrawerContent
+import com.example.linguasyne.ui.elements.ReviseDrawerContent
 import com.example.linguasyne.ui.elements.SharedTopAppBar
 import com.example.linguasyne.viewmodels.StartViewModel
 

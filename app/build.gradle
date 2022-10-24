@@ -97,7 +97,8 @@ dependencies {
     implementation "dev.chrisbanes.snapper:snapper:0.3.0"
 
     //ViewPager dots for compose
-    implementation "com.google.accompanist:accompanist-pager:0.22.0-rc"
+    implementation "com.google.accompanist:accompanist-pager:0.26.5-rc"
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.26.5-rc")
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
