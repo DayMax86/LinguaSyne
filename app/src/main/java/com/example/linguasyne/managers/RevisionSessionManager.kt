@@ -16,6 +16,7 @@ import com.example.linguasyne.enums.ReviewTimes.ONE_YEAR
 import com.example.linguasyne.enums.ReviewTimes.TWO_DAYS
 import com.example.linguasyne.enums.ReviewTimes.TWO_MONTHS
 import com.example.linguasyne.enums.ReviewTimes.TWO_WEEKS
+import com.example.linguasyne.enums.TermTypes
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
@@ -34,11 +35,12 @@ object RevisionSessionManager {
         //Now go through and filter user unlocks by review time
         val tempList: MutableList<Vocab> = mutableListOf()
         for (i: Int in 0..2) { //for testing limited to 3 items, will be "(i: Int in 0..userUnlocks.size-1)"
+            //Filter by review time
             if (userUnlocks[i].nextReviewHours == NOW) {
                 tempList.add(userUnlocks[i])
             }
         }
-        //Finally filter by review time and we're left with terms that are due for revision.
+
 
         //Sort the results (randomly by default but could be oldest first etc. etc.)
         //Set manager's current list
@@ -84,9 +86,6 @@ object RevisionSessionManager {
             endOfList = true
         }
 
-        //Make sure to swap steps each time, so both steps can be completed
-        swapSteps()
-
         if (sl.size >= 1) {
             if (endOfList) {
                 //Loop back to start because the end of the list has been reached the first time around
@@ -95,6 +94,25 @@ object RevisionSessionManager {
                 //Move to the next term in the list
                 currentSession.currentTerm = sl.elementAt(sl.indexOf(ct) + 1)
             }
+
+            when (currentSession.currentStep) {
+                RevisionSession.AnswerTypes.ENG -> {
+                    //Make sure to swap steps (if necessary), so both steps can be completed
+                    if (currentSession.currentTerm.engAnswered) {
+                        swapSteps()
+                    }
+                }
+
+                (RevisionSession.AnswerTypes.TRANS) -> {
+                    //Make sure to swap steps (if necessary), so both steps can be completed
+                    if (currentSession.currentTerm.transAnswered) {
+                        swapSteps()
+                    }
+                }
+
+                else -> {/**/}
+            }
+
         } else if (sl.isEmpty()) {
             //There must be no terms left in the session so it can be ended and the summary screen shown
             return null
@@ -138,7 +156,7 @@ object RevisionSessionManager {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun convertNextReviewHoursToTimestamp(hours: Int): Date? {
-        return Date.valueOf(LocalDate.now().plusDays((hours/24).toLong()).toString())
+        return Date.valueOf(LocalDate.now().plusDays((hours / 24).toLong()).toString())
     }
 
     private fun advanceReviewTime(rt: Int) {
@@ -212,9 +230,9 @@ object RevisionSessionManager {
     }
 
     private fun swapSteps() {
-        if (currentSession.currentStep == RevisionSession.AnswerTypes.ENG)
+        if (currentSession.currentStep == RevisionSession.AnswerTypes.ENG) {
             currentSession.currentStep = RevisionSession.AnswerTypes.TRANS
-        else if (currentSession.currentStep == RevisionSession.AnswerTypes.TRANS) {
+        } else if (currentSession.currentStep == RevisionSession.AnswerTypes.TRANS) {
             currentSession.currentStep = RevisionSession.AnswerTypes.ENG
         }
     }
@@ -229,7 +247,10 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun sortSessionBy(session: MutableList<Vocab>, order: SortOrder): MutableList<Vocab> {
+    private fun sortSessionBy(
+        session: MutableList<Vocab>,
+        order: SortOrder
+    ): MutableList<Vocab> {
         when (order) {
             SortOrder.RANDOM -> {
                 session.shuffle()

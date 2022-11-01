@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,7 +22,7 @@ import com.example.linguasyne.viewmodels.ReviseTermViewModel
 @Composable
 fun RevisionSummaryScreen(navController: NavHostController) {
 
-    val viewModel = ReviseTermViewModel(navController)
+    val viewModel = remember { ReviseTermViewModel(navController) }
 
 
     LinguaSyneTheme(

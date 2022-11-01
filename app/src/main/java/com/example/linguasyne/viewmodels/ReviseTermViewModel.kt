@@ -52,8 +52,6 @@ class ReviseTermViewModel(
         viewModelScope
             .launch {
                 RevisionSessionManager.createSession(FirebaseManager.getUserVocabUnlocks())
-                summaryTotalCorrect = RevisionSessionManager.currentSession.totalCorrect
-                summaryTotalIncorrect = RevisionSessionManager.currentSession.totalIncorrect
             }.invokeOnCompletion {
                 updateTermTitle(RevisionSessionManager.currentSession.currentStep)
             }
@@ -181,6 +179,8 @@ class ReviseTermViewModel(
         currentTermTitle = RevisionSessionManager.advanceSession()?.name.toString()
         if (currentTermTitle == "" || currentTermTitle == null || currentTermTitle == "null") {
             //There is no next term (reached end of list) so activity should end and summary be launched
+            summaryTotalCorrect = RevisionSessionManager.currentSession.totalCorrect
+            summaryTotalIncorrect = RevisionSessionManager.currentSession.totalIncorrect
             navController.navigate(ComposableDestinations.SUMMARY)
         }
     }

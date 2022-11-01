@@ -41,7 +41,7 @@ import com.example.linguasyne.viewmodels.ReviseTermViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ReviseTermScreen(navController: NavHostController) {
-    val viewModel = ReviseTermViewModel(navController)
+    val viewModel = remember { ReviseTermViewModel(navController) }
 
     Surface(
         modifier = Modifier
@@ -75,8 +75,6 @@ fun ReviseTermScreen(navController: NavHostController) {
         }
     }
 }
-
-
 
 
 @Composable
