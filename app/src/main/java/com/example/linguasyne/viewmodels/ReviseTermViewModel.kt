@@ -231,7 +231,7 @@ class ReviseTermViewModel(
                     mascOutlineColour = LsErrorRed
                     femOutlineColour = LsErrorRed
                 }
-                else -> {/* No gender but the user needs to select one */
+                else -> {/* No gender selected but the user needs to select one */
                     selectGenderTextColour = LsErrorRed
                 }
             }
@@ -248,7 +248,9 @@ class ReviseTermViewModel(
         when (RevisionSessionManager.currentSession.currentStep) {
             //Check answer according to whether it's an ENG or TRANS step being tested
             (RevisionSession.AnswerTypes.TRANS) -> {
-                if (answer == RevisionSessionManager.currentSession.currentTerm.name) {
+                if (answer == RevisionSessionManager.currentSession.currentTerm.name.lowercase().filter {
+                        !it.isWhitespace()
+                    }) {
                     RevisionSessionManager.currentSession.currentTerm.transAnswered = true
                     return true
                 }
@@ -256,7 +258,9 @@ class ReviseTermViewModel(
             (RevisionSession.AnswerTypes.ENG) -> {
                 //Need to check for each of the translations in the list
                 for (trans in RevisionSessionManager.currentSession.currentTerm.translations) {
-                    if (answer == trans.lowercase()) {
+                    if (answer == trans.lowercase().filter {
+                            !it.isWhitespace()
+                        }) {
                         RevisionSessionManager.currentSession.currentTerm.engAnswered = true
                         return true
                     }
