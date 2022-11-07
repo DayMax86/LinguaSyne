@@ -48,7 +48,10 @@ fun ReviseTermScreen(navController: NavHostController) {
             .background(MaterialTheme.colors.background)
             .fillMaxHeight()
     ) {
+        DisplaySummary(display = viewModel.displaySummary, viewModel = viewModel)
+
         ViewTerm(
+            display = viewModel.displayTerm,
             viewModel.currentTermTitle,
             viewModel.userInput,
             onClickSubmit = viewModel::handleSubmit,
@@ -76,9 +79,23 @@ fun ReviseTermScreen(navController: NavHostController) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun DisplaySummary(display: Boolean, viewModel: ReviseTermViewModel) {
+    if (display) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+        ) {
+            RevisionSummaryScreen(viewModel = viewModel)
+        }
+    }
+}
 
 @Composable
 fun ViewTerm(
+    display: Boolean,
     termName: String?,
     userInput: String,
     handleChange: (String) -> Unit,
@@ -92,145 +109,146 @@ fun ViewTerm(
     mascImage: Int,
     femImage: Int,
 ) {
-
-    Column(
-        modifier = Modifier
-            .padding(top = 20.dp)
-            .fillMaxWidth(),
-    ) {
-
-        Row(
+    if (display) {
+        Column(
             modifier = Modifier
+                .padding(top = 20.dp)
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = termName.toString(),
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.h1
-            )
-
-
-        }
-
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(all = 10.dp),
-            horizontalArrangement = Arrangement.Center
         ) {
 
-            OutlinedTextField(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                value = userInput,
-                onValueChange = { handleChange(it) },
-                label = { Text(stringResource(id = R.string.enter_translation)) },
-                singleLine = true,
-                textStyle = MaterialTheme.typography.body1,
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = textFieldOutlineColour,
-                    unfocusedBorderColor = textFieldOutlineColour,
-                    textColor = MaterialTheme.colors.primary,
-                    unfocusedLabelColor = MaterialTheme.colors.secondary,
-                    placeholderColor = MaterialTheme.colors.secondary,
-                    focusedLabelColor = MaterialTheme.colors.secondary,
-                ),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions {
-                    onClickSubmit()
-                }
-            )
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = termName.toString(),
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.h1
+                )
 
 
-        }
+            }
 
-        Row(
-            modifier = Modifier
-                .padding(all = 10.dp),
-            horizontalArrangement = Arrangement.Start,
-        ) {
-            Text(
-                text = stringResource(id = R.string.select_gender),
-                color = selectGenderTextColour,
-                style = MaterialTheme.typography.body1,
-            )
-        }
 
-        Row(
-            modifier = Modifier
-                .padding(all = 10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 10.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
 
-            Row {
-                Image(
-                    painterResource(mascImage),
+                OutlinedTextField(
                     modifier = Modifier
-                        .border(2.dp, mascOutlineColour, RoundedCornerShape(10))
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            onClickMasc()
-                        }
-                        .size(width = 75.dp, height = 100.dp)
-                        .clip(shape = RectangleShape),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
+                        .fillMaxWidth(),
+                    value = userInput,
+                    onValueChange = { handleChange(it) },
+                    label = { Text(stringResource(id = R.string.enter_translation)) },
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.body1,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = textFieldOutlineColour,
+                        unfocusedBorderColor = textFieldOutlineColour,
+                        textColor = MaterialTheme.colors.primary,
+                        unfocusedLabelColor = MaterialTheme.colors.secondary,
+                        placeholderColor = MaterialTheme.colors.secondary,
+                        focusedLabelColor = MaterialTheme.colors.secondary,
+                    ),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions {
+                        onClickSubmit()
+                    }
+                )
+
+
+            }
+
+            Row(
+                modifier = Modifier
+                    .padding(all = 10.dp),
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                Text(
+                    text = stringResource(id = R.string.select_gender),
+                    color = selectGenderTextColour,
+                    style = MaterialTheme.typography.body1,
                 )
             }
 
             Row(
                 modifier = Modifier
+                    .padding(all = 10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Image(
-                    painterResource(femImage),
+
+                Row {
+                    Image(
+                        painterResource(mascImage),
+                        modifier = Modifier
+                            .border(2.dp, mascOutlineColour, RoundedCornerShape(10))
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                onClickMasc()
+                            }
+                            .size(width = 75.dp, height = 100.dp)
+                            .clip(shape = RectangleShape),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                    )
+                }
+
+                Row(
                     modifier = Modifier
-                        .border(2.dp, femOutlineColour, RoundedCornerShape(10))
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            onClickFem()
-                        }
-                        .size(width = 75.dp, height = 100.dp)
-                        .clip(shape = RectangleShape),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
+                ) {
+                    Image(
+                        painterResource(femImage),
+                        modifier = Modifier
+                            .border(2.dp, femOutlineColour, RoundedCornerShape(10))
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                onClickFem()
+                            }
+                            .size(width = 75.dp, height = 100.dp)
+                            .clip(shape = RectangleShape),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                    )
+                }
+
+            }
+
+
+            Row(
+                modifier = Modifier
+                    .padding(all = 10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+
+                Button(
+                    onClick = { onClickSubmit() },
+                    shape = RoundedCornerShape(100),
+                    modifier = Modifier.size(200.dp, 45.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = MaterialTheme.colors.secondary,
+                        contentColor = MaterialTheme.colors.onSurface,
+                    ),
                 )
+                {
+                    Text(
+                        text = stringResource(id = R.string.submit),
+                        color = MaterialTheme.colors.onBackground
+                    )
+                }
             }
 
         }
-
-
-        Row(
-            modifier = Modifier
-                .padding(all = 10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-
-            Button(
-                onClick = { onClickSubmit() },
-                shape = RoundedCornerShape(100),
-                modifier = Modifier.size(200.dp, 45.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondary,
-                    contentColor = MaterialTheme.colors.onSurface,
-                ),
-            )
-            {
-                Text(
-                    text = stringResource(id = R.string.submit),
-                    color = MaterialTheme.colors.onBackground
-                )
-            }
-        }
-
     }
 }

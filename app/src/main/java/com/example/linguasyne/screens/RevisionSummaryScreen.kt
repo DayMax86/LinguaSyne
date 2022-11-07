@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
@@ -20,10 +21,9 @@ import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RevisionSummaryScreen(navController: NavHostController) {
-
-    val viewModel = remember { ReviseTermViewModel(navController) }
-
+fun RevisionSummaryScreen(
+    viewModel: ReviseTermViewModel,
+) {
 
     LinguaSyneTheme(
         false,
@@ -34,12 +34,10 @@ fun RevisionSummaryScreen(navController: NavHostController) {
                 .fillMaxSize(),
         ) {
             Summary(
-
                 viewModel.summaryTotalCorrect,
                 viewModel.summaryTotalIncorrect,
                 viewModel::onSummaryButtonPress,
-
-            )
+                )
         }
     }
 

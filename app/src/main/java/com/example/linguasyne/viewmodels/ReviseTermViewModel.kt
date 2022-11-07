@@ -45,6 +45,8 @@ class ReviseTermViewModel(
     var animateCorrect: Boolean by mutableStateOf(false)
     var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_SHORT)
 
+    var displayTerm: Boolean by mutableStateOf(true)
+    var displaySummary: Boolean by mutableStateOf(false)
     var summaryTotalCorrect: Int by mutableStateOf(0)
     var summaryTotalIncorrect: Int by mutableStateOf(0)
 
@@ -55,6 +57,7 @@ class ReviseTermViewModel(
             }.invokeOnCompletion {
                 updateTermTitle(RevisionSessionManager.currentSession.currentStep)
             }
+        displayTerm = true
     }
 
     private fun updateTermTitle(cs: RevisionSession.AnswerTypes) {
@@ -154,6 +157,7 @@ class ReviseTermViewModel(
 
     fun onSummaryButtonPress() {
         navController.navigate(ComposableDestinations.HOME)
+        displaySummary = false
     }
 
     private fun resetUi() {
@@ -181,7 +185,8 @@ class ReviseTermViewModel(
             //There is no next term (reached end of list) so activity should end and summary be launched
             summaryTotalCorrect = RevisionSessionManager.currentSession.totalCorrect
             summaryTotalIncorrect = RevisionSessionManager.currentSession.totalIncorrect
-            navController.navigate(ComposableDestinations.SUMMARY)
+            displaySummary = true
+            displayTerm = false
         }
     }
 

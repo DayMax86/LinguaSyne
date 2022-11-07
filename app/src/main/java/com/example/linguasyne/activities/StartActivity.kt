@@ -20,6 +20,7 @@ import com.example.linguasyne.ui.elements.HomeDrawerContent
 import com.example.linguasyne.ui.elements.MainDrawerContent
 import com.example.linguasyne.ui.elements.ReviseDrawerContent
 import com.example.linguasyne.ui.elements.SharedTopAppBar
+import com.example.linguasyne.viewmodels.ReviseTermViewModel
 import com.example.linguasyne.viewmodels.StartViewModel
 
 class StartActivity : AppCompatActivity() {
@@ -95,9 +96,10 @@ class StartActivity : AppCompatActivity() {
                                     drawerContent = { ReviseDrawerContent() }
                                     ReviseTermScreen(navController)
                                 }
-                                composable(ComposableDestinations.SUMMARY) {
-                                    RevisionSummaryScreen(navController)
-                                }
+                                /*composable(ComposableDestinations.SUMMARY) {
+                                    RevisionSummaryScreen(ReviseTermViewModel(navController),
+                                    )
+                                }*/
                             }
                         }
                     },
