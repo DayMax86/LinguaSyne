@@ -36,7 +36,10 @@ import dev.chrisbanes.snapper.ExperimentalSnapperApi
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(
+    navController: NavHostController,
+    onClickHelp: () -> Unit,
+) {
     val viewModel = remember { HomeViewModel(navController) }
     val apiViewModel = remember { ApiViewModel() }
 

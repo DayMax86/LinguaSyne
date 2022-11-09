@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.ui.animations.AnimateSuccess
+import com.example.linguasyne.ui.elements.DefaultTopAppBar
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 
@@ -77,6 +79,7 @@ fun ReviseTermScreen(navController: NavHostController) {
             )
         }
     }
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

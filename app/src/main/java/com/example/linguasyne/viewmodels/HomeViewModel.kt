@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.User
@@ -25,7 +26,7 @@ import kotlinx.coroutines.tasks.await
 
 class HomeViewModel(
     private val navController: NavHostController,
-) : BaseViewModel() {
+) : ViewModel() {
 
     var user: User by mutableStateOf(FirebaseManager.currentUser!!)
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
@@ -121,10 +122,10 @@ class HomeViewModel(
         navController.navigate(ComposableDestinations.TERM_SEARCH)
     }
 
-    fun signOut() {
+/*    fun signOut() {
         FirebaseManager.signOutUser()
         navController.navigate(ComposableDestinations.LOGIN)
-    }
+    }*/
 
 }
 

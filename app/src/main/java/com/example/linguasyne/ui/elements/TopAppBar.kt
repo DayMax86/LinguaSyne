@@ -17,14 +17,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun SharedTopAppBar(
+fun DefaultTopAppBar(
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
+    titleResourceId: Int,
+    onClick: () -> Unit,
 ) {
     TopAppBar(
         title = {
             Text(
-                text = stringResource(id = R.string.app_name),
+                text = stringResource(id = titleResourceId),
                 color = MaterialTheme.colors.onSurface
             )
         },
@@ -57,7 +59,7 @@ fun SharedTopAppBar(
             TopAppBarActionButton(
                 imageVector = Icons.Default.Info,
                 description = "Help",
-            ) { /**/ }
+            ) { onClick() }
         }
     )
 
@@ -75,3 +77,4 @@ fun TopAppBarActionButton(
         Icon(imageVector = imageVector, contentDescription = description)
     }
 }
+
