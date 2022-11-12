@@ -21,7 +21,7 @@ fun DefaultTopAppBar(
     scope: CoroutineScope,
     scaffoldState: ScaffoldState,
     titleResourceId: Int,
-    onClick: () -> Unit,
+    onHelpClick: () -> Unit,
 ) {
     TopAppBar(
         title = {
@@ -59,7 +59,7 @@ fun DefaultTopAppBar(
             TopAppBarActionButton(
                 imageVector = Icons.Default.Info,
                 description = "Help",
-            ) { onClick() }
+            ) { onHelpClick() }
         }
     )
 

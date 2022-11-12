@@ -12,10 +12,14 @@ import com.example.linguasyne.managers.VocabRepository
 
 class VocabSearchViewModel(
     private val navController: NavController,
-): ViewModel() {
+): BaseViewModel() {
 
 
     lateinit var vocabList: MutableList<Vocab>
+
+    override fun showHelp() {
+        helpText = "Help me!"
+    }
 
     fun onSearchLaunch() {
         vocabList = VocabRepository.allVocab as MutableList<Vocab>

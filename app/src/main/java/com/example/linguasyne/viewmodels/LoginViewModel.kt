@@ -2,6 +2,7 @@ package com.example.linguasyne.viewmodels
 
 import android.net.Uri
 import android.util.Log
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,6 +19,7 @@ import com.example.linguasyne.classes.User
 import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.ui.theme.LsCorrectGreen
+import com.example.linguasyne.ui.theme.LsDarkPurple
 import com.example.linguasyne.ui.theme.LsErrorRed
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -35,10 +37,9 @@ class LoginViewModel(
     var userEmailInput: String by mutableStateOf("")
     var userPasswordInput: String by mutableStateOf("")
 
-    var outlineColour by mutableStateOf(Color(0xFF0016E0))
-
+    var outlineColour by mutableStateOf(Color(0xFF9466ff))
     var animateSuccess: Boolean by mutableStateOf(false)
-    var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_LONG)
+    var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_DEFAULT)
     var blurAmount: Int by mutableStateOf(0)
 
     fun handleLogin() {
@@ -62,7 +63,7 @@ class LoginViewModel(
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "$e")
                 //Feedback to user that login failed
-                outlineColour = LsErrorRed
+                    outlineColour = LsErrorRed
             }
         }
     }

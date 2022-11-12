@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +23,9 @@ import com.example.linguasyne.ui.elements.HomeDrawerContent
 import com.example.linguasyne.ui.elements.MainDrawerContent
 import com.example.linguasyne.ui.elements.ReviseDrawerContent
 import com.example.linguasyne.ui.elements.DefaultTopAppBar
+import com.example.linguasyne.viewmodels.BaseViewModel
 import com.example.linguasyne.viewmodels.StartViewModel
+import com.example.linguasyne.viewmodels.VocabSearchViewModel
 
 class StartActivity : AppCompatActivity() {
 
@@ -34,6 +37,7 @@ class StartActivity : AppCompatActivity() {
 
             val navController = rememberNavController()
             val viewModel = remember { StartViewModel(navController) }
+            var baseViewModel: BaseViewModel? = null
             var drawerContent: @Composable () -> Unit by remember { mutableStateOf({}) }
             var topBarStringResource: Int by remember { mutableStateOf(R.string.app_name) }
             var onClickHelp: () -> Unit by remember { mutableStateOf({}) }
@@ -59,7 +63,10 @@ class StartActivity : AppCompatActivity() {
                             scope = scope,
                             scaffoldState = scaffoldState,
                             titleResourceId = topBarStringResource,
-                            onClick = onClickHelp,
+                            onHelpClick = {
+                                navController.navigate((ComposableDestinations.HELP)
+                                //baseViewModel?.showHelp()
+                            },
                         )
                     },
 
@@ -70,42 +77,50 @@ class StartActivity : AppCompatActivity() {
                                 .background(MaterialTheme.colors.background)
                                 .fillMaxHeight()
                         ) {
+                            Column() {
+                                if (baseViewModel?.helpText?.isNotEmpty() == true) {
+                                    Text(
+                                        baseViewModel?.helpText ?: ""
+                                    )
+                                }
 
-                            NavHost(
-                                navController = navController,
-                                startDestination = if (viewModel.loginCheck())
-                                    ComposableDestinations.HOME else ComposableDestinations.LOGIN,
-                            ) {
-                                composable(ComposableDestinations.HOME) {
-                                    drawerContent = { HomeDrawerContent(viewModel::signOut) }
-                                    topBarStringResource = R.string.app_name
-                                    HomeScreen(navController, { onClickHelp() })
-                                }
-                                composable(ComposableDestinations.TERM_SEARCH) {
-                                    topBarStringResource = R.string.term_base
-                                    SearchScreen(navController)
-                                }
-                                composable(ComposableDestinations.CREATE_ACCOUNT) {
-                                    topBarStringResource = R.string.create_account
-                                    CreateAccountScreen(navController)
-                                }
-                                composable(ComposableDestinations.LOGIN) {
-                                    drawerContent = { LoginDrawerContent() }
-                                    topBarStringResource = R.string.log_in
-                                    LoginScreen(navController)
-                                }
-                                composable(ComposableDestinations.TERM_DISPLAY) {
-                                    VocabDisplayScreen(navController)
-                                    topBarStringResource = if (LessonManager.activeLesson) {
-                                        R.string.lesson
-                                    } else {
-                                        R.string.term_base
+                                NavHost(
+                                    navController = navController,
+                                    startDestination = if (viewModel.loginCheck())
+                                        ComposableDestinations.HOME else ComposableDestinations.LOGIN,
+                                ) {
+                                    composable(ComposableDestinations.HOME) {
+                                        drawerContent = { HomeDrawerContent(viewModel::signOut) }
+                                        topBarStringResource = R.string.app_name
+                                        HomeScreen(navController, { onClickHelp() })
                                     }
-                                }
-                                composable(ComposableDestinations.REVISE) {
-                                    drawerContent = { ReviseDrawerContent() }
-                                    topBarStringResource = R.string.revision
-                                    ReviseTermScreen(navController)
+                                    composable(ComposableDestinations.TERM_SEARCH) {
+                                        baseViewModel = VocabSearchViewModel(navController)
+                                        topBarStringResource = R.string.term_base
+                                        SearchScreen(baseViewModel as VocabSearchViewModel)
+                                    }
+                                    composable(ComposableDestinations.CREATE_ACCOUNT) {
+                                        topBarStringResource = R.string.create_account
+                                        CreateAccountScreen(navController)
+                                    }
+                                    composable(ComposableDestinations.LOGIN) {
+                                        drawerContent = { LoginDrawerContent() }
+                                        topBarStringResource = R.string.log_in
+                                        LoginScreen(navController)
+                                    }
+                                    composable(ComposableDestinations.TERM_DISPLAY) {
+                                        VocabDisplayScreen(navController)
+                                        topBarStringResource = if (LessonManager.activeLesson) {
+                                            R.string.lesson
+                                        } else {
+                                            R.string.term_base
+                                        }
+                                    }
+                                    composable(ComposableDestinations.REVISE) {
+                                        drawerContent = { ReviseDrawerContent() }
+                                        topBarStringResource = R.string.revision
+                                        ReviseTermScreen(navController)
+                                    }
                                 }
                             }
                         }
@@ -114,4 +129,11 @@ class StartActivity : AppCompatActivity() {
             }
         }
     }
+}
+
+@Composable
+private fun ShowHelp(
+    text: String,
+) {
+
 }

@@ -26,9 +26,9 @@ import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.VocabSearchViewModel
 
 @Composable
-fun SearchScreen(navController: NavHostController) {
-    val viewModel = VocabSearchViewModel(navController)
-
+fun SearchScreen(
+    viewModel: VocabSearchViewModel,
+) {
     viewModel.onSearchLaunch()
     LinguaSyneTheme(darkTheme = false) {
         Surface()
