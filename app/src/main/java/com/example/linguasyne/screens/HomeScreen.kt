@@ -59,7 +59,6 @@ fun HomeScreen(
 
 }
 
-@OptIn(ExperimentalSnapperApi::class, ExperimentalPagerApi::class)
 @Composable
 fun DisplayHome(
     user: User,

@@ -6,7 +6,7 @@
     <color name="LsLightTeal">#9bfdf4</color>
     <color name="mid_teal">#8cdede</color>
     <color name="black">#000000</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#FFFFFFFF</color>
     <color name="text_blue">#4255ff</color>
     <color name="bg_teal">#aefef2</color>
     <color name="hint_blue">#800016E0</color>

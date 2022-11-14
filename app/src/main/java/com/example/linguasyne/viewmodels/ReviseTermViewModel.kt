@@ -45,10 +45,14 @@ class ReviseTermViewModel(
     var animateCorrect: Boolean by mutableStateOf(false)
     var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_SHORT)
 
+    var blurAmount: Int by mutableStateOf(0)
+
     var displayTerm: Boolean by mutableStateOf(true)
     var displaySummary: Boolean by mutableStateOf(false)
     var summaryTotalCorrect: Int by mutableStateOf(0)
     var summaryTotalIncorrect: Int by mutableStateOf(0)
+
+    var displayEndSessionWarning: Boolean by mutableStateOf(false)
 
     init {
         viewModelScope
@@ -58,6 +62,19 @@ class ReviseTermViewModel(
                 updateTermTitle(RevisionSessionManager.currentSession.currentStep)
             }
         displayTerm = true
+    }
+
+    fun onBackPressed() {
+        displayEndSessionWarning = !displayEndSessionWarning
+        if (displayEndSessionWarning) {
+            blurAmount = 5
+        } else {
+            blurAmount = 0
+        }
+    }
+
+    fun onEndPressed() {
+        navController.navigate(ComposableDestinations.HOME)
     }
 
     private fun updateTermTitle(cs: RevisionSession.AnswerTypes) {
@@ -99,7 +116,7 @@ class ReviseTermViewModel(
             if (mascSelected) {
                 mascSelected = false
                 mascOutlineColour = LsGrey
-            } else if (!mascSelected) {
+            } else {
                 mascSelected = true
                 mascOutlineColour = LsDarkPurple
             }
@@ -112,7 +129,7 @@ class ReviseTermViewModel(
             if (femSelected) {
                 femSelected = false
                 femOutlineColour = LsGrey
-            } else if (!femSelected) {
+            } else {
                 femSelected = true
                 femOutlineColour = LsDarkPurple
             }
@@ -142,7 +159,6 @@ class ReviseTermViewModel(
                         animateCorrect = false
                         resetUi()
                     }
-
 
                 } else {
                     //User got the answer wrong so show appropriate animation

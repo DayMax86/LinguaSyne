@@ -45,7 +45,6 @@ import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalSnapperApi::class)
 @Composable
 fun VocabDisplayScreen(navController: NavHostController) {
 
@@ -659,8 +658,8 @@ fun DisplayPopUpInput(
 
         Column(
             modifier = Modifier
-                .fillMaxWidth(0.5f)
-                .fillMaxHeight(0.5f)
+                .fillMaxWidth()
+                .fillMaxHeight()
                 .padding(all = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

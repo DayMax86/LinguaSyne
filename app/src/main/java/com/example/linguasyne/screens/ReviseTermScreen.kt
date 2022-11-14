@@ -1,6 +1,7 @@
 package com.example.linguasyne.screens
 
 import android.os.Build
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -10,6 +11,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,6 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -32,41 +36,66 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.ui.elements.DefaultTopAppBar
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
+import com.example.linguasyne.viewmodels.VocabDisplayViewModel
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReviseTermScreen(navController: NavHostController) {
-    val viewModel = remember { ReviseTermViewModel(navController) }
+fun ReviseTermScreen(
+    viewModel: ReviseTermViewModel,
+) {
+    //val viewModel = remember { ReviseTermViewModel(navController) }
 
     Surface(
         modifier = Modifier
             .background(MaterialTheme.colors.background)
             .fillMaxHeight()
-    ) {
-        DisplaySummary(display = viewModel.displaySummary, viewModel = viewModel)
 
-        ViewTerm(
-            display = viewModel.displayTerm,
-            viewModel.currentTermTitle,
-            viewModel.userInput,
-            onClickSubmit = viewModel::handleSubmit,
-            onClickMasc = viewModel::handleMascClick,
-            onClickFem = viewModel::handleFemClick,
-            handleChange = viewModel::handleInput,
-            textFieldOutlineColour = viewModel.textFieldOutlineColour,
-            mascOutlineColour = viewModel.mascOutlineColour,
-            femOutlineColour = viewModel.femOutlineColour,
-            selectGenderTextColour = viewModel.selectGenderTextColour,
-            mascImage = viewModel.mascImage,
-            femImage = viewModel.femImage,
+    ) {
+        DisplaySummary(
+            display = viewModel.displaySummary,
+            viewModel = viewModel
         )
+
+        DisplayEndSessionWarning(
+            display = viewModel.displayEndSessionWarning,
+            buttonOnClick = viewModel::onEndPressed
+        )
+
+        Column(
+            modifier = Modifier.blur(
+                viewModel.blurAmount.dp,
+                viewModel.blurAmount.dp,
+                BlurredEdgeTreatment.Rectangle
+            )
+        ) {
+
+            ViewTerm(
+                display = viewModel.displayTerm,
+                backBehaviour = viewModel::onBackPressed,
+                termName = viewModel.currentTermTitle,
+                userInput = viewModel.userInput,
+                onClickSubmit = viewModel::handleSubmit,
+                onClickMasc = viewModel::handleMascClick,
+                onClickFem = viewModel::handleFemClick,
+                handleChange = viewModel::handleInput,
+                textFieldOutlineColour = viewModel.textFieldOutlineColour,
+                mascOutlineColour = viewModel.mascOutlineColour,
+                femOutlineColour = viewModel.femOutlineColour,
+                selectGenderTextColour = viewModel.selectGenderTextColour,
+                mascImage = viewModel.mascImage,
+                femImage = viewModel.femImage,
+            )
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -80,6 +109,39 @@ fun ReviseTermScreen(navController: NavHostController) {
         }
     }
 
+
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun DisplayEndSessionWarning(
+    display: Boolean,
+    buttonOnClick: () -> Unit,
+) {
+    if (display) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .clip(RoundedCornerShape(10.dp))
+                .padding(all = 10.dp)
+                .border(
+                    2.dp,
+                    MaterialTheme.colors.primary,
+                    shape = RoundedCornerShape(size = 10.dp)
+                )
+                .background(
+                    color = MaterialTheme.colors.onBackground,
+                    shape = RoundedCornerShape(size = 10.dp),
+                ),
+            contentAlignment = Alignment.Center
+
+        ) {
+            EndRevisionSessionScreen(buttonOnClick = buttonOnClick)
+        }
+
+    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -99,6 +161,7 @@ fun DisplaySummary(display: Boolean, viewModel: ReviseTermViewModel) {
 @Composable
 fun ViewTerm(
     display: Boolean,
+    backBehaviour: () -> Unit,
     termName: String?,
     userInput: String,
     handleChange: (String) -> Unit,
@@ -118,6 +181,10 @@ fun ViewTerm(
                 .padding(top = 20.dp)
                 .fillMaxWidth(),
         ) {
+
+            BackHandler {
+                backBehaviour()
+            }
 
             Row(
                 modifier = Modifier

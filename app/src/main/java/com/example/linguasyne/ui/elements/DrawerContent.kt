@@ -1,5 +1,7 @@
 package com.example.linguasyne.ui.elements
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.linguasyne.R
+import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 @Composable
 fun MainDrawerContent(
@@ -299,9 +302,11 @@ fun HomeDrawerContent(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReviseDrawerContent() {
-
+fun ReviseDrawerContent(
+    viewModel: ReviseTermViewModel,
+) {
     Column(
         modifier = Modifier
             .width(intrinsicSize = IntrinsicSize.Max),
@@ -310,7 +315,7 @@ fun ReviseDrawerContent() {
         Row(
             modifier = Modifier
                 .clickable {
-                    //endSessionEarly()
+                    viewModel.onBackPressed()
                 },
             horizontalArrangement = Arrangement.Start,
         ) {

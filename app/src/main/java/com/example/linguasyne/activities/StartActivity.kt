@@ -24,6 +24,7 @@ import com.example.linguasyne.ui.elements.MainDrawerContent
 import com.example.linguasyne.ui.elements.ReviseDrawerContent
 import com.example.linguasyne.ui.elements.DefaultTopAppBar
 import com.example.linguasyne.viewmodels.BaseViewModel
+import com.example.linguasyne.viewmodels.ReviseTermViewModel
 import com.example.linguasyne.viewmodels.StartViewModel
 import com.example.linguasyne.viewmodels.VocabSearchViewModel
 
@@ -64,7 +65,7 @@ class StartActivity : AppCompatActivity() {
                             scaffoldState = scaffoldState,
                             titleResourceId = topBarStringResource,
                             onHelpClick = {
-                                navController.navigate((ComposableDestinations.HELP)
+                                //navController.navigate(ComposableDestinations.HELP)
                                 //baseViewModel?.showHelp()
                             },
                         )
@@ -117,9 +118,12 @@ class StartActivity : AppCompatActivity() {
                                         }
                                     }
                                     composable(ComposableDestinations.REVISE) {
-                                        drawerContent = { ReviseDrawerContent() }
+                                        val vm = remember { ReviseTermViewModel(navController) }
+                                        drawerContent = { ReviseDrawerContent(vm) }
                                         topBarStringResource = R.string.revision
-                                        ReviseTermScreen(navController)
+                                        ReviseTermScreen(
+                                            viewModel = vm
+                                        )
                                     }
                                 }
                             }
