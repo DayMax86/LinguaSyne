@@ -11,19 +11,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -36,15 +29,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.ui.animations.AnimateSuccess
-import com.example.linguasyne.ui.elements.DefaultTopAppBar
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
-import com.example.linguasyne.viewmodels.VocabDisplayViewModel
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -52,7 +40,6 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 fun ReviseTermScreen(
     viewModel: ReviseTermViewModel,
 ) {
-    //val viewModel = remember { ReviseTermViewModel(navController) }
 
     Surface(
         modifier = Modifier
@@ -67,7 +54,8 @@ fun ReviseTermScreen(
 
         DisplayEndSessionWarning(
             display = viewModel.displayEndSessionWarning,
-            buttonOnClick = viewModel::onEndPressed
+            onConfirmDialogueButton = viewModel::onEndPressed,
+            onDismissDialogueButton = viewModel::onBackPressed,
         )
 
         Column(
@@ -116,31 +104,14 @@ fun ReviseTermScreen(
 @Composable
 fun DisplayEndSessionWarning(
     display: Boolean,
-    buttonOnClick: () -> Unit,
+    onConfirmDialogueButton: () -> Unit,
+    onDismissDialogueButton: () -> Unit,
 ) {
     if (display) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .clip(RoundedCornerShape(10.dp))
-                .padding(all = 10.dp)
-                .border(
-                    2.dp,
-                    MaterialTheme.colors.primary,
-                    shape = RoundedCornerShape(size = 10.dp)
-                )
-                .background(
-                    color = MaterialTheme.colors.onBackground,
-                    shape = RoundedCornerShape(size = 10.dp),
-                ),
-            contentAlignment = Alignment.Center
-
-        ) {
-            EndRevisionSessionScreen(buttonOnClick = buttonOnClick)
-        }
-
+        EndRevisionSessionScreen(
+            onConfirmDialogueButton = onConfirmDialogueButton,
+            onDismissDialogueButton = onDismissDialogueButton,
+        )
     }
 }
 

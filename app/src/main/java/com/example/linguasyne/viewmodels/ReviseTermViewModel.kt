@@ -66,10 +66,10 @@ class ReviseTermViewModel(
 
     fun onBackPressed() {
         displayEndSessionWarning = !displayEndSessionWarning
-        if (displayEndSessionWarning) {
-            blurAmount = 5
+        blurAmount = if (displayEndSessionWarning) {
+            5
         } else {
-            blurAmount = 0
+            0
         }
     }
 

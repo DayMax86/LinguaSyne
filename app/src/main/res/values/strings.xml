@@ -56,4 +56,6 @@
     <string name="unlocked">Unlocked</string>
     <string name="memorised">Memorised</string>
     <string name="end_session_warning_prompt">Are you sure you would like to end the session?</string>
+    <string name="cancel">Cancel</string>
+    <string name="resume">Resume</string>
 </resources>

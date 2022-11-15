@@ -15,6 +15,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
@@ -22,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -34,6 +36,7 @@ import com.example.linguasyne.R
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.viewmodels.CreateAccountViewModel
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreateAccountScreen(navController: NavHostController) {
 
@@ -134,6 +137,7 @@ fun DisplayPasswordStrength(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DisplayCreateAccount(
     userEmailInput: String,
@@ -149,6 +153,7 @@ fun DisplayCreateAccount(
     blurAmount: Int,
 ) {
 
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
@@ -231,6 +236,7 @@ fun DisplayCreateAccount(
                 ),
                 keyboardActions = KeyboardActions {
                     buttonOnClick()
+                    //keyboardController?.hide()
                 }
             )
 
