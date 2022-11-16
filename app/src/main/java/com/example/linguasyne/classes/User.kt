@@ -2,7 +2,7 @@ package com.example.linguasyne.classes
 
 import android.net.Uri
 
-class User(email: String) {
+class User(email: String = "") {
 
     var imageUri: Uri? = null
     var id: String = ""

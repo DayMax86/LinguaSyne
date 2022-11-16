@@ -31,7 +31,7 @@ object FirebaseManager {
                     val vocab = Vocab(
                         document.getField<String>("id").toString(),
                         document.getField<String>("name").toString(),
-                        document.getField<Int>("unlockLevel")!!.toInt(),
+                        document.getField<Int>("unlockLevel") ?: 0,
                         vocabTranslations as List<String>,
                         vocabMnemonics as List<String>,
                         vocabGender as String,
@@ -73,7 +73,7 @@ object FirebaseManager {
     }
 
     fun getDefaultUserImageUri(): Uri {
-        return Uri.parse("https://firebasestorage.googleapis.com/v0/b/linguasyne.appspot.com/o/default%2FAngrySteveEmote.png?alt=media&token=b3ba69f5-0ba8-41f4-9449-b58327b7f4d0")
+        return Uri.parse("https://firebasestorage.googleapis.com/v0/b/linguasyne.appspot.com/o/default%2Fdefault_profile_image.png?alt=media&token=92568d94-2835-4648-8128-672e998fe3de")
     }
 
     fun signOutUser() {

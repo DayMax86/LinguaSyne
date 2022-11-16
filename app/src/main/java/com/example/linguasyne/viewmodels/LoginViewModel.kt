@@ -68,28 +68,6 @@ class LoginViewModel(
         }
     }
 
-    /*private fun loadUserImage() {
-        viewModelScope.launch {
-            try {
-                val firebaseUser = FirebaseManager.currentUser
-                Log.e("LoginViewModel", firebaseUser!!.email)
-                val firestoreRef =
-                    Firebase.firestore.collection("users").document(firebaseUser.email)
-                firestoreRef
-                    .get()
-                    .await()
-                    .apply {
-                        //Successfully obtained user image uri from firebase
-                        FirebaseManager.currentUser!!.imageUri =
-                            Uri.parse(this.get("user_image_uri") as String?)
-                    }
-            } catch (e: Exception) {
-                Log.e("LoginViewModel", "Image exception: $e")
-            }
-        }
-    }*/
-
-
     fun handleEmailChange(text: String) {
         userEmailInput = text
     }

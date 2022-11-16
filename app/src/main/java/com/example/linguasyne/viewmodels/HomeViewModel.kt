@@ -28,8 +28,8 @@ class HomeViewModel(
     private val navController: NavHostController,
 ) : ViewModel() {
 
-    var user: User by mutableStateOf(FirebaseManager.currentUser!!)
-    var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
+    var user: User by mutableStateOf(FirebaseManager.currentUser?: User(""))
+    var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser?.imageUri ?: FirebaseManager.getDefaultUserImageUri())
 
     val activeIndicatorColour: Color = LsDarkPurple
     val inactiveIndicatorColour: Color = LsGrey
@@ -39,10 +39,6 @@ class HomeViewModel(
         loadUserImage()
     }
 
-/*    override fun drawerContent() {
-
-    }*/
-
     fun onBackPressed() {
         //Back button disabled on home screen
     }
@@ -50,18 +46,17 @@ class HomeViewModel(
     private fun loadUserImage() {
         viewModelScope.launch {
             try {
-                val firebaseUser = FirebaseManager.currentUser
                 val firestoreRef =
-                    Firebase.firestore.collection("users").document(firebaseUser!!.email)
+                    Firebase.firestore.collection("users").document(user.email)
 
                 firestoreRef
                     .get()
                     .await()
                     .let {doc ->
                         //Successfully obtained user image uri from firebase
-                        FirebaseManager.currentUser!!.imageUri =
+                        this@HomeViewModel.user.imageUri =
                             Uri.parse(doc.get("imageUri") as String?)
-                        userImage = FirebaseManager.currentUser!!.imageUri
+                        userImage = this@HomeViewModel.user.imageUri
                     }
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Image exception: $e")
@@ -74,18 +69,17 @@ class HomeViewModel(
         viewModelScope.launch {
             try {
                 val filename = "profileImage"
-                val firebaseUser = FirebaseAuth.getInstance().currentUser
                 val firestoreRef =
-                    Firebase.firestore.collection("users").document(firebaseUser?.email!!)
+                    Firebase.firestore.collection("users").document(user.email)
                 val storageRef =
                     FirebaseStorage.getInstance()
-                        .getReference("/users/${FirebaseManager.currentUser!!.id}/image/$filename")
+                        .getReference("/users/${user.id}/image/$filename")
                 if (localUri != null) {
                     storageRef.putFile(localUri)
                         .await()
                         .apply {
                             FirebaseStorage.getInstance().reference
-                                .child("users/${FirebaseManager.currentUser!!.id}/image/$filename").downloadUrl
+                                .child("users/${user.id}/image/$filename").downloadUrl
                                 .await()
                                 .apply {
                                     firestoreRef
@@ -122,10 +116,6 @@ class HomeViewModel(
         navController.navigate(ComposableDestinations.TERM_SEARCH)
     }
 
-/*    fun signOut() {
-        FirebaseManager.signOutUser()
-        navController.navigate(ComposableDestinations.LOGIN)
-    }*/
 
 }
 
