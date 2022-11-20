@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.linguasyne.gitexclude.HiddenData
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -18,7 +19,7 @@ class ApiViewModel : ViewModel() {
     interface NewsApi {
         @GET("search_free?q=france24&lang=fr&media=True")
         @Headers(
-            "X-RapidAPI-Key: 387f51c318msh541d76400b314c1p15f5a6jsn28aba00ec1bf",
+            HiddenData.API_KEY,
             "X-RapidAPI-Host: newscatcher.p.rapidapi.com",
         )
         suspend fun getNewsItems(): NewsResponse

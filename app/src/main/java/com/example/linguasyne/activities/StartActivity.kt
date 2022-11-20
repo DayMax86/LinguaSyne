@@ -1,5 +1,6 @@
 package com.example.linguasyne.activities
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
@@ -15,8 +16,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.linguasyne.R
 import com.example.linguasyne.enums.ComposableDestinations
+import com.example.linguasyne.gitexclude.HiddenData
+import com.example.linguasyne.managers.CSVManager
+import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.screens.*
 import com.example.linguasyne.ui.elements.HomeDrawerContent
@@ -27,6 +32,7 @@ import com.example.linguasyne.viewmodels.BaseViewModel
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 import com.example.linguasyne.viewmodels.StartViewModel
 import com.example.linguasyne.viewmodels.VocabSearchViewModel
+import kotlin.coroutines.coroutineContext
 
 class StartActivity : AppCompatActivity() {
 
@@ -91,7 +97,7 @@ class StartActivity : AppCompatActivity() {
                                         ComposableDestinations.HOME else ComposableDestinations.LOGIN,
                                 ) {
                                     composable(ComposableDestinations.HOME) {
-                                        drawerContent = { HomeDrawerContent(viewModel::signOut) }
+                                        drawerContent = { HomeDrawerContent(viewModel::signOut, this@StartActivity.applicationContext) }
                                         topBarStringResource = R.string.app_name
                                         HomeScreen(navController, { onClickHelp() })
                                     }
@@ -135,9 +141,5 @@ class StartActivity : AppCompatActivity() {
     }
 }
 
-@Composable
-private fun ShowHelp(
-    text: String,
-) {
 
-}
+

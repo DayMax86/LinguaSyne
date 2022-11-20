@@ -39,9 +39,10 @@ class HomeViewModel(
         loadUserImage()
     }
 
-/*    override fun drawerContent() {
 
-    }*/
+    fun fetchReviewsDue() {
+
+    }
 
     fun onBackPressed() {
         //Back button disabled on home screen
@@ -57,7 +58,7 @@ class HomeViewModel(
                 firestoreRef
                     .get()
                     .await()
-                    .let {doc ->
+                    .let { doc ->
                         //Successfully obtained user image uri from firebase
                         FirebaseManager.currentUser!!.imageUri =
                             Uri.parse(doc.get("imageUri") as String?)

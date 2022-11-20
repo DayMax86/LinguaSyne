@@ -4,12 +4,15 @@ import android.net.Uri
 import android.util.Log
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.classes.Vocab
+import com.example.linguasyne.enums.ReviewTimes
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
@@ -81,6 +84,24 @@ object FirebaseManager {
         currentUser = null
         Log.d("StartActivity", "User signed out")
         Log.d("StartActivity", "Current user id: ${FirebaseAuth.getInstance().currentUser?.uid}")
+    }
+
+    suspend fun checkReviewsDue() {
+        var fetchedTerms: List<Vocab>
+        coroutineScope {
+            fetchedTerms = FirebaseFirestore.getInstance()
+                .collection("users")
+                .document("${FirebaseManager.currentUser?.email}")
+                .collection("terms")
+                .get()
+                .await()
+                .toObjects(Vocab::class.java)
+        }
+        fetchedTerms.forEach {
+            if (it.nextReviewTime.compareTo(Timestamp.now()) <= 0) {
+                it.reviewDue = true
+            }
+        }
     }
 
 }

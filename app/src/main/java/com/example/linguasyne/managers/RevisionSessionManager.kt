@@ -36,7 +36,7 @@ object RevisionSessionManager {
         val tempList: MutableList<Vocab> = mutableListOf()
         for (i: Int in 0..2) { //for testing limited to 3 items, will be "(i: Int in 0..userUnlocks.size-1)"
             //Filter by review time
-            if (userUnlocks[i].nextReviewHours == NOW) {
+            if (userUnlocks[i].nextReviewHours == NOW || userUnlocks[i].reviewDue) {
                 tempList.add(userUnlocks[i])
             }
         }
@@ -141,7 +141,8 @@ object RevisionSessionManager {
                         .document(this)
                         .update(
                             "nextReviewTime",
-                            convertNextReviewHoursToTimestamp(currentSession.currentTerm.nextReviewHours)
+                            convertNextReviewHoursToTimestamp(currentSession.currentTerm.nextReviewHours),
+                            arrayOf("reviewDue", false)
                         )
                         .await()
                     Log.d(

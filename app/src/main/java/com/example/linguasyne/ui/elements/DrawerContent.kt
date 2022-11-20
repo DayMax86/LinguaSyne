@@ -1,5 +1,6 @@
 package com.example.linguasyne.ui.elements
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -25,7 +26,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.linguasyne.R
+import com.example.linguasyne.gitexclude.HiddenData
+import com.example.linguasyne.managers.CSVManager
+import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 @Composable
@@ -170,6 +175,7 @@ fun MainDrawerContent(
 @Composable
 fun HomeDrawerContent(
     signOut: () -> Unit,
+    context: Context,
 ) {
 
     Column(
@@ -300,6 +306,43 @@ fun HomeDrawerContent(
         )
     }
 
+    if (FirebaseManager.currentUser?.id == HiddenData.ADMIN_USER_ID) {
+        Column(
+            modifier = Modifier
+                .width(intrinsicSize = IntrinsicSize.Max),
+            horizontalAlignment = Alignment.Start,
+        ) {
+
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        uploadLanguageData(context)
+                    },
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Text(
+                        text = "Upload CSV data",
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary,
+                        maxLines = 1,
+                    )
+                }
+            }
+        }
+    }
+}
+
+private fun uploadLanguageData(context: Context) {
+    /*if (FirebaseManager.currentUser?.id == HiddenData.ADMIN_USER_ID) {
+        CSVManager.importVocabCSV(context)
+    }*/
+    //DEVELOPER USE ONLY.
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
