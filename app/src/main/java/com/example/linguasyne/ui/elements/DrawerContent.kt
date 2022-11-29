@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.linguasyne.R
-import com.example.linguasyne.gitexclude.HiddenData
+import com.example.linguasyne.HiddenData
 import com.example.linguasyne.managers.CSVManager
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.viewmodels.ReviseTermViewModel

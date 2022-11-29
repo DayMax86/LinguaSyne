@@ -19,7 +19,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.linguasyne.R
 import com.example.linguasyne.enums.ComposableDestinations
-import com.example.linguasyne.gitexclude.HiddenData
 import com.example.linguasyne.managers.CSVManager
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
