@@ -146,7 +146,7 @@ class CreateAccountViewModel(
             try {
                 val firestoreInstance = FirebaseFirestore.getInstance()
                 firestoreInstance
-                    .collection("users").document(FirebaseManager.currentUser!!.id)
+                    .collection("users").document(user.id)
                     .set(user)
                     .await()
                     .apply {
@@ -164,19 +164,20 @@ class CreateAccountViewModel(
     fun uploadUserImage(localUri: Uri?) {
         viewModelScope.launch {
             try {
+                val user = FirebaseManager.currentUser ?: User("")
                 val filename = "profileImage"
                 val firebaseUser = FirebaseAuth.getInstance().currentUser
                 val firestoreRef =
-                    Firebase.firestore.collection("users").document(firebaseUser?.email!!)
+                    Firebase.firestore.collection("users").document(firebaseUser?.email ?: "")
                 val storageRef =
                     FirebaseStorage.getInstance()
-                        .getReference("/users/${FirebaseManager.currentUser!!.id}/image/$filename")
+                        .getReference("/users/${user.id}/image/$filename")
                 if (localUri != null) {
                     storageRef.putFile(localUri)
                         .await()
                         .apply {
                             FirebaseStorage.getInstance().reference
-                                .child("users/${FirebaseManager.currentUser!!.id}/image/$filename").downloadUrl
+                                .child("users/${user.id}/image/$filename").downloadUrl
                                 .await()
                                 .apply {
                                     firestoreRef

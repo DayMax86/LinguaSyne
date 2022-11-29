@@ -304,7 +304,7 @@ private fun TopHomeScreen(
                         .align(Alignment.CenterHorizontally),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.primaryVariant,
-                    text = stringResource(id = R.string.level) + "${user.level}"
+                    text = stringResource(id = R.string.level) + " ${user.level}"
                 )
 
             }
