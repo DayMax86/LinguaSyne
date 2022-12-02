@@ -27,7 +27,7 @@ fun ApiBox(
 ) {
 
     val minimumBoxHeight = 310
-    val maximumBoxHeight = 450
+    val maximumBoxHeight = 380
 
     Column(
         modifier = modifier,

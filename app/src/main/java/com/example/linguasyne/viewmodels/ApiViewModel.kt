@@ -1,18 +1,24 @@
 package com.example.linguasyne.viewmodels
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.Coil
+import coil.util.CoilUtils
 import com.example.linguasyne.HiddenData
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import java.lang.reflect.Array.get
+import java.net.URL
 
 class ApiViewModel : ViewModel() {
 
@@ -40,16 +46,38 @@ class ApiViewModel : ViewModel() {
             .launch {
                 try {
                     val tempList: NewsResponse = newsService.getNewsItems()
-                    for (i in 0 until 5) {
-                        news.add(
-                            tempList
-                                .toModel(i)
-                        )
+                    var i = 0
+                    var upperBound = 5
+                    while (i < upperBound) {
+                        if (testImageContent(tempList.toModel(i).image)) {
+                            news.add(
+                                tempList
+                                    .toModel(i)
+                            )
+                            i++
+                        } else {
+                            //Image couldn't be loaded so keep going through the news items until the next one with a valid image
+                            upperBound++
+                        }
                     }
                 } catch (e: Exception) {
                     Log.e("ApiViewModel", "$e")
                 }
             }
+    }
+
+    private fun testImageContent(imageURL: String): Boolean {
+        viewModelScope
+            .launch {
+                try {
+                    //try fetching the image
+                    //return true if successful
+                } catch (e: Exception) {
+                    Log.e("ApiViewModel", "Image not fetched: $e")
+                    //return false
+                }
+            }
+        return false
     }
 
     data class NewsResponse(
