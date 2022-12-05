@@ -1,5 +1,6 @@
 package com.example.linguasyne.ui.elements
 
+import android.graphics.Color
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,16 +10,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.linguasyne.viewmodels.ApiViewModel
+import com.example.linguasyne.ui.animations.AnimateLoading
 import com.google.accompanist.pager.*
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 
 
-@OptIn(ExperimentalSnapperApi::class, ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun ApiBox(
     modifier: Modifier = Modifier,
@@ -29,9 +32,17 @@ fun ApiBox(
     val minimumBoxHeight = 310
     val maximumBoxHeight = 380
 
+        AnimateLoading(
+            animate = viewModel.showLoadingAnim,
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(),
+        )
+
     Column(
         modifier = modifier,
     ) {
+
         HorizontalPager(
             state = pagerState,
             count = viewModel.news.size,

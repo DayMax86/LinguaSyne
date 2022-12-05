@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
+import com.example.linguasyne.ui.animations.AnimateLoading
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.viewmodels.CreateAccountViewModel
 
@@ -61,6 +62,13 @@ fun CreateAccountScreen(navController: NavHostController) {
         animationSpec = tween(viewModel.animateDuration.toInt()),
         initialScale = 0f,
         transformOrigin = TransformOrigin.Center,
+    )
+
+    AnimateLoading(
+        animate = viewModel.showLoadingAnim,
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(),
     )
 
     TogglePasswordStrengthIndicator(

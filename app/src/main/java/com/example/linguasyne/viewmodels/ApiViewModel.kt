@@ -3,13 +3,15 @@ package com.example.linguasyne.viewmodels
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.Coil
 import coil.util.CoilUtils
 import com.example.linguasyne.HiddenData
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,6 +23,8 @@ import java.lang.reflect.Array.get
 import java.net.URL
 
 class ApiViewModel : ViewModel() {
+
+    var showLoadingAnim by mutableStateOf(false)
 
     interface NewsApi {
         @GET("search_free?q=france24&lang=fr&media=True")
@@ -42,6 +46,7 @@ class ApiViewModel : ViewModel() {
         .create(NewsApi::class.java)
 
     init {
+        showLoadingAnim = true
         viewModelScope
             .launch {
                 try {
@@ -63,7 +68,7 @@ class ApiViewModel : ViewModel() {
                 } catch (e: Exception) {
                     Log.e("ApiViewModel", "$e")
                 }
-            }
+            }.invokeOnCompletion { showLoadingAnim = false }
     }
 
     private fun testImageContent(imageURL: String): Boolean {
@@ -72,12 +77,16 @@ class ApiViewModel : ViewModel() {
                 try {
                     //try fetching the image
                     //return true if successful
+
                 } catch (e: Exception) {
                     Log.e("ApiViewModel", "Image not fetched: $e")
                     //return false
                 }
             }
-        return false
+        /*return false*/
+        // for testing
+        return true
+        //------------
     }
 
     data class NewsResponse(

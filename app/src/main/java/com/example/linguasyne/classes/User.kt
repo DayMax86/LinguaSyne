@@ -16,7 +16,7 @@ class User(email: String = "") {
         generateId()
     }
 
-    fun generateId() {
+    private fun generateId() {
         id = email
     }
 

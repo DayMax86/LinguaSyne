@@ -44,6 +44,7 @@ class CreateAccountViewModel(
     var showProgressBar: Boolean by mutableStateOf(false)
     var goToHome: Boolean by mutableStateOf(false)
 
+    var showLoadingAnim by mutableStateOf(false)
     var animateSuccess: Boolean by mutableStateOf(false)
     var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_LONG)
     var blurAmount: Int by mutableStateOf(0)
@@ -116,11 +117,13 @@ class CreateAccountViewModel(
     }
 
     fun handleButtonPress() {
+        showProgressBar = false
         createAccount(userEmailInput, userPasswordInput)
     }
 
 
     private fun createAccount(email: String, password: String) {
+        showLoadingAnim = true
         viewModelScope.launch {
             try {
                 val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -138,7 +141,7 @@ class CreateAccountViewModel(
                 passwordOutlineColour = LsErrorRed
                 Log.e("CreateAccountViewModel", "$e")
             }
-        }
+        }.invokeOnCompletion { showLoadingAnim = false }
     }
 
     private fun addUserToFirestore(user: User) {

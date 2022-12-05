@@ -23,26 +23,18 @@ import com.example.linguasyne.ui.theme.White
 @Composable
 fun AnimateLoading(
     animate: Boolean,
+    modifier: Modifier,
 ) {
     if (animate) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceEvenly,
+        Box(
+            modifier = modifier,
+                contentAlignment = Alignment.Center,
         ) {
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+            CircularProgressIndicator(
+                color = MaterialTheme.colors.primary
             )
-            {
 
-                CircularProgressIndicator(
-                    color = MaterialTheme.colors.primary
-                )
-
-            }
         }
     }
 }

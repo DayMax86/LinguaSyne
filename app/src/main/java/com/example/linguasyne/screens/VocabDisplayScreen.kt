@@ -35,7 +35,10 @@ import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.ui.animations.AnimateSuccess
+import com.example.linguasyne.ui.elements.BottomFadedBox
 import com.example.linguasyne.ui.elements.DotsIndicator
+import com.example.linguasyne.ui.elements.EndLessonCard
+import com.example.linguasyne.ui.elements.TopFadedBox
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsDarkPurple
 import com.example.linguasyne.ui.theme.LsGrey
@@ -129,6 +132,15 @@ fun MainDisplay(
 
 
                     }
+                    item {
+                        EndLessonCard(
+                            modifier = Modifier
+                                .fillParentMaxWidth()
+                                .fillMaxHeight()
+                                .padding(10.dp),
+                            viewModel::handleBackPress
+                        )
+                    }
 
                 }
                 Row(
@@ -146,7 +158,7 @@ fun MainDisplay(
 
 
                         DotsIndicator(
-                            totalDots = LessonManager.currentLesson.lessonList.size,
+                            totalDots = LessonManager.currentLesson.lessonList.size + 1,
                             selectedIndex = lazyListState.firstVisibleItemIndex,
                             selectedColor = viewModel.selectedDotColour,
                             unSelectedColor = viewModel.unselectedDotColour,
@@ -223,53 +235,6 @@ fun MainDisplay(
     }
 }
 
-@Composable
-fun TopFadedBox(
-    show: Boolean,
-) {
-    if (show) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            LsGrey,
-                            Color.Transparent,
-                            )
-                    )
-                ),
-        )
-        {
-            //
-        }
-    }
-}
-
-@Composable
-fun BottomFadedBox(
-    show: Boolean,
-) {
-    if (show) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp)
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            LsGrey,
-                        )
-                    )
-                ),
-        )
-        {
-            //
-        }
-    }
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -291,6 +256,7 @@ fun DisplayTerm(
 
         Column(
             modifier = Modifier
+                .fillMaxHeight()
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

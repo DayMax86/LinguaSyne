@@ -20,7 +20,7 @@
     <string name="to_revise">To revise</string>
     <string name="exam">Exam</string>
     <string name="day_streak">%1$d-day streak!</string>
-    <string name="today_in">Today\'s news in %1$s</string>
+    <string name="today_in">The news in %1$s</string>
     <string name="password_strength">Password strength:</string>
     <string name="email_address">Email address</string>
     <string name="password">Password</string>
@@ -58,4 +58,6 @@
     <string name="end_session_warning_prompt">Are you sure you would like to end the session?</string>
     <string name="cancel">Cancel</string>
     <string name="resume">Resume</string>
+    <string name="lesson_end">Learnt all the vocab?</string>
+    <string name="complete_lesson">Press continue to end the lesson and add the vocab to your reviews</string>
 </resources>

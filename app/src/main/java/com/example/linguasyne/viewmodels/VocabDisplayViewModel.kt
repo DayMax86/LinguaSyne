@@ -123,7 +123,6 @@ class VocabDisplayViewModel(
     }
 
 
-
     private fun fetchTermSource(): Sources {
         vSource =
             if (LessonManager.activeLesson) {
