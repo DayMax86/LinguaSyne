@@ -38,12 +38,16 @@ class LoginViewModel(
     var userPasswordInput: String by mutableStateOf("")
 
     var outlineColour by mutableStateOf(Color(0xFF9466ff))
+
+    var showLoadingAnim by mutableStateOf(false)
+
     var animateSuccess: Boolean by mutableStateOf(false)
     var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_DEFAULT)
     var blurAmount: Int by mutableStateOf(0)
 
     fun handleLogin() {
         viewModelScope.launch {
+            showLoadingAnim = true
             try {
                 Firebase.auth
                     .signInWithEmailAndPassword(userEmailInput, userPasswordInput)
@@ -52,20 +56,23 @@ class LoginViewModel(
                         val user = User(userEmailInput)
                         FirebaseManager.currentUser = user
                         //Feedback to user that login was successful
+                        showLoadingAnim = false
                         animateSuccess = true
                         blurAmount = 5
                         delay(2500)
                         //loadUserImage()
                         goToHome()
                     }
-                //If the user changes the email input between sign in and now it will likely crash!
+                //If the user changes the email input between sign in and now it will likely crash! //TODO()
 
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "$e")
                 //Feedback to user that login failed
                     outlineColour = LsErrorRed
+                showLoadingAnim = false
             }
         }
+        showLoadingAnim = false
     }
 
     fun handleEmailChange(text: String) {

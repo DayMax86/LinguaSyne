@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.linguasyne.R
+import com.example.linguasyne.ui.animations.AnimateLoading
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.viewmodels.LoginViewModel
 
@@ -47,6 +48,7 @@ fun LoginScreen(navController: NavHostController) {
         buttonOnClick = viewModel::handleLogin,
         textOnClick = viewModel::handleTextPress,
         blurAmount = viewModel.blurAmount,
+        viewModel.showLoadingAnim,
     )
 
     AnimateSuccess(
@@ -113,6 +115,7 @@ fun DisplayLogin(
     buttonOnClick: () -> Unit,
     textOnClick: (Int) -> Unit,
     blurAmount: Int,
+    showAnim: Boolean
 ) {
 
     Column(
@@ -133,6 +136,14 @@ fun DisplayLogin(
                     .padding(all = 10.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
+
+                AnimateLoading(
+                    animate = showAnim,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                )
+
                 AsyncImage(
                     modifier = Modifier
                         .border(
@@ -230,7 +241,7 @@ fun DisplayLogin(
                         onClick = textOnClick,
                         style = MaterialTheme.typography.caption,
 
-                    )
+                        )
                 }
 
             }

@@ -37,7 +37,6 @@ import com.example.linguasyne.ui.animations.AnimateLoading
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.viewmodels.CreateAccountViewModel
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreateAccountScreen(navController: NavHostController) {
 
@@ -55,6 +54,7 @@ fun CreateAccountScreen(navController: NavHostController) {
         userImage = viewModel.userImage,
         onClickProfileImage = viewModel::uploadUserImage,
         blurAmount = viewModel.blurAmount,
+        viewModel.showLoadingAnim
     )
 
     AnimateSuccess(
@@ -159,6 +159,7 @@ fun DisplayCreateAccount(
     userImage: Uri?,
     onClickProfileImage: (Uri) -> Unit,
     blurAmount: Int,
+    showAnim: Boolean,
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -174,6 +175,13 @@ fun DisplayCreateAccount(
                 .padding(all = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            AnimateLoading(
+                animate = showAnim,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+            )
 
             Row(
                 modifier = Modifier

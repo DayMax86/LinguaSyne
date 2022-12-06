@@ -56,10 +56,10 @@ fun DefaultTopAppBar(
             )
         },
         actions = {
-            TopAppBarActionButton(
+            /*TopAppBarActionButton(
                 imageVector = Icons.Default.Info,
                 description = "Help",
-            ) { onHelpClick() }
+            ) { onHelpClick() }*/
         }
     )
 

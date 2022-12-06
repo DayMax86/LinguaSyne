@@ -1,7 +1,6 @@
 package com.example.linguasyne.screens
 
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
@@ -21,25 +20,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.managers.LessonManager
+import com.example.linguasyne.ui.animations.AnimateLoading
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.ui.elements.BottomFadedBox
 import com.example.linguasyne.ui.elements.DotsIndicator
 import com.example.linguasyne.ui.elements.EndLessonCard
 import com.example.linguasyne.ui.elements.TopFadedBox
-import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsDarkPurple
 import com.example.linguasyne.ui.theme.LsGrey
 import com.example.linguasyne.viewmodels.VocabDisplayViewModel
@@ -124,6 +121,7 @@ fun MainDisplay(
                                     viewModel::handleMnemTextPress,
                                     viewModel::handleBackPress,
                                     viewModel.progressBarValue,
+                                    viewModel.showLoadingAnim,
                                 )
 
                             }
@@ -185,6 +183,7 @@ fun MainDisplay(
                     viewModel::handleMnemTextPress,
                     viewModel::handleBackPress,
                     viewModel.progressBarValue,
+                    viewModel.showLoadingAnim,
                 )
 
 
@@ -244,6 +243,7 @@ fun DisplayTerm(
     onAddMnemPress: () -> Unit,
     backBehaviour: () -> Unit,
     termProgress: Float,
+    showAnim: Boolean,
 ) {
 
     BackHandler {
@@ -262,6 +262,13 @@ fun DisplayTerm(
         ) {
 
             //------------------------------ FIRST ROW --------------------------------//
+
+            AnimateLoading(
+                animate = showAnim,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+            )
 
             Row(
                 modifier = Modifier

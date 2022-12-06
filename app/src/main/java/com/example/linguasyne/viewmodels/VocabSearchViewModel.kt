@@ -14,12 +14,13 @@ class VocabSearchViewModel(
     private val navController: NavController,
 ): BaseViewModel() {
 
+    var showLoadingAnim: Boolean by mutableStateOf(false) //Not currently used
 
     lateinit var vocabList: MutableList<Vocab>
 
-    override fun showHelp() {
+    /*override fun showHelp() {
         helpText = "Help me!"
-    }
+    } */ //TODO()
 
     fun onSearchLaunch() {
         vocabList = VocabRepository.allVocab as MutableList<Vocab>

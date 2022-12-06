@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.Vocab
+import com.example.linguasyne.ui.animations.AnimateLoading
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.VocabSearchViewModel
 
@@ -37,6 +38,7 @@ fun SearchScreen(
                 vocabItems = viewModel.vocabList,
                 onClick = viewModel::handleCardPress,
                 onBackPress = viewModel::handleBackPress,
+                showAnim = viewModel.showLoadingAnim,
             )
         }
     }
@@ -48,6 +50,7 @@ fun DisplayVocab(
     vocabItems: MutableList<Vocab>,
     onClick: (Vocab) -> Unit,
     onBackPress: () -> Unit,
+    showAnim: Boolean,
 ) {
 
     BackHandler {
@@ -60,7 +63,11 @@ fun DisplayVocab(
         items(
             items = vocabItems,
             itemContent = {
-                VocabItem(vocab = it, onClick = onClick)
+                VocabItem(
+                    vocab = it,
+                    onClick = onClick,
+                    showAnim = showAnim,
+                )
             }
         )
     }
@@ -70,6 +77,7 @@ fun DisplayVocab(
 fun VocabItem(
     vocab: Vocab,
     onClick: (Vocab) -> Unit,
+    showAnim: Boolean,
 ) {
     Card(
         modifier = Modifier
@@ -94,6 +102,13 @@ fun VocabItem(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+
+            AnimateLoading(
+                animate = showAnim,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+            )
 
             Text(
                 text = vocab.name,

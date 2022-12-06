@@ -13,23 +13,15 @@ import com.example.linguasyne.enums.*
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.managers.VocabRepository
-import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsGrey
 import com.example.linguasyne.ui.theme.LsLightTeal
 import com.example.linguasyne.ui.theme.LsVocabTextBlue
-import com.google.common.primitives.UnsignedBytes.toInt
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import okhttp3.internal.notify
-import okhttp3.internal.wait
-import java.util.ArrayList
-import java.util.Comparator
 
 class VocabDisplayViewModel(
     private val navController: NavHostController,
@@ -59,17 +51,15 @@ class VocabDisplayViewModel(
     val animateDuration = AnimationLengths.ANIMATION_DURATION_LONG
     var blurAmount: Int by mutableStateOf(0)
 
-    var showLoadingAnimation: Boolean by mutableStateOf(false)
+    var showLoadingAnim: Boolean by mutableStateOf(false)
 
     var progressBarValue: Float by mutableStateOf(0f)
 
     init {
-        showLoadingAnimation = true
+        showLoadingAnim = true
         viewModelScope
             .launch {
-
                 vSource = fetchTermSource()
-
                 if (vSource == Sources.LESSON) {
                     FirebaseFirestore
                         .getInstance()
@@ -91,9 +81,9 @@ class VocabDisplayViewModel(
                     }
                 }
                 getTermData()
-                showLoadingAnimation = false
             }.apply {
                 showDisplay = true
+                showLoadingAnim = false
             }
     }
 

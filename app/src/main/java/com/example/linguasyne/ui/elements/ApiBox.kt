@@ -32,12 +32,12 @@ fun ApiBox(
     val minimumBoxHeight = 310
     val maximumBoxHeight = 380
 
-        AnimateLoading(
-            animate = viewModel.showLoadingAnim,
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(),
-        )
+    AnimateLoading(
+        animate = viewModel.showLoadingAnim,
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(),
+    )
 
     Column(
         modifier = modifier,
