@@ -13,6 +13,7 @@ import com.example.linguasyne.enums.*
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.managers.VocabRepository
+import com.example.linguasyne.ui.theme.LsDarkPurple
 import com.example.linguasyne.ui.theme.LsGrey
 import com.example.linguasyne.ui.theme.LsLightTeal
 import com.example.linguasyne.ui.theme.LsVocabTextBlue
@@ -31,6 +32,9 @@ class VocabDisplayViewModel(
 
     var termToDisplay: Vocab by mutableStateOf(VocabRepository.currentVocab[0])
 
+    val activeIndicatorColour: Color = LsDarkPurple
+    val inactiveIndicatorColour: Color = LsGrey
+
     var showDisplay: Boolean by mutableStateOf(false)
 
     var showPopUpInput: Boolean by mutableStateOf(false)
@@ -43,9 +47,6 @@ class VocabDisplayViewModel(
     private var fem by mutableStateOf(false)
     var femOutlineColour by mutableStateOf(LsGrey)
     var textFieldOutlineColour by mutableStateOf(LsVocabTextBlue)
-
-    val selectedDotColour: Color = LsVocabTextBlue
-    val unselectedDotColour: Color = LsLightTeal
 
     var animateSuccess: Boolean by mutableStateOf(false)
     val animateDuration = AnimationLengths.ANIMATION_DURATION_LONG
@@ -73,7 +74,7 @@ class VocabDisplayViewModel(
                     //The terms only appear in a lesson once (this is ensured when the lesson is created)...
                     //...so they can be added to the user's collection without checking for pre-existing terms
                     if (LessonManager.currentLesson.lessonList.isEmpty()) {
-                        //Display message to the user that they have no lessons available!
+                        //Display message to the user that they have no lessons available! //TODO()
                     } else {
                         for (v: Vocab in LessonManager.currentLesson.lessonList) {
                             addTermToUserCollection(v)

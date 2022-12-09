@@ -7,9 +7,6 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -34,89 +31,94 @@ import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.ui.animations.AnimateLoading
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.ui.elements.BottomFadedBox
-import com.example.linguasyne.ui.elements.DotsIndicator
 import com.example.linguasyne.ui.elements.EndLessonCard
 import com.example.linguasyne.ui.elements.TopFadedBox
 import com.example.linguasyne.ui.theme.LsDarkPurple
 import com.example.linguasyne.ui.theme.LsGrey
 import com.example.linguasyne.viewmodels.VocabDisplayViewModel
-import dev.chrisbanes.snapper.ExperimentalSnapperApi
-import dev.chrisbanes.snapper.rememberSnapperFlingBehavior
+import com.google.accompanist.pager.*
 
 
+@OptIn(ExperimentalPagerApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun VocabDisplayScreen(navController: NavHostController) {
 
     val viewModel = remember { VocabDisplayViewModel(navController) }
+    val scrollState = rememberScrollState()
+    val pagerState = rememberPagerState()
 
     ShowMainDisplay(
         show = viewModel.showDisplay,
         viewModel = viewModel,
-        source = viewModel.vSource
+        source = viewModel.vSource,
+        pagerState = pagerState,
+        scrollState = scrollState,
     )
 
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ShowMainDisplay(
     show: Boolean,
     viewModel: VocabDisplayViewModel,
     source: VocabDisplayViewModel.Sources,
+    pagerState: PagerState,
+    scrollState: ScrollState,
 ) {
     if (show) {
-        MainDisplay(viewModel, source)
+        MainDisplay(viewModel, source, pagerState, scrollState)
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalSnapperApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun MainDisplay(
     viewModel: VocabDisplayViewModel,
-    source: VocabDisplayViewModel.Sources
+    source: VocabDisplayViewModel.Sources,
+    pagerState: PagerState,
+    scrollState: ScrollState,
 ) {
-
-    val scrollState = rememberScrollState()
-
     when (source) {
         VocabDisplayViewModel.Sources.LESSON -> {
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
             ) {
 
-
-                val lazyListState = rememberLazyListState()
-                LazyRow(
+                HorizontalPager(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(0.95f),
-                    state = lazyListState,
-                    flingBehavior = rememberSnapperFlingBehavior(lazyListState),
-                ) {
-                    items(
-                        LessonManager.currentLesson.lessonList
-                    ) { item ->
+                    state = pagerState,
+                    count = LessonManager.currentLesson.lessonList.size + 1,
+                ) { page ->
 
-                        Card(
-                            modifier = Modifier
-                                .fillParentMaxWidth()
-                                .padding(10.dp),
-                            elevation = 3.dp,
-                        ) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        elevation = 3.dp,
+                    ) {
+
+                        if (page <= LessonManager.currentLesson.lessonList.size - 1) {
+
                             Surface(
                                 modifier = Modifier
-                                    .verticalScroll(rememberScrollState())
+                                    .verticalScroll(scrollState)
                                     .background(MaterialTheme.colors.background)
                                     .fillMaxHeight()
                                     .fillMaxWidth()
                             )
                             {
+
                                 DisplayTerm(
-                                    item,
+                                    LessonManager.currentLesson.lessonList[page],
                                     viewModel::handleTransTextPress,
                                     viewModel::handleMnemTextPress,
                                     viewModel::handleBackPress,
@@ -124,16 +126,38 @@ fun MainDisplay(
                                     viewModel.showLoadingAnim,
                                 )
 
+
                             }
 
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight(),
+                                verticalArrangement = Arrangement.Top,
+                            ) {
+                                TopFadedBox(
+                                    show =
+                                    (scrollState.value > 0)
+                                )
+                            }
+
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight(),
+                                verticalArrangement = Arrangement.Bottom,
+                            ) {
+                                BottomFadedBox(
+                                    show =
+                                    (scrollState.value < scrollState.maxValue) && (scrollState.maxValue > 0)
+                                )
+                            }
                         }
 
-
                     }
-                    item {
+
+                    if (page == LessonManager.currentLesson.lessonList.size) {
                         EndLessonCard(
                             modifier = Modifier
-                                .fillParentMaxWidth()
+                                .fillMaxWidth()
                                 .fillMaxHeight()
                                 .padding(10.dp),
                             viewModel::handleBackPress
@@ -141,31 +165,34 @@ fun MainDisplay(
                     }
 
                 }
+
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
+            )
+            {
                 Row(
                     modifier = Modifier
                         .fillMaxHeight()
                         .fillMaxWidth(),
-                )
-                {
-                    Row(
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+
+                    HorizontalPagerIndicator(
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-
-
-                        DotsIndicator(
-                            totalDots = LessonManager.currentLesson.lessonList.size + 1,
-                            selectedIndex = lazyListState.firstVisibleItemIndex,
-                            selectedColor = viewModel.selectedDotColour,
-                            unSelectedColor = viewModel.unselectedDotColour,
-                        )
-                    }
+                            .align(Alignment.Bottom)
+                            .padding(top = 8.dp, bottom = 16.dp),
+                        pagerState = pagerState,
+                        activeColor = viewModel.activeIndicatorColour,
+                        inactiveColor = viewModel.inactiveIndicatorColour,
+                    )
                 }
-
             }
+
         }
+
         VocabDisplayViewModel.Sources.SEARCH -> {
 
             Surface(
@@ -228,9 +255,7 @@ fun MainDisplay(
                 onBackBehaviour = viewModel::togglePopUp,
             )
 
-
         }
-        else -> {}
     }
 }
 
