@@ -66,7 +66,7 @@ object FirebaseManager {
         coroutineScope {
             fetchedTerms = FirebaseFirestore.getInstance()
                 .collection("users")
-                .document("${FirebaseManager.currentUser?.email}")
+                .document("${currentUser?.email}")
                 .collection("terms")
                 .get()
                 .await()
@@ -86,22 +86,55 @@ object FirebaseManager {
         Log.d("StartActivity", "Current user id: ${FirebaseAuth.getInstance().currentUser?.uid}")
     }
 
-    suspend fun checkReviewsDue() {
-        var fetchedTerms: List<Vocab>
-        coroutineScope {
-            fetchedTerms = FirebaseFirestore.getInstance()
-                .collection("users")
-                .document("${FirebaseManager.currentUser?.email}")
-                .collection("terms")
-                .get()
-                .await()
-                .toObjects(Vocab::class.java)
-        }
-        fetchedTerms.forEach {
-            if (it.nextReviewTime.compareTo(Timestamp.now()) <= 0) {
-                it.reviewDue = true
+    fun checkReviewsDue(): Int {
+        var fetchedTerms: List<Vocab> = emptyList()
+        var termsDue = 0
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .document("${currentUser?.email}")
+            .collection("terms")
+            .get()
+            .addOnSuccessListener {
+                fetchedTerms = it.toObjects(Vocab::class.java)
+                fetchedTerms.forEach { vocab ->
+                    if (vocab.nextReviewTime.compareTo(Timestamp.now()) <= 0) {
+                        vocab.reviewDue = true
+                        termsDue++
+                    }
+                }
             }
+        return termsDue
+    }
+
+    suspend fun checkLessonsDue(): Int {
+        var termsDue = 0
+        var fetchedTerms: List<Vocab> = emptyList()
+        getUserVocabUnlocks().apply {
+            val userUnlocks: List<Vocab> = this
+            FirebaseFirestore.getInstance()
+                .collection("vocab")
+                .get()
+                .addOnSuccessListener {
+                    Log.d("FirebaseManager", "vocab fetched successfully")
+                    fetchedTerms = it.toObjects(Vocab::class.java)
+                    fetchedTerms.forEach { vocab ->
+                        if (vocab.unlockLevel <= currentUser!!.level) {
+                            Log.d("FirebaseManager", "vocab unlock level <= user level")
+                            userUnlocks.forEach { unlockedTerm ->
+                                Log.d("FirebaseManager", "vocab id=${vocab.id}, unlockedTerm id=${unlockedTerm.id}")
+                                if (vocab.id == unlockedTerm.id) {
+                                    termsDue++
+                                }
+                            }
+                        }
+                    }
+                    Log.d("FirebaseManager", "terms due: ${termsDue}")
+                }
+                .addOnFailureListener {
+                    Log.e("FirebaseManager", "$it")
+                }
         }
+        return termsDue
     }
 
 }

@@ -55,6 +55,8 @@ fun HomeScreen(
         viewModel.inactiveIndicatorColour,
         viewModel::onBackPressed,
         apiViewModel,
+        viewModel.reviewsDue,
+        viewModel.lessonsDue,
     )
 
 }
@@ -72,6 +74,8 @@ fun DisplayHome(
     inactiveIndicatorColour: Color,
     backBehaviour: () -> Unit,
     apiViewModel: ApiViewModel,
+    reviewsDue: Int,
+    lessonsDue: Int,
 ) {
 
     Column(
@@ -92,7 +96,9 @@ fun DisplayHome(
             onClickTermBase,
             user,
             onClickProfileImage,
-            userImage
+            userImage,
+            reviewsDue,
+            lessonsDue,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -115,7 +121,9 @@ private fun TopHomeScreen(
     onClickTermBase: () -> Unit,
     user: User,
     onClickProfileImage: (Uri?) -> Unit,
-    userImage: Uri?
+    userImage: Uri?,
+    reviewsDue: Int,
+    lessonsDue: Int,
 ) {
     Row(
         modifier = Modifier
@@ -162,7 +170,7 @@ private fun TopHomeScreen(
                         Row(
 
                         ) {
-                            Text("50")
+                            Text("$lessonsDue")
                         }
                     }
 
@@ -206,7 +214,7 @@ private fun TopHomeScreen(
                             Row(
 
                             ) {
-                                Text("50")
+                                Text("$reviewsDue")
                             }
                         }
 

@@ -31,21 +31,27 @@ class HomeViewModel(
     var user: User by mutableStateOf(FirebaseManager.currentUser!!)
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
 
+    var reviewsDue: Int by mutableStateOf(0)
+    var lessonsDue: Int by mutableStateOf(0)
+
     val activeIndicatorColour: Color = LsDarkPurple
     val inactiveIndicatorColour: Color = LsGrey
 
     init {
-        FirebaseManager.loadVocabFromFirebase()
-        loadUserImage()
+        viewModelScope.launch {
+            FirebaseManager.loadVocabFromFirebase()
+            getReviewsAndLessonsDue()
+            loadUserImage()
+        }
     }
 
-
-    fun fetchReviewsDue() {
-
+    suspend fun getReviewsAndLessonsDue () {
+        reviewsDue = FirebaseManager.checkReviewsDue()
+        lessonsDue = FirebaseManager.checkLessonsDue()
     }
 
     fun onBackPressed() {
-        //Back button disabled on home screen
+        //Back button disabled on home screen? Or minimise app?
     }
 
     private fun loadUserImage() {
@@ -122,11 +128,6 @@ class HomeViewModel(
     fun handleTermBaseClick() {
         navController.navigate(ComposableDestinations.TERM_SEARCH)
     }
-
-/*    fun signOut() {
-        FirebaseManager.signOutUser()
-        navController.navigate(ComposableDestinations.LOGIN)
-    }*/
 
 }
 
