@@ -39,9 +39,10 @@ class HomeViewModel(
 
     init {
         viewModelScope.launch {
-            FirebaseManager.loadVocabFromFirebase()
-            getReviewsAndLessonsDue()
-            loadUserImage()
+            FirebaseManager.loadVocabFromFirebase().apply {
+                getReviewsAndLessonsDue()
+                loadUserImage()
+            }
         }
     }
 

@@ -22,27 +22,27 @@ object VocabRepository {
     }
 
     fun filterByUnlockLevel(searchTermLevel: Int) {
-        currentVocab = currentVocab
-            .filter { it.unlockLevel <= searchTermLevel}
+        currentVocab = allVocab
+            .filter { it.unlockLevel <= searchTermLevel }
             .sortedBy { it.id }
     }
 
     suspend fun filterByUserNotYetUnlocked() {
         var tempList: List<Vocab> = allVocab
         coroutineScope {
-            val userUnlocks = FirebaseManager.getUserVocabUnlocks()
-            //TODO() This is an inefficient algorithm - it may bottleneck with large lists
-            allVocab.forEach { av ->
-                userUnlocks.forEach { uU ->
-                    if (av.id == uU.id) {
-                        tempList = tempList.minus(av)
+            FirebaseManager.getUserVocabUnlocks().apply {
+                //TODO() This is an inefficient algorithm - it may bottleneck with large lists
+                allVocab.forEach { av ->
+                    this.forEach { uU ->
+                        if (av.id == uU.id) {
+                            tempList = tempList.minus(av)
+                        }
                     }
                 }
             }
+            currentVocab = tempList
+                .sortedBy { it.id }
         }
-        currentVocab = tempList
-            .sortedBy { it.id }
+
     }
-
-
 }

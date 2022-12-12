@@ -107,34 +107,18 @@ object FirebaseManager {
     }
 
     suspend fun checkLessonsDue(): Int {
-        var termsDue = 0
-        var fetchedTerms: List<Vocab> = emptyList()
-        getUserVocabUnlocks().apply {
-            val userUnlocks: List<Vocab> = this
-            FirebaseFirestore.getInstance()
-                .collection("vocab")
-                .get()
-                .addOnSuccessListener {
-                    Log.d("FirebaseManager", "vocab fetched successfully")
-                    fetchedTerms = it.toObjects(Vocab::class.java)
-                    fetchedTerms.forEach { vocab ->
-                        if (vocab.unlockLevel <= currentUser!!.level) {
-                            Log.d("FirebaseManager", "vocab unlock level <= user level")
-                            userUnlocks.forEach { unlockedTerm ->
-                                Log.d("FirebaseManager", "vocab id=${vocab.id}, unlockedTerm id=${unlockedTerm.id}")
-                                if (vocab.id == unlockedTerm.id) {
-                                    termsDue++
-                                }
-                            }
-                        }
-                    }
-                    Log.d("FirebaseManager", "terms due: ${termsDue}")
+        var termsDue: Int
+        coroutineScope{
+            var filteredVocab: List<Vocab> = emptyList()
+            getUserVocabUnlocks().apply {
+                filteredVocab = this
+                VocabRepository.filterByUnlockLevel(currentUser!!.level).apply {
+                    termsDue =
+                        VocabRepository.currentVocab.size - filteredVocab.size
+                    Log.d("FirebaseManager", "returning termsDue LESSONS (value = $termsDue)")
                 }
-                .addOnFailureListener {
-                    Log.e("FirebaseManager", "$it")
-                }
+            }
         }
         return termsDue
     }
-
 }
