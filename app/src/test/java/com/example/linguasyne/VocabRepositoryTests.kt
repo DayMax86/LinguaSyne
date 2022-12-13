@@ -23,7 +23,7 @@ class VocabRepositoryTests {
     @BeforeEach
     fun beforeEach() {
         VocabRepository.currentVocab = listOf(Vocab())
-        viewModel = VocabDisplayViewModel(providedScope = scope)
+        //viewModel = VocabDisplayViewModel()
     }
 
     @Test

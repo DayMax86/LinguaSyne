@@ -1,5 +1,6 @@
 package com.example.linguasyne.managers
 
+import android.util.Log
 import com.example.linguasyne.classes.Lesson
 import com.example.linguasyne.classes.Vocab
 
@@ -22,10 +23,11 @@ object LessonManager {
                 //check to see if there are any other terms left to be unlocked at this level
                 if (notYetUnlocked.isNotEmpty()) {
                     //filter not-yet-unlocked items by user's level
-                    notYetUnlocked.filter {
+                    notYetUnlocked = notYetUnlocked.filter {
                         it.unlockLevel == FirebaseManager.currentUser!!.level
                         //Null check surrounding method content so non-null asserted call is safe
                     }
+                    Log.d("LessonManager", "notYetUnlocked size -1 = ${notYetUnlocked.size-1}")
                     //now take the first 5 items (or the full list if there are fewer than 5) of the list and create lesson
                     val max: Int = minOf(LESSON_SIZE, notYetUnlocked.size - 1)
                     for (i: Int in 0 until max) {

@@ -62,12 +62,17 @@ object RevisionSessionManager {
 
             //If they got both steps correct first time the term's next review should be advanced.
             if (currentSession.currentTerm.answeredPerfectly) {
-                advanceReviewTime(currentSession.currentTerm.nextReviewHours)
+
+                updateReviewTimeOnFirebase(
+                    currentSession.currentTerm,
+                    convertNextReviewHoursToTimestamp(
+                        advanceReviewTime(currentSession.currentTerm.nextReviewHours)
+                    )
+                )
                 //Likewise it should be 'demoted' if they didn't answer perfectly.
             } else {
                 decreaseReviewTime(currentSession.currentTerm.nextReviewHours)
             }
-            updateReviewTimeOnFirebase()
 
             val tl: MutableList<Vocab> = mutableListOf()
             tl.add(currentSession.currentTerm)
@@ -110,10 +115,11 @@ object RevisionSessionManager {
                     }
                 }
 
-                else -> {/**/}
+                else -> {/**/
+                }
             }
 
-        } else if (sl.isEmpty()) {
+        } else {
             //There must be no terms left in the session so it can be ended and the summary screen shown
             return null
         }
@@ -123,7 +129,7 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun updateReviewTimeOnFirebase() {
+    private suspend fun updateReviewTimeOnFirebase(term: Vocab, nextReviewTimestamp: Date?) {
         try {
             val firestoreRef = FirebaseFirestore.getInstance()
             firestoreRef
@@ -132,23 +138,27 @@ object RevisionSessionManager {
                 .collection("terms")
                 .get()
                 .await()
-                .first { it.getField<String>("id") == currentSession.currentTerm.id }.id
                 .apply {
-                    firestoreRef
-                        .collection("users")
-                        .document("${FirebaseManager.currentUser?.email}")
-                        .collection("terms")
-                        .document(this)
-                        .update(
-                            "nextReviewTime",
-                            convertNextReviewHoursToTimestamp(currentSession.currentTerm.nextReviewHours),
-                            arrayOf("reviewDue", false)
-                        )
-                        .await()
-                    Log.d(
-                        "RevisionSessionManager",
-                        "Successfully updated Firestore next review time: ${currentSession.currentTerm.nextReviewHours}"
-                    )
+                    this.documents.forEach {
+                        if (it.getField<String>("id") == term.id) {
+                            firestoreRef
+                                .collection("users")
+                                .document("${FirebaseManager.currentUser?.email}")
+                                .collection("terms")
+                                .document(it.id)
+                                .update(
+                                    "nextReviewTime",
+                                    nextReviewTimestamp,
+                                    "nextReviewHours",
+                                    term.nextReviewHours
+                                ).apply {
+                                    Log.d(
+                                        "RevisionSessionManager",
+                                        "Successfully updated Firestore next review time: ${currentSession.currentTerm.nextReviewHours}"
+                                    )
+                                }
+                        }
+                    }
                 }
         } catch (e: Exception) {
             Log.e("RevisionSessionManager", "Next review firebase update error: $e")
@@ -156,11 +166,11 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun convertNextReviewHoursToTimestamp(hours: Int): Date? {
+    fun convertNextReviewHoursToTimestamp(hours: Int): Date? {
         return Date.valueOf(LocalDate.now().plusDays((hours / 24).toLong()).toString())
     }
 
-    private fun advanceReviewTime(rt: Int) {
+    private fun advanceReviewTime(rt: Int): Int {
         when (rt) {
             (NOW) -> {
                 currentSession.currentTerm.nextReviewHours = ONE_DAY
@@ -193,9 +203,10 @@ object RevisionSessionManager {
                 currentSession.currentTerm.nextReviewHours = NEVER
             }
         }
+        return currentSession.currentTerm.nextReviewHours
     }
 
-    private fun decreaseReviewTime(rt: Int) {
+    private fun decreaseReviewTime(rt: Int): Int {
         when (rt) {
             (NOW) -> {
                 currentSession.currentTerm.nextReviewHours = NOW
@@ -228,6 +239,7 @@ object RevisionSessionManager {
                 currentSession.currentTerm.nextReviewHours = EIGHT_MONTHS
             }
         }
+        return currentSession.currentTerm.nextReviewHours
     }
 
     private fun swapSteps() {

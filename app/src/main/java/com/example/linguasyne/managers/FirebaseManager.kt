@@ -86,23 +86,21 @@ object FirebaseManager {
         Log.d("StartActivity", "Current user id: ${FirebaseAuth.getInstance().currentUser?.uid}")
     }
 
-    fun checkReviewsDue(): Int {
-        var fetchedTerms: List<Vocab> = emptyList()
+    suspend fun checkReviewsDue(): Int {
         var termsDue = 0
-        FirebaseFirestore.getInstance()
-            .collection("users")
-            .document("${currentUser?.email}")
-            .collection("terms")
-            .get()
-            .addOnSuccessListener {
-                fetchedTerms = it.toObjects(Vocab::class.java)
-                fetchedTerms.forEach { vocab ->
-                    if (vocab.nextReviewTime.compareTo(Timestamp.now()) <= 0) {
-                        vocab.reviewDue = true
-                        termsDue++
+        coroutineScope {
+            getUserVocabUnlocks().apply {
+                    this.forEach { vocab ->
+                        if (vocab.nextReviewTime.compareTo(Timestamp.now()) <= 0) {
+                            vocab.reviewDue = true
+                            termsDue++
+                        }
                     }
                 }
-            }
+        }
+
+
+
         return termsDue
     }
 

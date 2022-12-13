@@ -1,22 +1,24 @@
 package com.example.linguasyne
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.linguasyne.classes.User
+import com.example.linguasyne.enums.ReviewTimes
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.RevisionSessionManager
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.time.LocalDate
 
 class RevisionSessionCreationTests {
 
-/*    class ExampleUnitTest {
+    class ExampleUnitTest {
         @Test
-        fun createRevisionSessionTest() {
-            FirebaseManager.currentUser = User("test@test.com")
-            //When user level is 0 and first 3/21 terms in vocab have unlock level changed to > 0
-            RevisionSessionManager.createSession()
-            assertEquals(18, RevisionSessionManager.currentSession.sl.size)
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun reviewTimeConversionTest() {
+            assertEquals(LocalDate.now(), RevisionSessionManager.convertNextReviewHoursToTimestamp(ReviewTimes.NOW))
         }
-    }*/
+    }
 }
 
 

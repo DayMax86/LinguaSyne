@@ -1,5 +1,6 @@
 package com.example.linguasyne.viewmodels
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -10,6 +11,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.Coil
+import coil.imageLoader
+import coil.request.ImageRequest
+import coil.request.ImageResult
+import coil.request.SuccessResult
 import coil.util.CoilUtils
 import com.example.linguasyne.HiddenData
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +27,9 @@ import retrofit2.http.Headers
 import java.lang.reflect.Array.get
 import java.net.URL
 
-class ApiViewModel : ViewModel() {
+class ApiViewModel(
+    context: Context,
+) : ViewModel() {
 
     var showLoadingAnim by mutableStateOf(false)
 
@@ -45,7 +52,7 @@ class ApiViewModel : ViewModel() {
         .build()
         .create(NewsApi::class.java)
 
-    init {
+    init { //TODO() Make sure this stops at the length of the news list
         showLoadingAnim = true
         viewModelScope
             .launch {
@@ -54,7 +61,7 @@ class ApiViewModel : ViewModel() {
                     var i = 0
                     var upperBound = 5
                     while (i < upperBound) {
-                        if (testImageContent(tempList.toModel(i).image)) {
+                        if (testImageContent(tempList.toModel(i).image, context)) {
                             news.add(
                                 tempList
                                     .toModel(i)
@@ -62,6 +69,7 @@ class ApiViewModel : ViewModel() {
                             i++
                         } else {
                             //Image couldn't be loaded so keep going through the news items until the next one with a valid image
+                            i++
                             upperBound++
                         }
                     }
@@ -71,22 +79,13 @@ class ApiViewModel : ViewModel() {
             }.invokeOnCompletion { showLoadingAnim = false }
     }
 
-    private fun testImageContent(imageURL: String): Boolean {
-        viewModelScope
-            .launch {
-                try {
-                    //try fetching the image
-                    //return true if successful
-
-                } catch (e: Exception) {
-                    Log.e("ApiViewModel", "Image not fetched: $e")
-                    //return false
-                }
-            }
-        /*return false*/
-        // for testing
-        return true
-        //------------
+    private suspend fun testImageContent(imageURL: String, context: Context): Boolean {
+        val request = ImageRequest.Builder(context)
+            .data(imageURL)
+            .build()
+        val result = context.imageLoader.execute(request)
+        Log.e("ApiViewModel", "imageURL = ${imageURL}, result = ${result::class.simpleName}")
+        return result is SuccessResult
     }
 
     data class NewsResponse(
