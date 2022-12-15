@@ -59,6 +59,8 @@ fun HomeScreen(
         apiViewModel,
         viewModel.reviewsDue,
         viewModel.lessonsDue,
+        viewModel.reviewsClickable,
+        viewModel.lessonsClickable,
     )
 
 }
@@ -78,6 +80,8 @@ fun DisplayHome(
     apiViewModel: ApiViewModel,
     reviewsDue: Int,
     lessonsDue: Int,
+    reviewsClickable: Boolean,
+    lessonsClickable: Boolean,
 ) {
 
     Column(
@@ -101,6 +105,8 @@ fun DisplayHome(
             userImage,
             reviewsDue,
             lessonsDue,
+            reviewsClickable,
+            lessonsClickable,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -126,6 +132,8 @@ private fun TopHomeScreen(
     userImage: Uri?,
     reviewsDue: Int,
     lessonsDue: Int,
+    reviewsClickable: Boolean,
+    lessonsClickable: Boolean,
 ) {
     Row(
         modifier = Modifier
@@ -151,7 +159,11 @@ private fun TopHomeScreen(
             Button(
                 modifier = Modifier
                     .width(150.dp),
-                onClick = { onClickVocabLesson() },
+                onClick = {
+                    if (lessonsClickable) {
+                        onClickVocabLesson()
+                    }
+                },
                 shape = RoundedCornerShape(100),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.secondary,
@@ -195,7 +207,11 @@ private fun TopHomeScreen(
                     modifier = Modifier
                         .padding(bottom = 8.dp)
                         .width(150.dp),
-                    onClick = { onClickRevision() },
+                    onClick = {
+                        if (reviewsClickable) {
+                            onClickRevision()
+                        }
+                    },
                     shape = RoundedCornerShape(100),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = MaterialTheme.colors.secondary,

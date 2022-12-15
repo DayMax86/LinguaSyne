@@ -34,9 +34,9 @@ object RevisionSessionManager {
 
         //Now go through and filter user unlocks by review time
         val tempList: MutableList<Vocab> = mutableListOf()
-        for (i: Int in 0..2) { //for testing limited to 3 items, will be "(i: Int in 0..userUnlocks.size-1)"
+        for (i: Int in userUnlocks.indices) {
             //Filter by review time
-            if (userUnlocks[i].nextReviewHours == NOW || userUnlocks[i].reviewDue) {
+            if (userUnlocks[i].nextReviewHours == NOW || userUnlocks[i].reviewDue()) {
                 tempList.add(userUnlocks[i])
             }
         }

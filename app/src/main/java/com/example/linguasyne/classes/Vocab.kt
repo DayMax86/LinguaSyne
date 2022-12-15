@@ -37,7 +37,6 @@ class Vocab(
     var currentLevelTerm: Int = 0
     var nextReviewTime: Timestamp = Timestamp.now()
     var nextReviewHours: Int = 0
-    var reviewDue: Boolean = false
 
     init {
         assignGender(vocabGender)
@@ -67,9 +66,8 @@ class Vocab(
         }
     }
 
-    /*@RequiresApi(Build.VERSION_CODES.O)
-    private fun convertNextReviewTimestampToHours(){
-        nextReviewTime
-    }*/
+    fun reviewDue(): Boolean {
+        return this.nextReviewTime < Timestamp.now()
+    }
 
 }

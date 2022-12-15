@@ -4,15 +4,12 @@ import android.net.Uri
 import android.util.Log
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.classes.Vocab
-import com.example.linguasyne.enums.ReviewTimes
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.getField
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 
@@ -89,34 +86,36 @@ object FirebaseManager {
     suspend fun checkReviewsDue(): Int {
         var termsDue = 0
         coroutineScope {
-            getUserVocabUnlocks().apply {
-                    this.forEach { vocab ->
-                        if (vocab.nextReviewTime.compareTo(Timestamp.now()) <= 0) {
-                            vocab.reviewDue = true
-                            termsDue++
-                        }
-                    }
+            getUserVocabUnlocks().onEach { vocab ->
+                if (vocab.reviewDue()) {
+                    termsDue++
                 }
+            }
         }
-
-
-
         return termsDue
     }
 
     suspend fun checkLessonsDue(): Int {
         var termsDue: Int
-        coroutineScope{
-            var filteredVocab: List<Vocab> = emptyList()
+        coroutineScope {
+            var userUnlocks: List<Vocab> = emptyList()
             getUserVocabUnlocks().apply {
-                filteredVocab = this
+                userUnlocks = this
                 VocabRepository.filterByUnlockLevel(currentUser!!.level).apply {
                     termsDue =
-                        VocabRepository.currentVocab.size - filteredVocab.size
+                        VocabRepository.currentVocab.size - userUnlocks.size
                     Log.d("FirebaseManager", "returning termsDue LESSONS (value = $termsDue)")
                 }
             }
         }
         return termsDue
     }
+
+    suspend fun increaseUserLevel() {
+        coroutineScope {
+            Firebase.firestore.collection("users").document(currentUser!!.email)
+                .update("level", currentUser!!.level++)
+        }
+    }
+
 }

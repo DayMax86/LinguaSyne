@@ -32,7 +32,9 @@ class HomeViewModel(
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
 
     var reviewsDue: Int by mutableStateOf(0)
+    var reviewsClickable: Boolean by mutableStateOf(false)
     var lessonsDue: Int by mutableStateOf(0)
+    var lessonsClickable: Boolean by mutableStateOf(false)
 
     val activeIndicatorColour: Color = LsDarkPurple
     val inactiveIndicatorColour: Color = LsGrey
@@ -46,9 +48,11 @@ class HomeViewModel(
         }
     }
 
-    suspend fun getReviewsAndLessonsDue () {
+    private suspend fun getReviewsAndLessonsDue() {
         reviewsDue = FirebaseManager.checkReviewsDue()
         lessonsDue = FirebaseManager.checkLessonsDue()
+        reviewsClickable = reviewsDue > 0
+        lessonsClickable = lessonsDue > 0
     }
 
     fun onBackPressed() {
