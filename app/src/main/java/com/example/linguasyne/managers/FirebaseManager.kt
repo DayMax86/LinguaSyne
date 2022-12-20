@@ -114,7 +114,9 @@ object FirebaseManager {
     suspend fun increaseUserLevel() {
         coroutineScope {
             Firebase.firestore.collection("users").document(currentUser!!.email)
-                .update("level", currentUser!!.level++)
+                .update("level", currentUser!!.level)
+        }.addOnSuccessListener {
+            Log.d("FirebaseManager", "User level increased on Firebase successfully")
         }
     }
 

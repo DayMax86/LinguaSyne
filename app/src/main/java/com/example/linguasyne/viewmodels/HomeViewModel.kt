@@ -41,11 +41,11 @@ class HomeViewModel(
 
     init {
         viewModelScope.launch {
-            FirebaseManager.loadVocabFromFirebase().apply {
-                getReviewsAndLessonsDue()
-                loadUserImage()
-            }
+            FirebaseManager.loadVocabFromFirebase()
+            getReviewsAndLessonsDue()
+            user.levelUpCheck(FirebaseManager.getUserVocabUnlocks())
         }
+        loadUserImage()
     }
 
     private suspend fun getReviewsAndLessonsDue() {
