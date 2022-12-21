@@ -16,13 +16,13 @@ import com.example.linguasyne.enums.ReviewTimes.ONE_YEAR
 import com.example.linguasyne.enums.ReviewTimes.TWO_DAYS
 import com.example.linguasyne.enums.ReviewTimes.TWO_MONTHS
 import com.example.linguasyne.enums.ReviewTimes.TWO_WEEKS
-import com.example.linguasyne.enums.TermTypes
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
 import kotlinx.coroutines.tasks.await
 import java.sql.Date
+import java.sql.Timestamp
 import java.time.LocalDate
+import java.util.Calendar
 
 object RevisionSessionManager {
 
@@ -129,7 +129,7 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun updateReviewTimeOnFirebase(term: Vocab, nextReviewTimestamp: Date?) {
+    private suspend fun updateReviewTimeOnFirebase(term: Vocab, nextReviewTimestamp: Date) {
         try {
             val firestoreRef = FirebaseFirestore.getInstance()
             firestoreRef
@@ -166,8 +166,11 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun convertNextReviewHoursToTimestamp(hours: Int): Date? {
-        return Date.valueOf(LocalDate.now().plusDays((hours / 24).toLong()).toString())
+    fun convertNextReviewHoursToTimestamp(hours: Int): java.util.Date {
+        //return Date.valueOf(LocalDate.now().plusDays((hours / 24).toLong()).toString())
+        val hoursInMillis = hours * 3600000
+        //var t: com.google.firebase.Timestamp = com.google.firebase.Timestamp.now().toDate()
+        return Date.valueOf(LocalDate.now().plus(hoursInMillis).toString())
     }
 
     private fun advanceReviewTime(rt: Int): Int {
