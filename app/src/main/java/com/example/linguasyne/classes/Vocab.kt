@@ -1,14 +1,14 @@
 package com.example.linguasyne.classes
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.linguasyne.enums.Gender
 import com.example.linguasyne.enums.ReviewTimes
 import com.example.linguasyne.enums.TermTypes
 import com.google.firebase.Timestamp
-import java.time.LocalDateTime
-import java.time.LocalDateTime.*
 import java.time.Month
+import java.util.*
 
 class Vocab(
     vocabId: String = "",
@@ -35,7 +35,7 @@ class Vocab(
     var answeredPerfectly: Boolean = true
 
     var currentLevelTerm: Int = 0
-    var nextReviewTime: Timestamp = Timestamp.now()
+    var nextReviewTime = Calendar.getInstance().time
     var nextReviewHours: Int = 0
 
     init {
@@ -67,7 +67,9 @@ class Vocab(
     }
 
     fun reviewDue(): Boolean {
-        return this.nextReviewTime < Timestamp.now()
+        Log.w("Vocab", "Calendar.getInstance().time: ${Calendar.getInstance().time}")
+        return this.nextReviewTime.before(Calendar.getInstance().time)
+        //return this.nextReviewTime < Timestamp.now()
     }
 
 }

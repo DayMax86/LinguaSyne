@@ -19,9 +19,6 @@ import com.example.linguasyne.enums.ReviewTimes.TWO_WEEKS
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
 import kotlinx.coroutines.tasks.await
-import java.sql.Date
-import java.sql.Timestamp
-import java.time.LocalDate
 import java.util.Calendar
 
 object RevisionSessionManager {
@@ -129,7 +126,7 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun updateReviewTimeOnFirebase(term: Vocab, nextReviewTimestamp: Date) {
+    private suspend fun updateReviewTimeOnFirebase(term: Vocab, nextReviewTimestamp: Calendar) {
         try {
             val firestoreRef = FirebaseFirestore.getInstance()
             firestoreRef
@@ -166,11 +163,11 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun convertNextReviewHoursToTimestamp(hours: Int): java.util.Date {
+    fun convertNextReviewHoursToTimestamp(hours: Int): Calendar {
         //return Date.valueOf(LocalDate.now().plusDays((hours / 24).toLong()).toString())
-        val hoursInMillis = hours * 3600000
-        //var t: com.google.firebase.Timestamp = com.google.firebase.Timestamp.now().toDate()
-        return Date.valueOf(LocalDate.now().plus(hoursInMillis).toString())
+        val cal: Calendar = Calendar.getInstance()
+        cal.add(Calendar.HOUR_OF_DAY, hours)
+        return cal
     }
 
     private fun advanceReviewTime(rt: Int): Int {
