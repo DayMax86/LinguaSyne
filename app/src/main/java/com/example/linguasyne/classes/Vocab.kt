@@ -35,7 +35,7 @@ class Vocab(
     var answeredPerfectly: Boolean = true
 
     var currentLevelTerm: Int = 0
-    var nextReviewTime = Calendar.getInstance().time
+    var nextReviewTime: Long = 0
     var nextReviewHours: Int = 0
 
     init {
@@ -68,7 +68,7 @@ class Vocab(
 
     fun reviewDue(): Boolean {
         Log.w("Vocab", "Calendar.getInstance().time: ${Calendar.getInstance().time}")
-        return this.nextReviewTime.before(Calendar.getInstance().time)
+        return this.nextReviewTime < Calendar.getInstance().timeInMillis
         //return this.nextReviewTime < Timestamp.now()
     }
 

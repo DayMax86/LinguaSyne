@@ -126,7 +126,7 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private suspend fun updateReviewTimeOnFirebase(term: Vocab, nextReviewTimestamp: Calendar) {
+    private suspend fun updateReviewTimeOnFirebase(term: Vocab, nextReviewTimestamp: Long) {
         try {
             val firestoreRef = FirebaseFirestore.getInstance()
             firestoreRef
@@ -163,11 +163,11 @@ object RevisionSessionManager {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun convertNextReviewHoursToTimestamp(hours: Int): Calendar {
+    fun convertNextReviewHoursToTimestamp(hours: Int): Long {
         //return Date.valueOf(LocalDate.now().plusDays((hours / 24).toLong()).toString())
-        val cal: Calendar = Calendar.getInstance()
+        val cal = Calendar.getInstance()
         cal.add(Calendar.HOUR_OF_DAY, hours)
-        return cal
+        return cal.timeInMillis
     }
 
     private fun advanceReviewTime(rt: Int): Int {
