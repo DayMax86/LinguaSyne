@@ -30,7 +30,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import coil.util.CoilUtils
 import com.example.linguasyne.R
+import com.example.linguasyne.classes.RevisionSession
+import com.example.linguasyne.managers.RevisionSessionManager
 import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
@@ -81,6 +84,7 @@ fun ReviseTermScreen(
                 selectGenderTextColour = viewModel.selectGenderTextColour,
                 mascImage = viewModel.mascImage,
                 femImage = viewModel.femImage,
+                flagEmoji = viewModel.flagEmoji,
             )
         }
 
@@ -145,6 +149,7 @@ fun ViewTerm(
     selectGenderTextColour: Color,
     mascImage: Int,
     femImage: Int,
+    flagEmoji: String,
 ) {
     if (display) {
         Column(
@@ -195,6 +200,7 @@ fun ViewTerm(
                         placeholderColor = MaterialTheme.colors.secondary,
                         focusedLabelColor = MaterialTheme.colors.secondary,
                     ),
+                    trailingIcon = @Composable { Text(flagEmoji) },
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done
                     ),

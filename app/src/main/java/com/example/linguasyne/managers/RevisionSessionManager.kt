@@ -164,7 +164,6 @@ object RevisionSessionManager {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun convertNextReviewHoursToTimestamp(hours: Int): Long {
-        //return Date.valueOf(LocalDate.now().plusDays((hours / 24).toLong()).toString())
         val cal = Calendar.getInstance()
         cal.add(Calendar.HOUR_OF_DAY, hours)
         return cal.timeInMillis

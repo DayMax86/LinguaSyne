@@ -1,6 +1,8 @@
 package com.example.linguasyne.viewmodels
 
+import android.media.MediaPlayer
 import android.os.Build
+import android.provider.MediaStore.Audio.Media
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,7 +23,9 @@ import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 class ReviseTermViewModel(
-    private val navController: NavHostController
+    private val navController: NavHostController,
+    val mediaPlayerCorrect: MediaPlayer,
+    val mediaPlayerWrong: MediaPlayer,
 ) : ViewModel() {
 
     var currentTermTitle: String? by mutableStateOf("")
@@ -41,6 +45,10 @@ class ReviseTermViewModel(
     var selectGenderTextColour by mutableStateOf(LsTextBlue)
     var mascImage by mutableStateOf(R.drawable.opaquemars)
     var femImage by mutableStateOf(R.drawable.opaquevenus)
+    var flagEmoji by mutableStateOf(String(Character.toChars(0x1F1EC)))
+
+    val mascEmoji = String(Character.toChars(0x2642))
+    val femEmoji = String(Character.toChars(0x2640))
 
     var animateCorrect: Boolean by mutableStateOf(false)
     var animateDuration: Long by mutableStateOf(AnimationLengths.ANIMATION_DURATION_SHORT)
@@ -86,11 +94,27 @@ class ReviseTermViewModel(
             RevisionSession.AnswerTypes.ENG -> {
                 currentTermTitle = ctName
                 enableGenderSelection = true
+                flagEmoji = String(Character.toChars(0x1F1EC)) + String(Character.toChars(0x1F1E7))
             }
             RevisionSession.AnswerTypes.TRANS -> {
-                currentTermTitle = ctTrans
+                currentTermTitle =
+                    "$ctTrans  " + when (RevisionSessionManager.currentSession.currentTerm.gender) {
+                        Gender.M -> {
+                            mascEmoji
+                        }
+                        Gender.F -> {
+                            femEmoji
+                        }
+                        Gender.MF -> {
+                            mascEmoji + femEmoji
+                        }
+                        else -> {
+                            ""
+                        }
+                    }
                 //Disable gender selection for English words
                 enableGenderSelection = false
+                flagEmoji = String(Character.toChars(0x1F1EB)) + String(Character.toChars(0x1F1F7))
             }
         }
 
@@ -107,7 +131,10 @@ class ReviseTermViewModel(
     }
 
     fun handleSubmit() {
-        validateAnswer()
+        //Disable answer submit while correct animation is playing from last term
+        if (!animateCorrect) {
+            validateAnswer()
+        }
     }
 
     fun handleMascClick() {
@@ -147,22 +174,27 @@ class ReviseTermViewModel(
                     if (enableGenderSelection) {
                         if (checkGender()) {
                             animateCorrect = true
+                            mediaPlayerCorrect.start()
                             delay(AnimationLengths.ANIMATION_DURATION_SHORT)
                             advance()
                             animateCorrect = false
+                            mediaPlayerCorrect.stop()
                             resetUi()
                         }
                     } else {
                         animateCorrect = true
+                        mediaPlayerCorrect.start()
                         delay(AnimationLengths.ANIMATION_DURATION_SHORT)
                         advance()
                         animateCorrect = false
+                        mediaPlayerCorrect.stop()
                         resetUi()
                     }
 
                 } else {
                     //User got the answer wrong so show appropriate animation
                     textFieldOutlineColour = LsErrorRed
+                    mediaPlayerWrong.start()
                 }
 
             } catch (e: Exception) {
@@ -264,9 +296,11 @@ class ReviseTermViewModel(
         when (RevisionSessionManager.currentSession.currentStep) {
             //Check answer according to whether it's an ENG or TRANS step being tested
             (RevisionSession.AnswerTypes.TRANS) -> {
-                if (answer == RevisionSessionManager.currentSession.currentTerm.name.lowercase().filter {
-                        !it.isWhitespace()
-                    }) {
+                if (answer == RevisionSessionManager.currentSession.currentTerm.name.lowercase()
+                        .filter {
+                            !it.isWhitespace()
+                        }
+                ) {
                     RevisionSessionManager.currentSession.currentTerm.transAnswered = true
                     return true
                 }

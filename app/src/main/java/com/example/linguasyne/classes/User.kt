@@ -12,7 +12,7 @@ class User(email: String = "") {
     var imageUri: Uri? = null
     var id: String = ""
     val email: String
-    var level: Int = 0
+    var level: Int = 1
     var streak: Int = 0
     var studyCountry: String = "France"
 
@@ -31,7 +31,7 @@ class User(email: String = "") {
         Log.d("User", "Current user level: ${this.level}")
         userUnlocks.filter { it.unlockLevel == this.level }.forEach {
             Log.d("User", "Vocab item next review hours: ${it.nextReviewHours}")
-            if (it.nextReviewHours >= ReviewTimes.ONE_DAY) { //This has been lowered for testing - should be ONE_WEEK or perhaps greater
+            if (it.nextReviewHours >= ReviewTimes.ONE_WEEK) {
                 i++
             }
         }

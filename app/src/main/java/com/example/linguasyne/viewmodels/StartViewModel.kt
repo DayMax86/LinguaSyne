@@ -1,9 +1,13 @@
 package com.example.linguasyne.viewmodels
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -30,6 +34,16 @@ class StartViewModel(
             loggedIn = false
         }
         return loggedIn
+    }
+
+    fun aboutLinguaSyne(uriHandler: UriHandler) {
+        uriHandler.openUri("https://github.com/DayMax86/LinguaSyne")
+    }
+
+    fun share() {
+
+
+        //startActivity(shareIntent)
     }
 
     fun signOut() {

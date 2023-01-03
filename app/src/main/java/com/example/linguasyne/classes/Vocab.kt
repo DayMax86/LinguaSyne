@@ -44,7 +44,7 @@ class Vocab(
     }
 
     private fun assignGender(vocabGender: String) {
-        when (vocabGender.toLowerCase()) {
+        when (vocabGender.lowercase()) {
             "no" -> gender = Gender.NO
             "mf" -> gender = Gender.MF
             "m" -> gender = Gender.M
@@ -55,7 +55,7 @@ class Vocab(
 
     private fun assignTypes(vocabTypes: List<String>) {
         vocabTypes.forEach {
-            when (it.toLowerCase()) {
+            when (it.lowercase()) {
                 "n" -> this.types.add(TermTypes.NOUN)
                 "adj" -> this.types.add(TermTypes.ADJ)
                 "adv" -> this.types.add(TermTypes.ADV)
@@ -67,9 +67,12 @@ class Vocab(
     }
 
     fun reviewDue(): Boolean {
-        Log.w("Vocab", "Calendar.getInstance().time: ${Calendar.getInstance().time}")
-        return this.nextReviewTime < Calendar.getInstance().timeInMillis
-        //return this.nextReviewTime < Timestamp.now()
+        if (this.nextReviewHours == ReviewTimes.NEVER) {
+            //Make sure that the user never sees a completed term.
+            return false
+        } else {
+            return this.nextReviewTime < Calendar.getInstance().timeInMillis
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.linguasyne.ui.elements
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,6 +36,7 @@ import com.example.linguasyne.viewmodels.ReviseTermViewModel
 @Composable
 fun MainDrawerContent(
     screenContent: @Composable () -> Unit,
+    shareIntent: Intent,
 ) {
     Column(
         modifier = Modifier
@@ -130,6 +133,8 @@ fun MainDrawerContent(
             horizontalAlignment = Alignment.Start,
         ) {
             Row(
+                modifier = Modifier
+                    .clickable { /*LocalContext.current.startActivity(shareIntent)*/ },
                 horizontalArrangement = Arrangement.Start,
             ) {
 
@@ -173,6 +178,7 @@ fun MainDrawerContent(
 @Composable
 fun HomeDrawerContent(
     signOut: () -> Unit,
+    aboutLinguaSyne: () -> Unit,
     context: Context,
 ) {
 
@@ -182,9 +188,8 @@ fun HomeDrawerContent(
         horizontalAlignment = Alignment.Start,
     ) {
         Row(
-            /*modifier = Modifier.clickable { //TODO() FOR DEVELOPER USE ONLY!! Will be removed in release version.
-    CSVManager.importVocabCSV(this@StartActivity.applicationContext)
-},*/
+            modifier = Modifier
+                .clickable { aboutLinguaSyne() },
             horizontalArrangement = Arrangement.Start,
         ) {
 
@@ -218,7 +223,7 @@ fun HomeDrawerContent(
         )
     }
 
-    Column(
+    /*Column(
         modifier = Modifier
             .width(intrinsicSize = IntrinsicSize.Max),
         horizontalAlignment = Alignment.Start,
@@ -259,7 +264,7 @@ fun HomeDrawerContent(
                 .height(1.dp),
             color = MaterialTheme.colors.onBackground,
         )
-    }
+    }*/
 
     Column(
         modifier = Modifier
