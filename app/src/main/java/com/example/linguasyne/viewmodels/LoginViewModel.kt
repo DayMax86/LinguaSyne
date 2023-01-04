@@ -1,8 +1,6 @@
 package com.example.linguasyne.viewmodels
 
-import android.net.Uri
 import android.util.Log
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,20 +11,11 @@ import com.example.linguasyne.managers.FirebaseManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.enums.AnimationLengths
 import com.example.linguasyne.enums.ComposableDestinations
-import com.example.linguasyne.ui.theme.LsCorrectGreen
-import com.example.linguasyne.ui.theme.LsDarkPurple
 import com.example.linguasyne.ui.theme.LsErrorRed
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.firestore.ktx.firestore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 

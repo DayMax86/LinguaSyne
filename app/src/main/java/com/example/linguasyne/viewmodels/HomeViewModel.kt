@@ -36,8 +36,8 @@ class HomeViewModel(
     var lessonsDue: Int by mutableStateOf(0)
     var lessonsClickable: Boolean by mutableStateOf(false)
 
-    val activeIndicatorColour: Color = LsDarkPurple
-    val inactiveIndicatorColour: Color = LsGrey
+    val activeIndicatorColour: Color = LsLightPrimaryVariant
+    val inactiveIndicatorColour: Color = LsLightOnPrimary
 
     init {
         viewModelScope.launch {

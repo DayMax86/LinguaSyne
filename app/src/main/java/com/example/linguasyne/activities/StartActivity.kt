@@ -22,10 +22,7 @@ import com.example.linguasyne.R
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.screens.*
-import com.example.linguasyne.ui.elements.HomeDrawerContent
-import com.example.linguasyne.ui.elements.MainDrawerContent
-import com.example.linguasyne.ui.elements.ReviseDrawerContent
-import com.example.linguasyne.ui.elements.DefaultTopAppBar
+import com.example.linguasyne.ui.elements.*
 import com.example.linguasyne.viewmodels.BaseViewModel
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 import com.example.linguasyne.viewmodels.StartViewModel
@@ -50,17 +47,18 @@ class StartActivity : AppCompatActivity() {
 
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+                putExtra(Intent.EXTRA_TEXT, "http://play.google.com/store/apps/details?id=com.example.linguasyne")
                 type = "text/plain"
             }
             val shareIntent = Intent.createChooser(sendIntent, null)
+            val context = LocalContext.current
 
             val scope = rememberCoroutineScope()
             val scaffoldState =
                 rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
 
             //TODO() Change to match system theme once colours have been set before release
-            LinguaSyneTheme(darkTheme = false) {
+            LinguaSyneTheme(darkTheme = viewModel.darkMode) {
 
                 //Global, shared features (e.g. TopAppBar, Drawer)
                 Scaffold(
@@ -68,7 +66,16 @@ class StartActivity : AppCompatActivity() {
                     drawerContent = {
                         MainDrawerContent(
                             screenContent = drawerContent,
-                            shareIntent,
+                            settings = {
+                                ShowSettings(
+                                    visible = viewModel.showSettings,
+                                    darkMode = viewModel.darkMode,
+                                    toggleDarkMode = viewModel::toggleDarkMode,
+                                )
+                            },
+                            toggleSettingsDisplay = viewModel::toggleSettings,
+                            shareIntent = shareIntent,
+                            context = context,
                         )
                     },
 

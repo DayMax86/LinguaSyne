@@ -2,7 +2,6 @@ package com.example.linguasyne.viewmodels
 
 import android.media.MediaPlayer
 import android.os.Build
-import android.provider.MediaStore.Audio.Media
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,16 +32,16 @@ class ReviseTermViewModel(
     private var ctTrans: String = ""
 
     var userInput: String by mutableStateOf("")
-    var textFieldOutlineColour by mutableStateOf(LsGrey)
-    var mascOutlineColour by mutableStateOf(LsGrey)
-    var femOutlineColour by mutableStateOf(LsGrey)
+    var textFieldOutlineColour by mutableStateOf(LsLightOnPrimary)
+    var mascOutlineColour by mutableStateOf(LsLightOnPrimary)
+    var femOutlineColour by mutableStateOf(LsLightOnPrimary)
 
     var selectedGender by mutableStateOf(Gender.NO)
     private var mascSelected = false
     private var femSelected = false
     private var enableGenderSelection = false
 
-    var selectGenderTextColour by mutableStateOf(LsTextBlue)
+    var selectGenderTextColour by mutableStateOf(LsLightPrimary)
     var mascImage by mutableStateOf(R.drawable.opaquemars)
     var femImage by mutableStateOf(R.drawable.opaquevenus)
     var flagEmoji by mutableStateOf(String(Character.toChars(0x1F1EC)))
@@ -121,11 +120,11 @@ class ReviseTermViewModel(
         if (enableGenderSelection) {
             mascImage = R.drawable.opaquemars
             femImage = R.drawable.opaquevenus
-            selectGenderTextColour = LsTextBlue
+            selectGenderTextColour = LsLightPrimary
         } else {
             mascImage = R.drawable.alphamars
             femImage = R.drawable.alphavenus
-            selectGenderTextColour = LsGrey
+            selectGenderTextColour = LsLightOnPrimary
         }
 
     }
@@ -142,10 +141,10 @@ class ReviseTermViewModel(
             //Toggle selection
             if (mascSelected) {
                 mascSelected = false
-                mascOutlineColour = LsGrey
+                mascOutlineColour = LsLightOnPrimary
             } else {
                 mascSelected = true
-                mascOutlineColour = LsDarkPurple
+                mascOutlineColour = LsLightPrimaryVariant
             }
         }
     }
@@ -155,10 +154,10 @@ class ReviseTermViewModel(
             //Toggle selection
             if (femSelected) {
                 femSelected = false
-                femOutlineColour = LsGrey
+                femOutlineColour = LsLightOnPrimary
             } else {
                 femSelected = true
-                femOutlineColour = LsDarkPurple
+                femOutlineColour = LsLightPrimaryVariant
             }
         }
     }
@@ -211,12 +210,12 @@ class ReviseTermViewModel(
     private fun resetUi() {
         //Reset text box and border colour
         userInput = ""
-        textFieldOutlineColour = LsGrey
+        textFieldOutlineColour = LsLightOnPrimary
         //Reset gender borders and values
         mascSelected = false
-        mascOutlineColour = LsGrey
+        mascOutlineColour = LsLightOnPrimary
         femSelected = false
-        femOutlineColour = LsGrey
+        femOutlineColour = LsLightOnPrimary
 
         // Make sure the activity is displaying either the term name or translation
         updateTermTitle(RevisionSessionManager.currentSession.currentStep)
@@ -224,7 +223,7 @@ class ReviseTermViewModel(
 
     fun handleInput(text: String) {
         userInput = text
-        textFieldOutlineColour = LsDarkPurple
+        textFieldOutlineColour = LsLightPrimaryVariant
     }
 
     private suspend fun advance() {

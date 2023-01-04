@@ -7,24 +7,18 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,10 +28,110 @@ import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
 @Composable
+fun ShowSettings(
+    visible: Boolean,
+    darkMode: Boolean,
+    toggleDarkMode: (Boolean) -> Unit,
+) {
+    if (visible) {
+        Column(
+            modifier = Modifier
+                //.border(2.dp, Color.Red)
+                .fillMaxHeight()
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+        )
+        {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .width(intrinsicSize = IntrinsicSize.Min)
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.Start,
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.settings),
+                            style = MaterialTheme.typography.h1,
+                            color = MaterialTheme.colors.primary,
+                            maxLines = 1,
+                        )
+
+                    }
+
+                }
+
+                Divider(
+                    modifier = Modifier
+                        .height(3.dp),
+                    color = MaterialTheme.colors.onBackground,
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    //.width(intrinsicSize = IntrinsicSize.Max),
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.dark_mode),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary,
+                        maxLines = 1,
+                    )
+
+                    Switch(
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp),
+                        checked = darkMode,
+                        onCheckedChange = toggleDarkMode,
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colors.primary,
+                            checkedTrackColor = MaterialTheme.colors.secondary,
+                            uncheckedThumbColor = MaterialTheme.colors.primaryVariant,
+                            uncheckedTrackColor = MaterialTheme.colors.onBackground,
+                        )
+                    )
+
+                }
+
+                Divider(
+                    modifier = Modifier
+                        .height(1.dp),
+                    color = MaterialTheme.colors.onBackground,
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun MainDrawerContent(
     screenContent: @Composable () -> Unit,
+    settings: @Composable () -> Unit,
+    toggleSettingsDisplay: () -> Unit,
     shareIntent: Intent,
+    context: Context,
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -72,7 +166,11 @@ fun MainDrawerContent(
                         modifier = Modifier
                             .size(width = 50.dp, height = 50.dp)
                             .padding(start = 10.dp, top = 6.dp)
-                            .border(2.dp, MaterialTheme.colors.secondary, RoundedCornerShape(10))
+                            .border(
+                                2.dp,
+                                MaterialTheme.colors.secondary,
+                                RoundedCornerShape(10)
+                            )
                             .clip(shape = RectangleShape),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
@@ -94,6 +192,10 @@ fun MainDrawerContent(
             horizontalAlignment = Alignment.Start,
         ) {
             Row(
+                modifier = Modifier
+                    .clickable {
+                        toggleSettingsDisplay()
+                    },
                 horizontalArrangement = Arrangement.Start,
             ) {
 
@@ -127,6 +229,8 @@ fun MainDrawerContent(
             )
         }
 
+        settings()
+
         Column(
             modifier = Modifier
                 .width(intrinsicSize = IntrinsicSize.Max),
@@ -134,7 +238,7 @@ fun MainDrawerContent(
         ) {
             Row(
                 modifier = Modifier
-                    .clickable { /*LocalContext.current.startActivity(shareIntent)*/ },
+                    .clickable { context.startActivity(shareIntent) },
                 horizontalArrangement = Arrangement.Start,
             ) {
 

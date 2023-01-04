@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 open class BaseViewModel: ViewModel() {
-    open var helpText by mutableStateOf("asaasa")
+    open var helpText by mutableStateOf("test")
 
     open fun drawerContent() {
     }

@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.linguasyne.ui.theme.LsGrey
+import com.example.linguasyne.ui.theme.LsLightOnPrimary
 
 @Composable
 fun TopFadedBox(
@@ -23,7 +23,7 @@ fun TopFadedBox(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            LsGrey,
+                            LsLightOnPrimary,
                             Color.Transparent,
                         )
                     )
@@ -48,7 +48,7 @@ fun BottomFadedBox(
                     brush = Brush.verticalGradient(
                         colors = listOf(
                             Color.Transparent,
-                            LsGrey,
+                            LsLightOnPrimary,
                         )
                     )
                 ),

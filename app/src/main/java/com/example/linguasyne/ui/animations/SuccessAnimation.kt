@@ -16,7 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.linguasyne.ui.theme.LsCorrectGreen
-import com.example.linguasyne.ui.theme.White
+import com.example.linguasyne.ui.theme.LsLightOnBackground
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -73,7 +73,7 @@ fun AnimateSuccess(
                             //color = LsCorrectGreen,
                             style =
                             TextStyle(
-                                color = White,
+                                color = LsLightOnBackground,
                                 fontSize = 150.sp,
                             ),
 

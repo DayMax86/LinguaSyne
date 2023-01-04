@@ -11,7 +11,7 @@ import com.example.linguasyne.R
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.ui.theme.LsCorrectGreen
 import com.example.linguasyne.ui.theme.LsErrorRed
-import com.example.linguasyne.ui.theme.LsTextBlue
+import com.example.linguasyne.ui.theme.LsLightPrimary
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.User
@@ -52,12 +52,12 @@ class CreateAccountViewModel(
     var userImage: Uri? by mutableStateOf(null)
 
     fun handleEmailChange(text: String) {
-        emailOutlineColour = LsTextBlue
+        emailOutlineColour = LsLightPrimary
         userEmailInput = text
     }
 
     fun handlePasswordChange(text: String) {
-        passwordOutlineColour = LsTextBlue
+        passwordOutlineColour = LsLightPrimary
         userPasswordInput = text
 
         if (userPasswordInput == "") { //User hasn't entered a password so hide the strength indicator

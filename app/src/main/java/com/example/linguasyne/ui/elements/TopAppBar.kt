@@ -52,7 +52,8 @@ fun DefaultTopAppBar(
                             )
                         }
                     ),
-                contentDescription = ""
+                contentDescription = "",
+                tint = MaterialTheme.colors.secondary,
             )
         },
         actions = {

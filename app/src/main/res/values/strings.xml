@@ -60,4 +60,5 @@
     <string name="resume">Resume</string>
     <string name="lesson_end">Learnt all the vocab?</string>
     <string name="complete_lesson">Press continue to end the lesson and add the vocab to your reviews</string>
+    <string name="dark_mode">Dark mode</string>
 </resources>

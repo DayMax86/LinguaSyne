@@ -13,10 +13,9 @@ import com.example.linguasyne.enums.*
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.managers.VocabRepository
-import com.example.linguasyne.ui.theme.LsDarkPurple
-import com.example.linguasyne.ui.theme.LsGrey
-import com.example.linguasyne.ui.theme.LsLightTeal
-import com.example.linguasyne.ui.theme.LsVocabTextBlue
+import com.example.linguasyne.ui.theme.LsLightPrimaryVariant
+import com.example.linguasyne.ui.theme.LsLightOnPrimary
+import com.example.linguasyne.ui.theme.LsLightPrimary
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.getField
@@ -32,8 +31,8 @@ class VocabDisplayViewModel(
 
     var termToDisplay: Vocab by mutableStateOf(VocabRepository.currentVocab[0])
 
-    val activeIndicatorColour: Color = LsDarkPurple
-    val inactiveIndicatorColour: Color = LsGrey
+    val activeIndicatorColour: Color = LsLightPrimaryVariant
+    val inactiveIndicatorColour: Color = LsLightOnPrimary
 
     var showDisplay: Boolean by mutableStateOf(false)
 
@@ -43,10 +42,10 @@ class VocabDisplayViewModel(
     var userInput: String by mutableStateOf("")
 
     private var masc by mutableStateOf(false)
-    var mascOutlineColour by mutableStateOf(LsGrey)
+    var mascOutlineColour by mutableStateOf(LsLightOnPrimary)
     private var fem by mutableStateOf(false)
-    var femOutlineColour by mutableStateOf(LsGrey)
-    var textFieldOutlineColour by mutableStateOf(LsVocabTextBlue)
+    var femOutlineColour by mutableStateOf(LsLightOnPrimary)
+    var textFieldOutlineColour by mutableStateOf(LsLightPrimary)
 
     var animateSuccess: Boolean by mutableStateOf(false)
     val animateDuration = AnimationLengths.ANIMATION_DURATION_LONG

@@ -33,8 +33,8 @@ import com.example.linguasyne.ui.animations.AnimateSuccess
 import com.example.linguasyne.ui.elements.BottomFadedBox
 import com.example.linguasyne.ui.elements.EndLessonCard
 import com.example.linguasyne.ui.elements.TopFadedBox
-import com.example.linguasyne.ui.theme.LsDarkPurple
-import com.example.linguasyne.ui.theme.LsGrey
+import com.example.linguasyne.ui.theme.LsLightPrimaryVariant
+import com.example.linguasyne.ui.theme.LsLightOnPrimary
 import com.example.linguasyne.viewmodels.VocabDisplayViewModel
 import com.google.accompanist.pager.*
 
@@ -352,9 +352,9 @@ fun DisplayTerm(
                             .border(
                                 2.dp,
                                 if (vocab.gender == Gender.M || vocab.gender == Gender.MF) {
-                                    LsDarkPurple
+                                    LsLightPrimaryVariant
                                 } else {
-                                    LsGrey
+                                    LsLightOnPrimary
                                 },
                                 RoundedCornerShape(10)
                             )
@@ -374,9 +374,9 @@ fun DisplayTerm(
                             .border(
                                 2.dp,
                                 if (vocab.gender == Gender.F || vocab.gender == Gender.MF) {
-                                    LsDarkPurple
+                                    LsLightPrimaryVariant
                                 } else {
-                                    LsGrey
+                                    LsLightOnPrimary
                                 },
                                 RoundedCornerShape(10)
                             )

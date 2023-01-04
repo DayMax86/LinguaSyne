@@ -2,38 +2,39 @@ package com.example.linguasyne.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
 
 private val LightThemeColors = lightColors(
-    primary = LsTextBlue,
-    primaryVariant = LsDarkPurple,
-    onPrimary = LsGrey,
-    secondary = LsDarkPurple,
-    secondaryVariant = LsLightTeal,
-    onSecondary = LsGrey,
+    primary = LsLightPrimary,
+    primaryVariant = LsLightPrimaryVariant,
+    onPrimary = LsLightOnPrimary,
+    secondary = LsLightSecondary,
+    secondaryVariant = LsLightSecondaryVariant,
+    onSecondary = LsLightOnSecondary,
     error = LsErrorRed,
     onError = LsErrorRed,
-    background = LsBackgroundTeal,
-    onBackground = White,
-    surface = LsBackgroundTeal,
-    onSurface = White
+    background = LsLightBackground,
+    onBackground = LsLightOnBackground,
+    surface = LsLightSurface,
+    onSurface = LsLightOnSurface
 )
 
-private val DarkThemeColors = lightColors(
-    primary = LsMidPurple,
-    primaryVariant = LsDarkPurple,
-    onPrimary = LsGrey,
-    secondary = LsDarkPurple,
-    secondaryVariant = LsLightTeal,
-    onSecondary = LsGrey,
+private val DarkThemeColors = darkColors(
+    primary = LsDarkPrimary,
+    primaryVariant = LsDarkPrimaryVariant,
+    onPrimary = LsDarkOnPrimary,
+    secondary = LsDarkSecondary,
+    secondaryVariant = LsDarkSecondaryVariant,
+    onSecondary = LsDarkOnSecondary,
     error = LsErrorRed,
     onError = LsErrorRed,
-    background = LsBackgroundTeal,
-    onBackground = White,
-    surface = LsBackgroundTeal,
-    onSurface = White
+    background = LsDarkBackground,
+    onBackground = LsDarkOnBackground,
+    surface = LsDarkSurface,
+    onSurface = LsDarkOnSurface
 )
 
 
