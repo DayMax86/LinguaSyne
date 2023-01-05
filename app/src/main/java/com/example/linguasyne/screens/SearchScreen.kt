@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.Vocab
+import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.ui.animations.AnimateLoading
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.VocabSearchViewModel
@@ -121,12 +122,12 @@ fun VocabItem(
             ) {
 
                 Text(
-                    text = stringResource(id = R.string.unlock_level) + "${vocab.unlockLevel}",
+                    text = stringResource(id = R.string.unlock_level) + " ${vocab.unlockLevel}",
                     color = MaterialTheme.colors.secondary,
                     style = MaterialTheme.typography.body1,
                 )
                 Text(
-                    text = stringResource(id = R.string.current_level) + "${vocab.currentLevelTerm}",
+                    text = stringResource(id = R.string.your_level) + " ${FirebaseManager.currentUser!!.level}",
                     color = MaterialTheme.colors.secondary,
                     style = MaterialTheme.typography.body1,
                 )

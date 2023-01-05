@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.linguasyne.R
 import com.example.linguasyne.HiddenData
+import com.example.linguasyne.managers.CSVManager
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
 
@@ -446,9 +447,9 @@ fun HomeDrawerContent(
 }
 
 private fun uploadLanguageData(context: Context) {
-    /*if (FirebaseManager.currentUser?.id == HiddenData.ADMIN_USER_ID) {
+    if (FirebaseManager.currentUser?.id == HiddenData.ADMIN_USER_ID) {
         CSVManager.importVocabCSV(context)
-    }*/
+    }
     //DEVELOPER USE ONLY.
 }
 

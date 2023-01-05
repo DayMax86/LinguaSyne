@@ -51,6 +51,8 @@ class VocabDisplayViewModel(
     val animateDuration = AnimationLengths.ANIMATION_DURATION_LONG
     var blurAmount: Int by mutableStateOf(0)
 
+    var displayEndSessionWarning by mutableStateOf(false)
+
     var showLoadingAnim: Boolean by mutableStateOf(false)
 
     var progressBarValue: Float by mutableStateOf(0f)
@@ -88,6 +90,19 @@ class VocabDisplayViewModel(
     }
 
     fun handleBackPress() {
+        if (vSource == Sources.SEARCH) {
+            handleEndPress()
+        } else {
+            displayEndSessionWarning = !displayEndSessionWarning
+            blurAmount = if (displayEndSessionWarning) {
+                5
+            } else {
+                0
+            }
+        }
+    }
+
+    fun handleEndPress() {
         viewModelScope
             .launch {
                 if (!showPopUpInput) {

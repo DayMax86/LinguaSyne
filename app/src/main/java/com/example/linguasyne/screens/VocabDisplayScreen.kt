@@ -85,110 +85,127 @@ fun MainDisplay(
     when (source) {
         VocabDisplayViewModel.Sources.LESSON -> {
 
-            Column(
+            Surface(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
+                    .blur(
+                        viewModel.blurAmount.dp,
+                        viewModel.blurAmount.dp,
+                        BlurredEdgeTreatment.Rectangle
+                    )
             ) {
 
-                HorizontalPager(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.95f),
-                    state = pagerState,
-                    count = LessonManager.currentLesson.lessonList.size + 1,
-                ) { page ->
+                        .fillMaxHeight()
+                ) {
 
-                    Card(
+                    HorizontalPager(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(10.dp),
-                        elevation = 3.dp,
-                    ) {
+                            .fillMaxHeight(0.95f),
+                        state = pagerState,
+                        count = LessonManager.currentLesson.lessonList.size + 1,
+                    ) { page ->
 
-                        if (page <= LessonManager.currentLesson.lessonList.size - 1) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            elevation = 3.dp,
+                        ) {
 
-                            Surface(
+                            if (page <= LessonManager.currentLesson.lessonList.size - 1) {
+
+                                Surface(
+                                    modifier = Modifier
+                                        .verticalScroll(scrollState)
+                                        .background(MaterialTheme.colors.background)
+                                        .fillMaxHeight()
+                                        .fillMaxWidth()
+                                )
+                                {
+
+                                    DisplayTerm(
+                                        LessonManager.currentLesson.lessonList[page],
+                                        viewModel::handleTransTextPress,
+                                        viewModel::handleMnemTextPress,
+                                        viewModel::handleBackPress,
+                                        viewModel.progressBarValue,
+                                        viewModel.showLoadingAnim,
+                                    )
+
+
+                                }
+
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    verticalArrangement = Arrangement.Top,
+                                ) {
+                                    TopFadedBox(
+                                        show =
+                                        (scrollState.value > 0)
+                                    )
+                                }
+
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxHeight(),
+                                    verticalArrangement = Arrangement.Bottom,
+                                ) {
+                                    BottomFadedBox(
+                                        show =
+                                        (scrollState.value < scrollState.maxValue) && (scrollState.maxValue > 0)
+                                    )
+                                }
+                            }
+
+                        }
+
+                        if (page == LessonManager.currentLesson.lessonList.size) {
+                            EndLessonCard(
                                 modifier = Modifier
-                                    .verticalScroll(scrollState)
-                                    .background(MaterialTheme.colors.background)
-                                    .fillMaxHeight()
                                     .fillMaxWidth()
+                                    .fillMaxHeight()
+                                    .padding(10.dp),
+                                viewModel::handleBackPress
                             )
-                            {
-
-                                DisplayTerm(
-                                    LessonManager.currentLesson.lessonList[page],
-                                    viewModel::handleTransTextPress,
-                                    viewModel::handleMnemTextPress,
-                                    viewModel::handleBackPress,
-                                    viewModel.progressBarValue,
-                                    viewModel.showLoadingAnim,
-                                )
-
-
-                            }
-
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxHeight(),
-                                verticalArrangement = Arrangement.Top,
-                            ) {
-                                TopFadedBox(
-                                    show =
-                                    (scrollState.value > 0)
-                                )
-                            }
-
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxHeight(),
-                                verticalArrangement = Arrangement.Bottom,
-                            ) {
-                                BottomFadedBox(
-                                    show =
-                                    (scrollState.value < scrollState.maxValue) && (scrollState.maxValue > 0)
-                                )
-                            }
                         }
 
                     }
 
-                    if (page == LessonManager.currentLesson.lessonList.size) {
-                        EndLessonCard(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight()
-                                .padding(10.dp),
-                            viewModel::handleBackPress
-                        )
-                    }
-
                 }
-
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(),
-            )
-            {
                 Row(
                     modifier = Modifier
                         .fillMaxHeight()
                         .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-
-                    HorizontalPagerIndicator(
+                )
+                {
+                    Row(
                         modifier = Modifier
-                            .align(Alignment.Bottom)
-                            .padding(top = 8.dp, bottom = 16.dp),
-                        pagerState = pagerState,
-                        activeColor = viewModel.activeIndicatorColour,
-                        inactiveColor = viewModel.inactiveIndicatorColour,
-                    )
+                            .fillMaxHeight()
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+
+                        HorizontalPagerIndicator(
+                            modifier = Modifier
+                                .align(Alignment.Bottom)
+                                .padding(top = 8.dp, bottom = 16.dp),
+                            pagerState = pagerState,
+                            activeColor = viewModel.activeIndicatorColour,
+                            inactiveColor = viewModel.inactiveIndicatorColour,
+                        )
+                    }
                 }
+
+                DisplayEndSessionWarning(
+                    display = viewModel.displayEndSessionWarning,
+                    onConfirmDialogueButton = { viewModel.handleEndPress() },
+                    onDismissDialogueButton = { viewModel.handleBackPress() },
+                )
+
             }
 
         }
@@ -562,7 +579,6 @@ fun DisplayTerm(
                     Text(
                         modifier = Modifier
                             .padding(start = 5.dp),
-                        //text = vocab.currentLevelTerm.toString(),
                         text = stringResource(id = R.string.unlocked),
                         style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.secondary,
@@ -576,7 +592,6 @@ fun DisplayTerm(
                     Text(
                         modifier = Modifier
                             .padding(end = 5.dp),
-                        //text = (vocab.currentLevelTerm + 1).toString(),
                         text = stringResource(id = R.string.memorised),
                         style = MaterialTheme.typography.body2,
                         color = MaterialTheme.colors.secondary,
@@ -588,51 +603,6 @@ fun DisplayTerm(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        //---------------------- SIXTH ROW ----------------------------//
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                Row(
-                    modifier = Modifier
-                        .padding(10.dp),
-                ) {
-
-                    Text(
-                        modifier = Modifier
-                            .padding(all = 10.dp),
-                        text = stringResource(id = R.string.next_review),
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.secondary,
-                    )
-
-                }
-
-                Row(
-                    modifier = Modifier
-                        .padding(10.dp),
-                ) {
-
-                    Text(
-                        modifier = Modifier
-                            .padding(all = 10.dp),
-                        text = vocab.nextReviewHours.toString(),
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.secondary,
-                    )
-
-                }
-            }
-
-        }
     }
 
 

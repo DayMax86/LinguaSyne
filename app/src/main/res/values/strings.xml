@@ -43,6 +43,7 @@
     <string name="continue_string">Continue</string>
     <string name="unlock_level">Unlock level:</string>
     <string name="current_level">Current level:</string>
+    <string name="your_level">Your level:</string>
     <string name="password_strength_spaces">Password cannot contain spaces!</string>
     <string name="password_strength_very_weak">Very weak</string>
     <string name="password_strength_weak">Weak</string>

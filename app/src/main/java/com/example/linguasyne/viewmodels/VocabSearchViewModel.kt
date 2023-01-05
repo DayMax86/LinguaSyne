@@ -19,7 +19,7 @@ class VocabSearchViewModel(
     lateinit var vocabList: MutableList<Vocab>
 
     /*override fun showHelp() {
-        helpText = "Help me!"
+        helpText = "Help!"
     } */ //TODO()
 
     fun onSearchLaunch() {

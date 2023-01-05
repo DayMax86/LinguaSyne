@@ -98,11 +98,11 @@ class StartActivity : AppCompatActivity() {
                                 .fillMaxHeight()
                         ) {
                             Column() {
-                                if (baseViewModel?.helpText?.isNotEmpty() == true) {
+                                /*if (baseViewModel?.helpText?.isNotEmpty() == true) {
                                     Text(
                                         baseViewModel?.helpText ?: ""
                                     )
-                                }
+                                }*/ //TODO() Display help implementation
 
                                 NavHost(
                                     navController = navController,
