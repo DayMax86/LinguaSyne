@@ -6,11 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.UriHandler
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.managers.FirebaseManager
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 class StartViewModel(
     private val navController: NavHostController,
@@ -25,6 +27,7 @@ class StartViewModel(
             FirebaseAuth.getInstance().currentUser?.let {
                 FirebaseManager.currentUser = User(it.email ?: "")
                 loggedIn = true
+                fetchUserDarkModePreference()
             }
         } catch (e: Exception) {
             Log.e("StartViewModel", "$e")
@@ -48,6 +51,18 @@ class StartViewModel(
 
     fun toggleDarkMode(isDark: Boolean) {
         darkMode = isDark
+        viewModelScope.launch {
+            FirebaseManager.currentUser?.let {
+                it.darkModeEnabled = isDark
+                FirebaseManager.updateUserDarkModeChoice()
+            }
+        }
+    }
+
+    fun fetchUserDarkModePreference() {
+        viewModelScope.launch {
+            darkMode = FirebaseManager.getUserDarkModePreference()
+        }
     }
 
 }

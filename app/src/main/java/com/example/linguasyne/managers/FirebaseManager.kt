@@ -76,6 +76,27 @@ object FirebaseManager {
         return Uri.parse("https://firebasestorage.googleapis.com/v0/b/linguasyne.appspot.com/o/default%2Fdefault_profile_image.png?alt=media&token=92568d94-2835-4648-8128-672e998fe3de")
     }
 
+    suspend fun getUserDarkModePreference (): Boolean {
+        var darkMode: Boolean
+        coroutineScope {
+            darkMode = FirebaseFirestore.getInstance()
+                .collection("users")
+                .document("${currentUser?.email}")
+                .get().await().get("darkModeEnabled") as Boolean
+        }.apply {
+            return darkMode
+        }
+    }
+
+    suspend fun updateUserDarkModeChoice () {
+        coroutineScope {
+            Firebase.firestore.collection("users").document(currentUser!!.email)
+                .update("darkModeEnabled", currentUser!!.darkModeEnabled)
+        }.addOnSuccessListener {
+            Log.d("FirebaseManager", "User dark mode preference set to ${currentUser!!.darkModeEnabled}")
+        }
+    }
+
     fun signOutUser() {
         FirebaseAuth.getInstance().signOut()
         currentUser = null

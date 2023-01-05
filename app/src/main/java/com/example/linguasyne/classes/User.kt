@@ -15,6 +15,7 @@ class User(email: String = "") {
     var level: Int = 1
     var streak: Int = 0
     var studyCountry: String = "France"
+    var darkModeEnabled: Boolean = false
 
     init {
         this.email = email

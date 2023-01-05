@@ -7,14 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.ui.theme.LinguaSyneTheme
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
@@ -25,21 +21,19 @@ fun RevisionSummaryScreen(
     viewModel: ReviseTermViewModel,
 ) {
 
-    LinguaSyneTheme(
-        false,
+
+    Surface(
+        modifier = Modifier
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize(),
     ) {
-        Surface(
-            modifier = Modifier
-                .background(MaterialTheme.colors.background)
-                .fillMaxSize(),
-        ) {
-            Summary(
-                viewModel.summaryTotalCorrect,
-                viewModel.summaryTotalIncorrect,
-                viewModel::onSummaryButtonPress,
-                )
-        }
+        Summary(
+            viewModel.summaryTotalCorrect,
+            viewModel.summaryTotalIncorrect,
+            viewModel::onSummaryButtonPress,
+        )
     }
+
 
 }
 

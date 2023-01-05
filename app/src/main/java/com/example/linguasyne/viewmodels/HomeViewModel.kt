@@ -56,7 +56,7 @@ class HomeViewModel(
     }
 
     fun onBackPressed() {
-        //Back button disabled on home screen? Or minimise app?
+        //Back button disabled on home screen? Or minimise app? //TODO
     }
 
     private fun loadUserImage() {

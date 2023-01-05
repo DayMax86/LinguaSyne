@@ -53,7 +53,7 @@ fun DefaultTopAppBar(
                         }
                     ),
                 contentDescription = "",
-                tint = MaterialTheme.colors.secondary,
+                tint = MaterialTheme.colors.primary,
             )
         },
         actions = {

@@ -57,7 +57,6 @@ class StartActivity : AppCompatActivity() {
             val scaffoldState =
                 rememberScaffoldState(rememberDrawerState(DrawerValue.Closed))
 
-            //TODO() Change to match system theme once colours have been set before release
             LinguaSyneTheme(darkTheme = viewModel.darkMode) {
 
                 //Global, shared features (e.g. TopAppBar, Drawer)

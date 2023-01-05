@@ -1,6 +1,5 @@
 package com.example.linguasyne.screens
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.Vocab
 import com.example.linguasyne.ui.animations.AnimateLoading
@@ -31,17 +29,17 @@ fun SearchScreen(
     viewModel: VocabSearchViewModel,
 ) {
     viewModel.onSearchLaunch()
-    LinguaSyneTheme(darkTheme = false) {
-        Surface()
-        {
-            DisplayVocab(
-                vocabItems = viewModel.vocabList,
-                onClick = viewModel::handleCardPress,
-                onBackPress = viewModel::handleBackPress,
-                showAnim = viewModel.showLoadingAnim,
-            )
-        }
+
+    Surface()
+    {
+        DisplayVocab(
+            vocabItems = viewModel.vocabList,
+            onClick = viewModel::handleCardPress,
+            onBackPress = viewModel::handleBackPress,
+            showAnim = viewModel.showLoadingAnim,
+        )
     }
+    
 }
 
 
