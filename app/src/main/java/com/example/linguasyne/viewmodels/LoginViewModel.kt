@@ -52,7 +52,7 @@ class LoginViewModel(
                         //loadUserImage()
                         goToHome()
                     }
-                //If the user changes the email input between sign in and now it will likely crash! //TODO()
+                //If the user changes the email input between sign in and now it will potentially crash! //TODO()
 
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "$e")

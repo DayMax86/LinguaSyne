@@ -128,7 +128,12 @@ class CreateAccountViewModel(
             try {
                 val auth: FirebaseAuth = FirebaseAuth.getInstance()
                 /*------------ ADD TO FIREBASE 'AUTHENTICATION' -------------*/
-                auth.createUserWithEmailAndPassword(email, password)
+                auth.createUserWithEmailAndPassword(
+                    email.lowercase().filter {
+                        !it.isWhitespace()
+                    },
+                    password
+                )
                     .await()
                 // Sign in success, update UI with the signed-in user's information
                 val user = User(email)
@@ -201,7 +206,9 @@ class CreateAccountViewModel(
         viewModelScope.launch {
             goToHome = try {
                 Firebase.auth
-                    .signInWithEmailAndPassword(userEmailInput, userPasswordInput)
+                    .signInWithEmailAndPassword(
+                        userEmailInput.lowercase().filter { !it.isWhitespace() }, userPasswordInput
+                    )
                     .await()
                 //Feedback to user that login was successful
                 animateSuccess = true

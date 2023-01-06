@@ -25,7 +25,7 @@ class StartViewModel(
         var loggedIn = false
         try {
             FirebaseAuth.getInstance().currentUser?.let {
-                FirebaseManager.currentUser = User(it.email ?: "")
+                FirebaseManager.currentUser = User(it.email!!.lowercase().filter { !it.isWhitespace() } ?: "")
                 loggedIn = true
                 fetchUserDarkModePreference()
             }

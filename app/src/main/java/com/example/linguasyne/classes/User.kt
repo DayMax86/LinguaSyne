@@ -18,7 +18,9 @@ class User(email: String = "") {
     var darkModeEnabled: Boolean = false
 
     init {
-        this.email = email
+        this.email = email.lowercase().filter {
+            !it.isWhitespace()
+        }
         generateId()
     }
 

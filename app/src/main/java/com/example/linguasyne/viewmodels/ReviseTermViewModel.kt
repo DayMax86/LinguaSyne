@@ -1,11 +1,12 @@
 package com.example.linguasyne.viewmodels
 
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -32,16 +33,39 @@ class ReviseTermViewModel(
     private var ctTrans: String = ""
 
     var userInput: String by mutableStateOf("")
-    var textFieldOutlineColour by mutableStateOf(LsLightOnPrimary)
-    var mascOutlineColour by mutableStateOf(LsLightOnPrimary)
-    var femOutlineColour by mutableStateOf(LsLightOnPrimary)
+
+    enum class TextFieldColours {
+        DEFAULT,
+        CORRECT,
+        WRONG,
+        SELECTED,
+        UNSELECTED,
+        ;
+
+        val colourDefinitions: androidx.compose.ui.graphics.Color
+            @Composable
+            @ReadOnlyComposable
+            get() = when (this) {
+                DEFAULT -> MaterialTheme.colors.secondary
+                CORRECT -> LsCorrectGreen
+                WRONG -> LsErrorRed
+                SELECTED -> MaterialTheme.colors.primary
+                UNSELECTED -> MaterialTheme.colors.onBackground
+            }
+    }
+
+
+    var textFieldOutlineColour by mutableStateOf(TextFieldColours.DEFAULT)
+
+    var mascOutlineColour by mutableStateOf(TextFieldColours.UNSELECTED)
+    var femOutlineColour by mutableStateOf(TextFieldColours.UNSELECTED)
 
     var selectedGender by mutableStateOf(Gender.NO)
     private var mascSelected = false
     private var femSelected = false
     private var enableGenderSelection = false
 
-    var selectGenderTextColour by mutableStateOf(LsLightPrimary)
+    var selectGenderTextColour by mutableStateOf(TextFieldColours.DEFAULT)
     var mascImage by mutableStateOf(R.drawable.opaquemars)
     var femImage by mutableStateOf(R.drawable.opaquevenus)
     var flagEmoji by mutableStateOf(String(Character.toChars(0x1F1EC)))
@@ -120,11 +144,11 @@ class ReviseTermViewModel(
         if (enableGenderSelection) {
             mascImage = R.drawable.opaquemars
             femImage = R.drawable.opaquevenus
-            selectGenderTextColour = LsLightPrimary
+            selectGenderTextColour = TextFieldColours.DEFAULT
         } else {
             mascImage = R.drawable.alphamars
             femImage = R.drawable.alphavenus
-            selectGenderTextColour = LsLightOnPrimary
+            selectGenderTextColour = TextFieldColours.DEFAULT
         }
 
     }
@@ -141,10 +165,10 @@ class ReviseTermViewModel(
             //Toggle selection
             if (mascSelected) {
                 mascSelected = false
-                mascOutlineColour = LsLightOnPrimary
+                mascOutlineColour = TextFieldColours.UNSELECTED
             } else {
                 mascSelected = true
-                mascOutlineColour = LsLightPrimaryVariant
+                mascOutlineColour = TextFieldColours.SELECTED
             }
         }
     }
@@ -154,10 +178,10 @@ class ReviseTermViewModel(
             //Toggle selection
             if (femSelected) {
                 femSelected = false
-                femOutlineColour = LsLightOnPrimary
+                femOutlineColour = TextFieldColours.UNSELECTED
             } else {
                 femSelected = true
-                femOutlineColour = LsLightPrimaryVariant
+                femOutlineColour = TextFieldColours.SELECTED
             }
         }
     }
@@ -168,7 +192,7 @@ class ReviseTermViewModel(
                 //Check if the user input matches the current term's name
                 if (checkAnswer()) {
                     //User got the answer correct so show appropriate animation
-                    textFieldOutlineColour = LsCorrectGreen
+                    textFieldOutlineColour = TextFieldColours.CORRECT
 
                     if (enableGenderSelection) {
                         if (checkGender()) {
@@ -192,7 +216,7 @@ class ReviseTermViewModel(
 
                 } else {
                     //User got the answer wrong so show appropriate animation
-                    textFieldOutlineColour = LsErrorRed
+                    textFieldOutlineColour = TextFieldColours.WRONG
                     mediaPlayerWrong.start()
                 }
 
@@ -210,12 +234,12 @@ class ReviseTermViewModel(
     private fun resetUi() {
         //Reset text box and border colour
         userInput = ""
-        textFieldOutlineColour = LsLightOnPrimary
+        textFieldOutlineColour = TextFieldColours.DEFAULT
         //Reset gender borders and values
         mascSelected = false
-        mascOutlineColour = LsLightOnPrimary
+        mascOutlineColour = TextFieldColours.UNSELECTED
         femSelected = false
-        femOutlineColour = LsLightOnPrimary
+        femOutlineColour = TextFieldColours.UNSELECTED
 
         // Make sure the activity is displaying either the term name or translation
         updateTermTitle(RevisionSessionManager.currentSession.currentStep)
@@ -223,7 +247,7 @@ class ReviseTermViewModel(
 
     fun handleInput(text: String) {
         userInput = text
-        textFieldOutlineColour = LsLightPrimaryVariant
+        textFieldOutlineColour = TextFieldColours.DEFAULT
     }
 
     private suspend fun advance() {
@@ -257,11 +281,11 @@ class ReviseTermViewModel(
         val t = RevisionSessionManager.currentSession.currentTerm
         if (selectedGender == t.gender) {
             when (selectedGender) {
-                Gender.M -> mascOutlineColour = LsCorrectGreen
-                Gender.F -> femOutlineColour = LsCorrectGreen
+                Gender.M -> mascOutlineColour = TextFieldColours.CORRECT
+                Gender.F -> femOutlineColour = TextFieldColours.CORRECT
                 Gender.MF -> {
-                    mascOutlineColour = LsCorrectGreen
-                    femOutlineColour = LsCorrectGreen
+                    mascOutlineColour = TextFieldColours.CORRECT
+                    femOutlineColour = TextFieldColours.CORRECT
                 }
                 else -> {/* No gender so colours remain unchanged */
                 }
@@ -272,14 +296,14 @@ class ReviseTermViewModel(
         //If the got the gender wrong...
         else if (selectedGender != t.gender) {
             when (selectedGender) {
-                Gender.M -> mascOutlineColour = LsErrorRed
-                Gender.F -> femOutlineColour = LsErrorRed
+                Gender.M -> mascOutlineColour = TextFieldColours.WRONG
+                Gender.F -> femOutlineColour = TextFieldColours.WRONG
                 Gender.MF -> {
-                    mascOutlineColour = LsErrorRed
-                    femOutlineColour = LsErrorRed
+                    mascOutlineColour = TextFieldColours.WRONG
+                    femOutlineColour = TextFieldColours.WRONG
                 }
                 else -> {/* No gender selected but the user needs to select one */
-                    selectGenderTextColour = LsErrorRed
+                    selectGenderTextColour = TextFieldColours.WRONG
                 }
             }
             return false

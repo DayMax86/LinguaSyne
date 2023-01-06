@@ -194,8 +194,8 @@ fun MainDisplay(
                                 .align(Alignment.Bottom)
                                 .padding(top = 8.dp, bottom = 16.dp),
                             pagerState = pagerState,
-                            activeColor = viewModel.activeIndicatorColour,
-                            inactiveColor = viewModel.inactiveIndicatorColour,
+                            activeColor = MaterialTheme.colors.primary,
+                            inactiveColor = MaterialTheme.colors.secondaryVariant,
                         )
                     }
                 }
@@ -267,7 +267,7 @@ fun MainDisplay(
                 tOrM = viewModel.selectedInputType,
                 onTextValueChanged = viewModel::handleTextChange,
                 userInput = viewModel.userInput,
-                textFieldOutlineColour = viewModel.textFieldOutlineColour,
+                textFieldOutlineColour = MaterialTheme.colors.secondary,
                 buttonOnClick = viewModel::handleButtonPress,
                 onBackBehaviour = viewModel::togglePopUp,
             )
@@ -369,9 +369,9 @@ fun DisplayTerm(
                             .border(
                                 2.dp,
                                 if (vocab.gender == Gender.M || vocab.gender == Gender.MF) {
-                                    LsLightPrimaryVariant
+                                    MaterialTheme.colors.secondary
                                 } else {
-                                    LsLightOnPrimary
+                                    MaterialTheme.colors.onBackground
                                 },
                                 RoundedCornerShape(10)
                             )
@@ -391,9 +391,9 @@ fun DisplayTerm(
                             .border(
                                 2.dp,
                                 if (vocab.gender == Gender.F || vocab.gender == Gender.MF) {
-                                    LsLightPrimaryVariant
+                                    MaterialTheme.colors.secondary
                                 } else {
-                                    LsLightOnPrimary
+                                    MaterialTheme.colors.onBackground
                                 },
                                 RoundedCornerShape(10)
                             )

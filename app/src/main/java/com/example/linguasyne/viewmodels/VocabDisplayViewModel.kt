@@ -31,9 +31,6 @@ class VocabDisplayViewModel(
 
     var termToDisplay: Vocab by mutableStateOf(VocabRepository.currentVocab[0])
 
-    val activeIndicatorColour: Color = LsLightPrimaryVariant
-    val inactiveIndicatorColour: Color = LsLightOnPrimary
-
     var showDisplay: Boolean by mutableStateOf(false)
 
     var showPopUpInput: Boolean by mutableStateOf(false)
@@ -41,10 +38,6 @@ class VocabDisplayViewModel(
 
     var userInput: String by mutableStateOf("")
 
-    private var masc by mutableStateOf(false)
-    var mascOutlineColour by mutableStateOf(LsLightOnPrimary)
-    private var fem by mutableStateOf(false)
-    var femOutlineColour by mutableStateOf(LsLightOnPrimary)
     var textFieldOutlineColour by mutableStateOf(LsLightPrimary)
 
     var animateSuccess: Boolean by mutableStateOf(false)

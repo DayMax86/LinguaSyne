@@ -308,11 +308,18 @@ private fun TopHomeScreen(
                     .padding(top = 10.dp)
             ) {
 
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
 
-                SelectImage(
-                    onImageSelected = onClickProfileImage,
-                    userImage = userImage
-                )
+
+                    SelectImage(
+                        onImageSelected = onClickProfileImage,
+                        userImage = userImage
+                    )
+                }
 
                 FirebaseManager.currentUser?.let {
                     Text(
@@ -329,7 +336,7 @@ private fun TopHomeScreen(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.primaryVariant,
+                    color = MaterialTheme.colors.secondary,
                     text = stringResource(id = R.string.level) + " ${user.level}"
                 )
 
@@ -383,8 +390,8 @@ private fun BottomHomeScreen(
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 8.dp, bottom = 16.dp),
             pagerState = pagerState,
-            activeColor = activeIndicatorColour,
-            inactiveColor = inactiveIndicatorColour,
+            activeColor = MaterialTheme.colors.primary,
+            inactiveColor = MaterialTheme.colors.secondaryVariant,
         )
 
     }
