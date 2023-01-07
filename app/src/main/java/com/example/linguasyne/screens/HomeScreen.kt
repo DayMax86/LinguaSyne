@@ -4,11 +4,9 @@ import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -18,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -26,13 +26,11 @@ import androidx.navigation.NavHostController
 import com.example.linguasyne.R
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.managers.FirebaseManager
-import com.example.linguasyne.ui.elements.ApiBox
-import com.example.linguasyne.ui.elements.SelectImage
+import com.example.linguasyne.managers.LessonManager
+import com.example.linguasyne.ui.elements.*
 import com.example.linguasyne.viewmodels.ApiViewModel
 import com.example.linguasyne.viewmodels.HomeViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPagerIndicator
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.*
 import dev.chrisbanes.snapper.ExperimentalSnapperApi
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -61,10 +59,79 @@ fun HomeScreen(
         viewModel.lessonsDue,
         viewModel.reviewsClickable,
         viewModel.lessonsClickable,
+        viewModel.displayTutorial,
+        viewModel.blurAmount,
     )
-
 }
 
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun ShowTutorial(
+    displayTutorial: Boolean,
+    pagerState: PagerState,
+    scrollState: ScrollState,
+    tutorialPages: List<@Composable () -> Unit>
+) {
+    if (displayTutorial) {
+        HorizontalPager(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.95f),
+            state = pagerState,
+            count = 6,
+        ) { page ->
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                elevation = 3.dp,
+            ) {
+
+                Surface(
+                    modifier = Modifier
+                        //.verticalScroll(scrollState) //This causes a nested scroll crash
+                        .background(MaterialTheme.colors.background)
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                )
+                {
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.Top,
+                    ) {
+                        TopFadedBox(
+                            show =
+                            (scrollState.value > 0)
+                        )
+                    }
+
+                    //tutorialPages[page]
+                    TutorialCardEnd(Modifier.padding(all = 10.dp).wrapContentHeight())
+                    //----FOR TESTING----//
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.Bottom,
+                    ) {
+                        BottomFadedBox(
+                            show =
+                            (scrollState.value < scrollState.maxValue) && (scrollState.maxValue > 0)
+                        )
+                    }
+
+                }
+            }
+
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun DisplayHome(
     user: User,
@@ -82,43 +149,67 @@ fun DisplayHome(
     lessonsDue: Int,
     reviewsClickable: Boolean,
     lessonsClickable: Boolean,
+    displayTutorial: Boolean,
+    blurAmount: Int,
 ) {
 
-    Column(
+    Surface(
         modifier = Modifier
-            .fillMaxHeight()
-            .fillMaxWidth()
-            .padding(top = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .blur(blurAmount.dp, BlurredEdgeTreatment.Rectangle)
     ) {
 
-        BackHandler {
-            backBehaviour()
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth()
+                .padding(top = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+
+            BackHandler {
+                backBehaviour()
+            }
+
+            TopHomeScreen(
+                onClickVocabLesson,
+                onClickRevision,
+                onClickTermBase,
+                user,
+                onClickProfileImage,
+                userImage,
+                reviewsDue,
+                lessonsDue,
+                reviewsClickable,
+                lessonsClickable,
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            BottomHomeScreen(
+                user,
+                apiViewModel,
+                activeIndicatorColour,
+                inactiveIndicatorColour
+            )
+
         }
-
-        TopHomeScreen(
-            onClickVocabLesson,
-            onClickRevision,
-            onClickTermBase,
-            user,
-            onClickProfileImage,
-            userImage,
-            reviewsDue,
-            lessonsDue,
-            reviewsClickable,
-            lessonsClickable,
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        BottomHomeScreen(
-            user,
-            apiViewModel,
-            activeIndicatorColour,
-            inactiveIndicatorColour
-        )
-
     }
+    val scrollState = rememberScrollState()
+    val pagerState = rememberPagerState()
+    val tutorialPages = listOf<@Composable () -> Unit>(
+        { TutorialCardOne() },
+        { TutorialCardTwo() },
+        { TutorialCardThree() },
+        { TutorialCardFour() },
+        { TutorialCardFive() },
+        { TutorialCardEnd() },
+    )
+    ShowTutorial(
+        displayTutorial = displayTutorial,
+        pagerState = pagerState,
+        scrollState = scrollState,
+        tutorialPages = tutorialPages
+    )
 
 }
 

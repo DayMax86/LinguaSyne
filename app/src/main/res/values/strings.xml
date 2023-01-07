@@ -62,4 +62,26 @@
     <string name="lesson_end">Learnt all the vocab?</string>
     <string name="complete_lesson">Press continue to end the lesson and add the vocab to your reviews</string>
     <string name="dark_mode">Dark mode</string>
+    <string name="welcome">Welcome to LinguaSyne</string>
+    <string name="about_linguasyne">LinguaSyne is a language-learning app that uses a spaced-repitition system and mnemonics to help you learn vocabulary. It is aimed at people with little-to-no knowledge of French. This tutorial screen will briefly explain how the app works and what the different features are.</string>
+    <string name="continue_with_arrow">Continue ➡</string>
+    <string name="about_lessons">To learn vocab you need to have been shown it in the first place! Lessons are split into groups of 5 words, which you have to read through and memorise as best as possible before the terms are added to your revision list. When lessons are available you will see the following button with the number of lessons displayed, which can be pressed to start a lesson.</string>
+    <string name="lessons_found_here">The lessons button as found on the home screen:</string>
+    <string name="lessons_advice">Try to memorise the French, the English translation, and the gender of the term (beware - not all vocab items have a gender!). The genders are represented by the following symbols:</string>
+    <string name="masc_preview">♂ = masculine</string>
+    <string name="fem_preview">♀ = feminine</string>
+    <string name="about_revision">Now you\'ve learnt the terms and what they mean, it\'s time to be tested! If there are terms ready to be revised you will see the amount displayed on the following button, which can be pressed to start a revision session.</string>
+    <string name="revision_found_here">The vocab revision button as found on the home screen:</string>
+    <string name="revision_advice">For each term you will first be given the French and asked to provide the English translation, as well as provide the correct gender of the word by toggling the gender symbols. Once you have completed this step for each of the terms in the revision session you will be given the English and asked to provide the French translation for them. This time you don\'t have to select the gender though.</string>
+    <string name="further_revision_advice">If you answered both steps correctly, the term is considered to be better memorised, and it will be a period of time until it next appears in the revision list. Each consecutive correct answer for a term adds duration to this time period. Similarly if you answer incorrectly you will see the term sooner next time. Once you\'ve answered enough terms correctly in a row you\'ll level up and have more vocab appear in your lesson list.</string>
+    <string name="about_term_base">The term base is where you can see the current list of terms LinguaSyne can teach you (new terms will be periodically added so you shouldn\'t run out!). It can be accessed by pressing the following text on the home screen.</string>
+    <string name="term_base_found_here">The term base button as it appears on the home screen:</string>
+    <string name="term_base_advice">For terms you\'ve already unlocked you can add your own mnemonics or translations to help you better memorise the vocab. It is also where you can go if you need to revisit a term previously seen in a lesson.</string>
+    <string name="side_drawer">Side drawer</string>
+    <string name="about_side_drawer">The side drawer can be accessed on any screen by pressing the button in the top left corner, or by swiping from left to right. It contains options pertinent to the current screen you are seeing and you can access app settings from here, such as the dark mode toggle.</string>
+    <string name="side_drawer_advice">You can revisit this tutorial from the side drawer at any time, as well as report any bugs or provide feedback so that I can continuously improve the app and the user\'s experience.</string>
+    <string name="enjoy">Enjoy!</string>
+    <string name="thank_you">Thank you for downloading LinguaSyne. If you know someone who would enjoy using the app please consider sharing it with them - you can do this using the link in the side drawer.</string>
+    <string name="get_started">Press the button below to get started.</string>
+    <string name="go">Go!</string>
 </resources>

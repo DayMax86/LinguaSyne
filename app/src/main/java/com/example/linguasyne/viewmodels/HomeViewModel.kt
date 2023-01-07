@@ -39,6 +39,9 @@ class HomeViewModel(
     val activeIndicatorColour: Color = LsLightPrimaryVariant
     val inactiveIndicatorColour: Color = LsLightOnPrimary
 
+    var displayTutorial by mutableStateOf(false)
+    var blurAmount by mutableStateOf(0)
+
     init {
         viewModelScope.launch {
             FirebaseManager.loadVocabFromFirebase()
@@ -46,6 +49,10 @@ class HomeViewModel(
             user.levelUpCheck(FirebaseManager.getUserVocabUnlocks())
         }
         loadUserImage()
+        //-----FOR TESTING-------//TODO
+        displayTutorial = true
+        blurAmount = 5
+        //-----------------------//
     }
 
     private suspend fun getReviewsAndLessonsDue() {
