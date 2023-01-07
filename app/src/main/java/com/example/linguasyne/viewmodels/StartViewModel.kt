@@ -59,7 +59,7 @@ class StartViewModel(
         }
     }
 
-    fun fetchUserDarkModePreference() {
+    private fun fetchUserDarkModePreference() {
         viewModelScope.launch {
             darkMode = FirebaseManager.getUserDarkModePreference()
         }

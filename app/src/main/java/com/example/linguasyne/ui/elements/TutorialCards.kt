@@ -10,6 +10,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -191,14 +192,15 @@ fun TutorialCardTwo(
                     )
                 }
 
-                Text(
+                Spacer(modifier = Modifier.padding(top = 32.dp))
+                /*Text(
                     modifier = Modifier
                         .padding(all = 10.dp),
                     text = stringResource(R.string.continue_with_arrow),
                     color = MaterialTheme.colors.primaryVariant,
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
-                )
+                )*/
 
             }
 
@@ -309,14 +311,16 @@ fun TutorialCardThree(
                     textAlign = TextAlign.Center,
                 )
 
-                Text(
+                Spacer(modifier = Modifier.padding(top = 32.dp))
+
+                /*Text(
                     modifier = Modifier
                         .padding(all = 10.dp),
                     text = stringResource(R.string.continue_with_arrow),
                     color = MaterialTheme.colors.primaryVariant,
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
-                )
+                )*/
 
             }
 
@@ -383,7 +387,7 @@ fun TutorialCardFour(
                     Text(
                         modifier = Modifier
                             .padding(start = 2.dp),
-                        text = stringResource(id = R.string.term_base),
+                        text = String(Character.toChars(0x1F4DA)) + stringResource(id = R.string.term_base),
                         style = MaterialTheme.typography.body1,
                         color = MaterialTheme.colors.primary,
                     )
@@ -398,14 +402,16 @@ fun TutorialCardFour(
                     textAlign = TextAlign.Center,
                 )
 
-                Text(
+                Spacer(modifier = Modifier.padding(top = 32.dp))
+
+                /*Text(
                     modifier = Modifier
                         .padding(all = 10.dp),
                     text = stringResource(R.string.continue_with_arrow),
                     color = MaterialTheme.colors.primaryVariant,
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
-                )
+                )*/
 
             }
 
@@ -464,15 +470,16 @@ fun TutorialCardFive(
                     textAlign = TextAlign.Center,
                 )
 
+                Spacer(modifier = Modifier.padding(top = 32.dp))
 
-                Text(
+                /*Text(
                     modifier = Modifier
                         .padding(all = 10.dp),
                     text = stringResource(R.string.continue_with_arrow),
                     color = MaterialTheme.colors.primaryVariant,
                     style = MaterialTheme.typography.body1,
                     textAlign = TextAlign.Center,
-                )
+                )*/
 
             }
 
@@ -484,69 +491,64 @@ fun TutorialCardFive(
 @Composable
 fun TutorialCardEnd(
     modifier: Modifier = Modifier,
+    endTutorial: () -> Unit,
 ) {
     Card(
         modifier = modifier,
         elevation = 3.dp,
     ) {
-        Surface(
+
+
+        Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .background(MaterialTheme.colors.background)
-                .fillMaxHeight()
-                .fillMaxWidth()
-        )
-        {
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
 
-            Column(
+            Text(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .padding(all = 10.dp),
+                text = stringResource(R.string.enjoy),
+                color = MaterialTheme.colors.primary,
+                style = MaterialTheme.typography.h1,
+                textAlign = TextAlign.Center,
+            )
+
+            Text(
+                modifier = Modifier
+                    .padding(all = 10.dp),
+                text = stringResource(R.string.thank_you),
+                color = MaterialTheme.colors.primaryVariant,
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.Center,
+            )
+
+            Text(
+                modifier = Modifier
+                    .padding(all = 10.dp),
+                text = stringResource(R.string.get_started),
+                color = MaterialTheme.colors.primaryVariant,
+                style = MaterialTheme.typography.body1,
+                textAlign = TextAlign.Center,
+            )
+
+            Button(
+                modifier = Modifier
+                    .padding(all = 10.dp)
+                    .width(150.dp),
+                onClick = { endTutorial() },
+                shape = RoundedCornerShape(100),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary,
+                    contentColor = MaterialTheme.colors.onSurface,
+                )
             ) {
-
-                Text(
-                    modifier = Modifier
-                        .padding(all = 10.dp),
-                    text = stringResource(R.string.enjoy),
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.h1,
-                    textAlign = TextAlign.Center,
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(all = 10.dp),
-                    text = stringResource(R.string.thank_you),
-                    color = MaterialTheme.colors.primaryVariant,
-                    style = MaterialTheme.typography.body1,
-                    textAlign = TextAlign.Center,
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(all = 10.dp),
-                    text = stringResource(R.string.get_started),
-                    color = MaterialTheme.colors.primaryVariant,
-                    style = MaterialTheme.typography.body1,
-                    textAlign = TextAlign.Center,
-                )
-
-                Button(
-                    modifier = Modifier
-                        .width(150.dp),
-                    onClick = { },
-                    shape = RoundedCornerShape(100),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.secondary,
-                        contentColor = MaterialTheme.colors.onSurface,
-                    )
-                ) {
-                    Text(text = stringResource(R.string.go))
-                }
-
+                Text(text = stringResource(R.string.go))
             }
 
         }
+
+
     }
 
 }

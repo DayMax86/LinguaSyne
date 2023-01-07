@@ -84,4 +84,5 @@
     <string name="thank_you">Thank you for downloading LinguaSyne. If you know someone who would enjoy using the app please consider sharing it with them - you can do this using the link in the side drawer.</string>
     <string name="get_started">Press the button below to get started.</string>
     <string name="go">Go!</string>
+    <string name="tutorial">Tutorial</string>
 </resources>

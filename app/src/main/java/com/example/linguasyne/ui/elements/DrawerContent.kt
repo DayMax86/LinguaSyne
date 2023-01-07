@@ -285,6 +285,7 @@ fun HomeDrawerContent(
     signOut: () -> Unit,
     aboutLinguaSyne: () -> Unit,
     context: Context,
+    toggleTutorial: () -> Unit,
 ) {
 
     Column(
@@ -328,7 +329,7 @@ fun HomeDrawerContent(
         )
     }
 
-    /*Column(
+    Column(
         modifier = Modifier
             .width(intrinsicSize = IntrinsicSize.Max),
         horizontalAlignment = Alignment.Start,
@@ -336,7 +337,7 @@ fun HomeDrawerContent(
         Row(
             modifier = Modifier
                 .clickable {
-                    //launchTermBase()
+                    toggleTutorial()
                 },
             horizontalArrangement = Arrangement.Start,
         ) {
@@ -347,13 +348,13 @@ fun HomeDrawerContent(
                 horizontalArrangement = Arrangement.Start,
             ) {
                 Text(
-                    text = stringResource(id = R.string.term_base),
+                    text = stringResource(id = R.string.tutorial),
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.primary,
                     maxLines = 1,
                 )
                 Icon(
-                    Icons.Default.Search,
+                    Icons.Default.Warning,
                     modifier = Modifier
                         .padding(start = 10.dp, top = 6.dp)
                         .size(20.dp, 20.dp),
@@ -369,7 +370,7 @@ fun HomeDrawerContent(
                 .height(1.dp),
             color = MaterialTheme.colors.onBackground,
         )
-    }*/
+    }
 
     Column(
         modifier = Modifier

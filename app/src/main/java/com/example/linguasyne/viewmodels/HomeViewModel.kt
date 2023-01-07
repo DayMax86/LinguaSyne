@@ -47,12 +47,23 @@ class HomeViewModel(
             FirebaseManager.loadVocabFromFirebase()
             getReviewsAndLessonsDue()
             user.levelUpCheck(FirebaseManager.getUserVocabUnlocks())
+            displayTutorial = (FirebaseManager.getUserVocabUnlocks().isEmpty())
+            if (displayTutorial) {blurAmount = 5}
         }
         loadUserImage()
-        //-----FOR TESTING-------//TODO
-        displayTutorial = true
-        blurAmount = 5
+        //-----FOR TESTING-------//
+        /*displayTutorial = true
+        blurAmount = 5*/
         //-----------------------//
+    }
+
+    fun toggleTutorial() {
+        displayTutorial = !displayTutorial
+        blurAmount = if (displayTutorial) {
+            5
+        } else {
+            0
+        }
     }
 
     private suspend fun getReviewsAndLessonsDue() {

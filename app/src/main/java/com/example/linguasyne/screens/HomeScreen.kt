@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -36,10 +37,9 @@ import dev.chrisbanes.snapper.ExperimentalSnapperApi
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
     onClickHelp: () -> Unit,
+    viewModel: HomeViewModel
 ) {
-    val viewModel = remember { HomeViewModel(navController) }
     val context = LocalContext.current
     val apiViewModel = remember { ApiViewModel(context) }
 
@@ -61,6 +61,7 @@ fun HomeScreen(
         viewModel.lessonsClickable,
         viewModel.displayTutorial,
         viewModel.blurAmount,
+        viewModel::toggleTutorial
     )
 }
 
@@ -70,21 +71,23 @@ fun HomeScreen(
 fun ShowTutorial(
     displayTutorial: Boolean,
     pagerState: PagerState,
-    scrollState: ScrollState,
     tutorialPages: List<@Composable () -> Unit>
 ) {
     if (displayTutorial) {
         HorizontalPager(
             modifier = Modifier
+                .padding(all = 5.dp)
+                .clip(RoundedCornerShape(16.dp))
                 .fillMaxWidth()
-                .fillMaxHeight(0.95f),
+                .wrapContentHeight(),
             state = pagerState,
-            count = 6,
+            count = tutorialPages.size,
         ) { page ->
 
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clip(RoundedCornerShape(50.dp))
                     .padding(10.dp),
                 elevation = 3.dp,
             ) {
@@ -93,41 +96,20 @@ fun ShowTutorial(
                     modifier = Modifier
                         //.verticalScroll(scrollState) //This causes a nested scroll crash
                         .background(MaterialTheme.colors.background)
-                        .fillMaxHeight()
+                        .border(2.dp, MaterialTheme.colors.primary, RoundedCornerShape(16.dp))
+                        .clip(RoundedCornerShape(16.dp))
+                        .wrapContentHeight()
                         .fillMaxWidth()
                 )
                 {
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight(),
-                        verticalArrangement = Arrangement.Top,
-                    ) {
-                        TopFadedBox(
-                            show =
-                            (scrollState.value > 0)
-                        )
-                    }
-
-                    //tutorialPages[page]
-                    TutorialCardEnd(Modifier.padding(all = 10.dp).wrapContentHeight())
+                    tutorialPages[page].invoke()
+                    //TutorialCardOne(Modifier.wrapContentHeight())
                     //----FOR TESTING----//
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight(),
-                        verticalArrangement = Arrangement.Bottom,
-                    ) {
-                        BottomFadedBox(
-                            show =
-                            (scrollState.value < scrollState.maxValue) && (scrollState.maxValue > 0)
-                        )
-                    }
-
                 }
             }
 
         }
+
     }
 }
 
@@ -151,6 +133,7 @@ fun DisplayHome(
     lessonsClickable: Boolean,
     displayTutorial: Boolean,
     blurAmount: Int,
+    onTutorialEnd: () -> Unit,
 ) {
 
     Surface(
@@ -194,23 +177,60 @@ fun DisplayHome(
 
         }
     }
-    val scrollState = rememberScrollState()
+
     val pagerState = rememberPagerState()
     val tutorialPages = listOf<@Composable () -> Unit>(
-        { TutorialCardOne() },
-        { TutorialCardTwo() },
-        { TutorialCardThree() },
-        { TutorialCardFour() },
-        { TutorialCardFive() },
-        { TutorialCardEnd() },
-    )
-    ShowTutorial(
-        displayTutorial = displayTutorial,
-        pagerState = pagerState,
-        scrollState = scrollState,
-        tutorialPages = tutorialPages
+        { TutorialCardOne(Modifier.clip(RoundedCornerShape(16.dp))) },
+        { TutorialCardTwo(Modifier.clip(RoundedCornerShape(16.dp))) },
+        { TutorialCardThree(Modifier.clip(RoundedCornerShape(16.dp))) },
+        { TutorialCardFour(Modifier.clip(RoundedCornerShape(16.dp))) },
+        { TutorialCardFive(Modifier.clip(RoundedCornerShape(16.dp))) },
+        { TutorialCardEnd(Modifier.clip(RoundedCornerShape(16.dp)), onTutorialEnd) },
     )
 
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        ShowTutorial(
+            displayTutorial = displayTutorial,
+            pagerState = pagerState,
+            tutorialPages = tutorialPages
+        )
+    }
+
+    if (displayTutorial) {
+
+        Row(
+            modifier = Modifier
+                .padding(all = 10.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            Card(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colors.background)
+                    .border(2.dp, MaterialTheme.colors.primary, RoundedCornerShape(16.dp)),
+            ) {
+                HorizontalPagerIndicator(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .padding(all = 16.dp),
+                    pagerState = pagerState,
+                    activeColor = MaterialTheme.colors.primary,
+                    inactiveColor = MaterialTheme.colors.secondaryVariant,
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -357,7 +377,7 @@ private fun TopHomeScreen(
 
             }
 
-            Row(
+            /*Row(
                 modifier = Modifier
                     .padding(bottom = 2.dp),
                 horizontalArrangement = Arrangement.Center,
@@ -379,7 +399,7 @@ private fun TopHomeScreen(
                     color = MaterialTheme.colors.secondary
                 )
 
-            }
+            }*/ //TODO implement at a later date.
 
         }
 

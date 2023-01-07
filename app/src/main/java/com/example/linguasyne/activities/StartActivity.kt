@@ -23,10 +23,7 @@ import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.managers.LessonManager
 import com.example.linguasyne.screens.*
 import com.example.linguasyne.ui.elements.*
-import com.example.linguasyne.viewmodels.BaseViewModel
-import com.example.linguasyne.viewmodels.ReviseTermViewModel
-import com.example.linguasyne.viewmodels.StartViewModel
-import com.example.linguasyne.viewmodels.VocabSearchViewModel
+import com.example.linguasyne.viewmodels.*
 
 class StartActivity : AppCompatActivity() {
 
@@ -42,12 +39,16 @@ class StartActivity : AppCompatActivity() {
             var drawerContent: @Composable () -> Unit by remember { mutableStateOf({}) }
             var topBarStringResource: Int by remember { mutableStateOf(R.string.app_name) }
             var onClickHelp: () -> Unit by remember { mutableStateOf({}) }
-            val mediaPlayerCorrect = MediaPlayer.create(this.baseContext, R.raw.answer_correct_sound)
+            val mediaPlayerCorrect =
+                MediaPlayer.create(this.baseContext, R.raw.answer_correct_sound)
             val mediaPlayerWrong = MediaPlayer.create(this.baseContext, R.raw.answer_wrong_sound)
 
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, "http://play.google.com/store/apps/details?id=com.example.linguasyne")
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    "http://play.google.com/store/apps/details?id=com.example.linguasyne"
+                )
                 type = "text/plain"
             }
             val shareIntent = Intent.createChooser(sendIntent, null)
@@ -110,11 +111,15 @@ class StartActivity : AppCompatActivity() {
                                         ComposableDestinations.HOME else ComposableDestinations.LOGIN,
                                 ) {
                                     composable(ComposableDestinations.HOME) {
-                                        drawerContent = { HomeDrawerContent(viewModel::signOut,
-                                            { viewModel.aboutLinguaSyne(uriHandler) },
-                                            this@StartActivity.applicationContext) }
+                                        val homeViewModel = remember { HomeViewModel(navController) }
+                                        drawerContent = {
+                                            HomeDrawerContent(viewModel::signOut,
+                                                { viewModel.aboutLinguaSyne(uriHandler) },
+                                                this@StartActivity.applicationContext,
+                                                { homeViewModel.toggleTutorial() })
+                                        }
                                         topBarStringResource = R.string.app_name
-                                        HomeScreen(navController, { onClickHelp() })
+                                        HomeScreen({ onClickHelp() }, homeViewModel)
                                     }
                                     composable(ComposableDestinations.TERM_SEARCH) {
                                         baseViewModel = VocabSearchViewModel(navController)
@@ -139,7 +144,13 @@ class StartActivity : AppCompatActivity() {
                                         }
                                     }
                                     composable(ComposableDestinations.REVISE) {
-                                        val vm = remember { ReviseTermViewModel(navController, mediaPlayerCorrect, mediaPlayerWrong) }
+                                        val vm = remember {
+                                            ReviseTermViewModel(
+                                                navController,
+                                                mediaPlayerCorrect,
+                                                mediaPlayerWrong
+                                            )
+                                        }
                                         drawerContent = { ReviseDrawerContent(vm) }
                                         topBarStringResource = R.string.revision
                                         ReviseTermScreen(
