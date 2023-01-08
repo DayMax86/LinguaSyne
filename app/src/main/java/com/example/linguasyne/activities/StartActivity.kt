@@ -2,6 +2,7 @@ package com.example.linguasyne.activities
 
 import android.content.Intent
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
@@ -52,6 +53,17 @@ class StartActivity : AppCompatActivity() {
                 type = "text/plain"
             }
             val shareIntent = Intent.createChooser(sendIntent, null)
+
+            val mailIntent: Intent = Intent().apply {
+                action = Intent.ACTION_VIEW
+            }
+            mailIntent.data = Uri.parse("mailto:daymax96@gmail.com?subject=" + "LinguaSyne feedback" + "&body=" + "Description of feedback/bug:")
+
+            val linkedIntent: Intent = Intent().apply {
+                action = Intent.ACTION_VIEW
+            }
+            linkedIntent.data = Uri.parse("https://www.linkedin.com/in/daymax96/")
+
             val context = LocalContext.current
 
             val scope = rememberCoroutineScope()
@@ -75,6 +87,8 @@ class StartActivity : AppCompatActivity() {
                             },
                             toggleSettingsDisplay = viewModel::toggleSettings,
                             shareIntent = shareIntent,
+                            mailIntent = mailIntent,
+                            linkedIntent = linkedIntent,
                             context = context,
                         )
                     },
@@ -91,77 +105,79 @@ class StartActivity : AppCompatActivity() {
                         )
                     },
 
-                    content = { padding ->
-                        Surface(
-                            modifier = Modifier
-                                .padding(padding)
-                                .background(MaterialTheme.colors.background)
-                                .fillMaxHeight()
-                        ) {
-                            Column() {
-                                /*if (baseViewModel?.helpText?.isNotEmpty() == true) {
-                                    Text(
-                                        baseViewModel?.helpText ?: ""
-                                    )
-                                }*/ //TODO() Display help implementation
+                    ) { padding ->
+                    Surface(
+                        modifier = Modifier
+                            .padding(padding)
+                            .background(MaterialTheme.colors.background)
+                            .fillMaxHeight()
+                    ) {
+                        Column() {
+                            /*if (baseViewModel?.helpText?.isNotEmpty() == true) {
+                                Text(
+                                    baseViewModel?.helpText ?: ""
+                                )
+                            }*/ //TODO() Display help implementation
 
-                                NavHost(
-                                    navController = navController,
-                                    startDestination = if (viewModel.loginCheck())
-                                        ComposableDestinations.HOME else ComposableDestinations.LOGIN,
-                                ) {
-                                    composable(ComposableDestinations.HOME) {
-                                        val homeViewModel = remember { HomeViewModel(navController) }
-                                        drawerContent = {
-                                            HomeDrawerContent(viewModel::signOut,
-                                                { viewModel.aboutLinguaSyne(uriHandler) },
-                                                this@StartActivity.applicationContext,
-                                                { homeViewModel.toggleTutorial() })
-                                        }
-                                        topBarStringResource = R.string.app_name
-                                        HomeScreen({ onClickHelp() }, homeViewModel)
+                            NavHost(
+                                navController = navController,
+                                startDestination = if (viewModel.loginCheck())
+                                    ComposableDestinations.HOME else ComposableDestinations.LOGIN,
+                            ) {
+                                composable(ComposableDestinations.HOME) {
+                                    val homeViewModel = remember {
+                                        HomeViewModel(navController
+                                        ) { this@StartActivity.finish() }
                                     }
-                                    composable(ComposableDestinations.TERM_SEARCH) {
-                                        baseViewModel = VocabSearchViewModel(navController)
-                                        topBarStringResource = R.string.term_base
-                                        SearchScreen(baseViewModel as VocabSearchViewModel)
+                                    drawerContent = {
+                                        HomeDrawerContent(viewModel::signOut,
+                                            { viewModel.aboutLinguaSyne(uriHandler) },
+                                            this@StartActivity.applicationContext,
+                                            { homeViewModel.toggleTutorial() })
                                     }
-                                    composable(ComposableDestinations.CREATE_ACCOUNT) {
-                                        topBarStringResource = R.string.create_account
-                                        CreateAccountScreen(navController)
+                                    topBarStringResource = R.string.app_name
+                                    HomeScreen({ onClickHelp() }, homeViewModel)
+                                }
+                                composable(ComposableDestinations.TERM_SEARCH) {
+                                    baseViewModel = VocabSearchViewModel(navController)
+                                    topBarStringResource = R.string.term_base
+                                    SearchScreen(baseViewModel as VocabSearchViewModel)
+                                }
+                                composable(ComposableDestinations.CREATE_ACCOUNT) {
+                                    topBarStringResource = R.string.create_account
+                                    CreateAccountScreen(navController)
+                                }
+                                composable(ComposableDestinations.LOGIN) {
+                                    drawerContent = { LoginDrawerContent() }
+                                    topBarStringResource = R.string.log_in
+                                    LoginScreen(navController)
+                                }
+                                composable(ComposableDestinations.TERM_DISPLAY) {
+                                    VocabDisplayScreen(navController)
+                                    topBarStringResource = if (LessonManager.activeLesson) {
+                                        R.string.lesson
+                                    } else {
+                                        R.string.term_base
                                     }
-                                    composable(ComposableDestinations.LOGIN) {
-                                        drawerContent = { LoginDrawerContent() }
-                                        topBarStringResource = R.string.log_in
-                                        LoginScreen(navController)
-                                    }
-                                    composable(ComposableDestinations.TERM_DISPLAY) {
-                                        VocabDisplayScreen(navController)
-                                        topBarStringResource = if (LessonManager.activeLesson) {
-                                            R.string.lesson
-                                        } else {
-                                            R.string.term_base
-                                        }
-                                    }
-                                    composable(ComposableDestinations.REVISE) {
-                                        val vm = remember {
-                                            ReviseTermViewModel(
-                                                navController,
-                                                mediaPlayerCorrect,
-                                                mediaPlayerWrong
-                                            )
-                                        }
-                                        drawerContent = { ReviseDrawerContent(vm) }
-                                        topBarStringResource = R.string.revision
-                                        ReviseTermScreen(
-                                            viewModel = vm
+                                }
+                                composable(ComposableDestinations.REVISE) {
+                                    val vm = remember {
+                                        ReviseTermViewModel(
+                                            navController,
+                                            mediaPlayerCorrect,
+                                            mediaPlayerWrong
                                         )
                                     }
+                                    drawerContent = { ReviseDrawerContent(vm) }
+                                    topBarStringResource = R.string.revision
+                                    ReviseTermScreen(
+                                        viewModel = vm
+                                    )
                                 }
                             }
                         }
-                    },
-                )
+                    }
+                }
             }
         }
     }

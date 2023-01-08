@@ -562,8 +562,7 @@ fun DisplayTerm(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp),
-                //progress = (term.current_level_term.toFloat()) / 100
-                progress = termProgress // TODO() TEST VALUE
+                progress = termProgress
             )
 
             Row(

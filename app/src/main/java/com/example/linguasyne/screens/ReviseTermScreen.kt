@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import coil.util.CoilUtils
 import com.example.linguasyne.R
@@ -221,6 +222,11 @@ fun ViewTerm(
                     text = stringResource(id = R.string.select_gender),
                     color = selectGenderTextColour,
                     style = MaterialTheme.typography.body1,
+                    textDecoration = if (mascImage == R.drawable.alphamars || femImage == R.drawable.alphavenus) {
+                        TextDecoration.LineThrough
+                    } else {
+                        null
+                    }
                 )
             }
 

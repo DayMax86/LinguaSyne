@@ -85,4 +85,6 @@
     <string name="get_started">Press the button below to get started.</string>
     <string name="go">Go!</string>
     <string name="tutorial">Tutorial</string>
+    <string name="feedback">Provide feedback/report a bug</string>
+    <string name="linkedin">View my LinkedIn profile</string>
 </resources>

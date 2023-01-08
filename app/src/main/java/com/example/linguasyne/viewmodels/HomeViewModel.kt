@@ -1,6 +1,8 @@
 package com.example.linguasyne.viewmodels
 
 
+import android.app.Activity
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -12,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.linguasyne.activities.StartActivity
 import com.example.linguasyne.classes.User
 import com.example.linguasyne.enums.ComposableDestinations
 import com.example.linguasyne.managers.*
@@ -26,7 +29,10 @@ import kotlinx.coroutines.tasks.await
 
 class HomeViewModel(
     private val navController: NavHostController,
+    finishActivity: () -> Unit,
 ) : ViewModel() {
+
+    val closeApp: () -> Unit = finishActivity
 
     var user: User by mutableStateOf(FirebaseManager.currentUser!!)
     var userImage: Uri? by mutableStateOf(FirebaseManager.currentUser!!.imageUri)
@@ -74,7 +80,8 @@ class HomeViewModel(
     }
 
     fun onBackPressed() {
-        //Back button disabled on home screen? Or minimise app? //TODO
+        //Currently set to default behaviour so function is unused
+        closeApp()
     }
 
     private fun loadUserImage() {

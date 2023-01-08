@@ -2,6 +2,7 @@ package com.example.linguasyne.ui.elements
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -17,8 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -130,6 +133,8 @@ fun MainDrawerContent(
     settings: @Composable () -> Unit,
     toggleSettingsDisplay: () -> Unit,
     shareIntent: Intent,
+    mailIntent: Intent,
+    linkedIntent: Intent,
     context: Context,
 ) {
 
@@ -273,6 +278,88 @@ fun MainDrawerContent(
             )
         }
 
+        Column(
+            modifier = Modifier
+                .width(intrinsicSize = IntrinsicSize.Max),
+            horizontalAlignment = Alignment.Start,
+        ) {
+            Row(
+                modifier = Modifier
+                    .clickable { context.startActivity(linkedIntent) },
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.linkedin),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary,
+                        maxLines = 1,
+                    )
+                    Icon(
+                        bitmap = ImageBitmap.imageResource(id = R.drawable.linkedin_logo),
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 6.dp)
+                            .size(20.dp, 20.dp),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.secondary
+                    )
+                }
+
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(1.dp),
+                color = MaterialTheme.colors.onBackground,
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .width(intrinsicSize = IntrinsicSize.Max),
+            horizontalAlignment = Alignment.Start,
+        ) {
+            Row(
+                modifier = Modifier
+                    .clickable { context.startActivity(mailIntent) },
+                horizontalArrangement = Arrangement.Start,
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .padding(10.dp),
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.feedback),
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.primary,
+                        maxLines = 1,
+                    )
+                    Icon(
+                        Icons.Default.Email,
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 6.dp)
+                            .size(20.dp, 20.dp),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.secondary
+                    )
+                }
+
+            }
+
+            Divider(
+                modifier = Modifier
+                    .height(1.dp),
+                color = MaterialTheme.colors.onBackground,
+            )
+        }
+
         screenContent()
 
         //TODO() Add app version text here
@@ -354,7 +441,7 @@ fun HomeDrawerContent(
                     maxLines = 1,
                 )
                 Icon(
-                    Icons.Default.Warning,
+                    Icons.Default.Refresh,
                     modifier = Modifier
                         .padding(start = 10.dp, top = 6.dp)
                         .size(20.dp, 20.dp),
@@ -371,6 +458,7 @@ fun HomeDrawerContent(
             color = MaterialTheme.colors.onBackground,
         )
     }
+
 
     Column(
         modifier = Modifier

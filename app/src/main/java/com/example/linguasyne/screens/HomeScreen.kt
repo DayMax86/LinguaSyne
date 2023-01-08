@@ -1,5 +1,6 @@
 package com.example.linguasyne.screens
 
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.BackHandler
@@ -38,7 +39,7 @@ import dev.chrisbanes.snapper.ExperimentalSnapperApi
 @Composable
 fun HomeScreen(
     onClickHelp: () -> Unit,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
 ) {
     val context = LocalContext.current
     val apiViewModel = remember { ApiViewModel(context) }

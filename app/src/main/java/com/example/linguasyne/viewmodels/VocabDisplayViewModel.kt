@@ -167,43 +167,57 @@ class VocabDisplayViewModel(
 
     private fun fetchTermProgress() {
         val reviewTimesEnumSize = 11
-        progressBarValue = when (termToDisplay.nextReviewHours) {
-            ReviewTimes.NOW -> {
-                (1f / reviewTimesEnumSize) * 1
+
+        viewModelScope.launch {
+            FirebaseManager.getUserVocabUnlocks().firstOrNull {
+                it.id == termToDisplay.id
+            }.apply {
+                this?.let {
+                    termToDisplay.nextReviewHours = it.nextReviewHours
+                    termToDisplay.nextReviewTime = it.nextReviewTime
+                }
             }
-            ReviewTimes.ONE_DAY -> {
-                (1f / reviewTimesEnumSize) * 2
+        }.invokeOnCompletion {
+
+            progressBarValue = when (termToDisplay.nextReviewHours) {
+                ReviewTimes.NOW -> {
+                    (1f / reviewTimesEnumSize) * 1
+                }
+                ReviewTimes.ONE_DAY -> {
+                    (1f / reviewTimesEnumSize) * 2
+                }
+                ReviewTimes.TWO_DAYS -> {
+                    (1f / reviewTimesEnumSize) * 3
+                }
+                ReviewTimes.ONE_WEEK -> {
+                    (1f / reviewTimesEnumSize) * 4
+                }
+                ReviewTimes.TWO_WEEKS -> {
+                    (1f / reviewTimesEnumSize) * 5
+                }
+                ReviewTimes.ONE_MONTH -> {
+                    (1f / reviewTimesEnumSize) * 6
+                }
+                ReviewTimes.TWO_MONTHS -> {
+                    (1f / reviewTimesEnumSize) * 7
+                }
+                ReviewTimes.FOUR_MONTHS -> {
+                    (1f / reviewTimesEnumSize) * 8
+                }
+                ReviewTimes.EIGHT_MONTHS -> {
+                    (1f / reviewTimesEnumSize) * 9
+                }
+                ReviewTimes.ONE_YEAR -> {
+                    (1f / reviewTimesEnumSize) * 10
+                }
+                ReviewTimes.NEVER -> {
+                    1f
+                }
+                else -> {
+                    0f
+                }
             }
-            ReviewTimes.TWO_DAYS -> {
-                (1f / reviewTimesEnumSize) * 3
-            }
-            ReviewTimes.ONE_WEEK -> {
-                (1f / reviewTimesEnumSize) * 4
-            }
-            ReviewTimes.TWO_WEEKS -> {
-                (1f / reviewTimesEnumSize) * 5
-            }
-            ReviewTimes.ONE_MONTH -> {
-                (1f / reviewTimesEnumSize) * 6
-            }
-            ReviewTimes.TWO_MONTHS -> {
-                (1f / reviewTimesEnumSize) * 7
-            }
-            ReviewTimes.FOUR_MONTHS -> {
-                (1f / reviewTimesEnumSize) * 8
-            }
-            ReviewTimes.EIGHT_MONTHS -> {
-                (1f / reviewTimesEnumSize) * 9
-            }
-            ReviewTimes.ONE_YEAR -> {
-                (1f / reviewTimesEnumSize) * 10
-            }
-            ReviewTimes.NEVER -> {
-                (1f / reviewTimesEnumSize) * 11
-            }
-            else -> {
-                0f
-            }
+            Log.e("test", "Progressbar value = $progressBarValue")
         }
     }
 
