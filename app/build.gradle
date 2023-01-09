@@ -15,7 +15,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.linguasyne"
+        applicationId "com.daymax86.linguasyne"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
