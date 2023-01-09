@@ -28,6 +28,8 @@ import com.example.linguasyne.viewmodels.*
 
 class StartActivity : AppCompatActivity() {
 
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +41,13 @@ class StartActivity : AppCompatActivity() {
             var baseViewModel: BaseViewModel? = null
             var drawerContent: @Composable () -> Unit by remember { mutableStateOf({}) }
             var topBarStringResource: Int by remember { mutableStateOf(R.string.app_name) }
-            var onClickHelp: () -> Unit by remember { mutableStateOf({}) }
+            var onClickHelp: () -> Unit by remember { mutableStateOf({}) } //TODO(Not yet implemented)
             val mediaPlayerCorrect =
                 MediaPlayer.create(this.baseContext, R.raw.answer_correct_sound)
-            val mediaPlayerWrong = MediaPlayer.create(this.baseContext, R.raw.answer_wrong_sound)
+            val mediaPlayerWrong =
+                MediaPlayer.create(this.baseContext, R.raw.answer_wrong_sound)
 
+            //Intent for sharing LinguaSyne - points to store page
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(
@@ -54,11 +58,14 @@ class StartActivity : AppCompatActivity() {
             }
             val shareIntent = Intent.createChooser(sendIntent, null)
 
+            //Intent for mailto for reporting bugs etc.
             val mailIntent: Intent = Intent().apply {
                 action = Intent.ACTION_VIEW
             }
-            mailIntent.data = Uri.parse("mailto:daymax96@gmail.com?subject=" + "LinguaSyne feedback" + "&body=" + "Description of feedback/bug:")
+            mailIntent.data =
+                Uri.parse("mailto:daymax96@gmail.com?subject=" + "LinguaSyne feedback" + "&body=" + "Description of feedback/bug:")
 
+            //Intent for taking user to my LinkedIn
             val linkedIntent: Intent = Intent().apply {
                 action = Intent.ACTION_VIEW
             }
@@ -113,11 +120,14 @@ class StartActivity : AppCompatActivity() {
                             .fillMaxHeight()
                     ) {
                         Column() {
+                            /*---- Help button not yet implemented ----*/
                             /*if (baseViewModel?.helpText?.isNotEmpty() == true) {
                                 Text(
                                     baseViewModel?.helpText ?: ""
                                 )
-                            }*/ //TODO() Display help implementation
+                            }*/
+                            //TODO(Not yet implemented)
+                            /*----------------------------------------*/
 
                             NavHost(
                                 navController = navController,
@@ -126,7 +136,8 @@ class StartActivity : AppCompatActivity() {
                             ) {
                                 composable(ComposableDestinations.HOME) {
                                     val homeViewModel = remember {
-                                        HomeViewModel(navController
+                                        HomeViewModel(
+                                            navController
                                         ) { this@StartActivity.finish() }
                                     }
                                     drawerContent = {
@@ -139,7 +150,7 @@ class StartActivity : AppCompatActivity() {
                                     HomeScreen({ onClickHelp() }, homeViewModel)
                                 }
                                 composable(ComposableDestinations.TERM_SEARCH) {
-                                    baseViewModel = VocabSearchViewModel(navController)
+                                    baseViewModel = VocabSearchViewModel(navController) //TODO(Not yet implemented) part of help function
                                     topBarStringResource = R.string.term_base
                                     SearchScreen(baseViewModel as VocabSearchViewModel)
                                 }

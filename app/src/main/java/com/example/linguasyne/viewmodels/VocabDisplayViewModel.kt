@@ -38,8 +38,6 @@ class VocabDisplayViewModel(
 
     var userInput: String by mutableStateOf("")
 
-    var textFieldOutlineColour by mutableStateOf(LsLightPrimary)
-
     var animateSuccess: Boolean by mutableStateOf(false)
     val animateDuration = AnimationLengths.ANIMATION_DURATION_LONG
     var blurAmount: Int by mutableStateOf(0)
@@ -67,9 +65,7 @@ class VocabDisplayViewModel(
                     //If this is a lesson, unlock the terms for the user and add them to their personal firebase list
                     //The terms only appear in a lesson once (this is ensured when the lesson is created)...
                     //...so they can be added to the user's collection without checking for pre-existing terms
-                    if (LessonManager.currentLesson.lessonList.isEmpty()) {
-                        //Display message to the user that they have no lessons available! //TODO()
-                    } else {
+                    if (LessonManager.currentLesson.lessonList.isNotEmpty()) {
                         for (v: Vocab in LessonManager.currentLesson.lessonList) {
                             addTermToUserCollection(v)
                         }
@@ -114,7 +110,6 @@ class VocabDisplayViewModel(
         viewModelScope
             .launch {
                 fetchTermSource()
-                //Need to make sure the lesson has already been created before fetching the terms
                 fetchTerm()
                 fetchTermProgress()
             }
@@ -149,7 +144,7 @@ class VocabDisplayViewModel(
                             .toObjects(Vocab::class.java)
                             .first { it.id == VocabRepository.currentVocab[0].id }
                     } catch (e: Exception) {
-                        //User hasn't yet unlocked the term so fetch from the online repo.
+                        //User hasn't yet unlocked the term so fetch from the online repo. instead
                         Log.e(
                             "DisplayTermViewModel",
                             "fetchTerm error: $e"
@@ -243,7 +238,6 @@ class VocabDisplayViewModel(
                 }
             }
     }
-
 
     fun handleTextChange(text: String) {
         userInput = text

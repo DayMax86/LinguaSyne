@@ -10,18 +10,18 @@ import kotlin.math.floor
 class User(email: String = "") {
 
     var imageUri: Uri? = null
-    var id: String = ""
+    var id: String = "" //ID is set to email address as through firebase email is guaranteed to be unique
     val email: String
     var level: Int = 1
-    var streak: Int = 0
+    var streak: Int = 0 //TODO(Not yet implemented)
     var studyCountry: String = "France"
     var darkModeEnabled: Boolean = false
 
     init {
         this.email = email.lowercase().filter {
-            !it.isWhitespace()
+            !it.isWhitespace() //Make sure the email is in consistent form
         }
-        generateId()
+        generateId() //Separate method in case ID format ever needs to change
     }
 
     private fun generateId() {
@@ -29,21 +29,17 @@ class User(email: String = "") {
     }
 
     suspend fun levelUpCheck(userUnlocks: List<Vocab>) {
+        //If user has levelled up they need to be given more lessons
         var i: Int = 0
         val threshold: Int
-        Log.d("User", "Current user level: ${this.level}")
         userUnlocks.filter { it.unlockLevel == this.level }.forEach {
-            Log.d("User", "Vocab item next review hours: ${it.nextReviewHours}")
             if (it.nextReviewHours >= ReviewTimes.ONE_WEEK) {
                 i++
             }
         }
-        //Make threshold 80% of unlocks for that level
+        //Make level-up threshold 80% of unlocks for all levels less than current user level
         VocabRepository.filterByUnlockLevel(this.level).apply {
-            Log.d("User", "Current vocab size: ${VocabRepository.currentVocab.size}")
             threshold = floor(VocabRepository.currentVocab.size * 0.8).toInt()
-            Log.d("User", "i: ${i}")
-            Log.d("User", "Threshold: ${threshold}")
         }
         if (i >= threshold) {
             levelUp()
@@ -51,9 +47,9 @@ class User(email: String = "") {
     }
 
     private suspend fun levelUp() {
-        Log.d("User", "Threshold: Levelling up!")
+        Log.d("User", "Levelling up!")
         this.level++
-        FirebaseManager.increaseUserLevel()
+        FirebaseManager.increaseUserLevel() //Increase user level on firebase
     }
 
 }

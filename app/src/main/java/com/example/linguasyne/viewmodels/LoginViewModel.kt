@@ -49,11 +49,8 @@ class LoginViewModel(
                         animateSuccess = true
                         blurAmount = 5
                         delay(2500)
-                        //loadUserImage()
                         goToHome()
                     }
-                //If the user changes the email input between sign in and now it will potentially crash! //TODO()
-
             } catch (e: Exception) {
                 Log.e("LoginViewModel", "$e")
                 //Feedback to user that login failed

@@ -25,8 +25,10 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.linguasyne.BuildConfig
 import com.example.linguasyne.R
 import com.example.linguasyne.HiddenData
+import com.example.linguasyne.activities.StartActivity
 import com.example.linguasyne.managers.CSVManager
 import com.example.linguasyne.managers.FirebaseManager
 import com.example.linguasyne.viewmodels.ReviseTermViewModel
@@ -362,7 +364,22 @@ fun MainDrawerContent(
 
         screenContent()
 
-        //TODO() Add app version text here
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(intrinsicSize = IntrinsicSize.Max),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Bottom,
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(10.dp),
+                text = stringResource(id = R.string.app_version_text, BuildConfig.VERSION_CODE),
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.primary,
+                maxLines = 1,
+            )
+        }
 
     }
 }

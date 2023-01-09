@@ -141,7 +141,7 @@ class CreateAccountViewModel(
                 /*------------ ADD TO FIREBASE 'FIRESTORE' -------------*/
                 addUserToFirestore(user)
             } catch (e: Exception) {
-                //TODO() If sign in fails, display a message to the user explaining why.
+                //TODO() If sign in fails, feed back the reason to the user rather than just a colour
                 emailOutlineColour = LsErrorRed
                 passwordOutlineColour = LsErrorRed
                 Log.e("CreateAccountViewModel", "$e")
@@ -229,7 +229,7 @@ class CreateAccountViewModel(
         navController.navigate(ComposableDestinations.LOGIN)
     }
 
-    private fun checkPasswordStrength(password: String): PasswordStrengths {
+    private fun checkPasswordStrength(password: String): PasswordStrengths { //Custom password strength algorithm
         var score = 0
         //Is the pw longer than 8 characters?
         if (password.length > 8) {

@@ -193,7 +193,7 @@ fun DisplayCreateAccount(
                 AsyncImage(
                     modifier = Modifier
                         .clickable {
-                            onClickProfileImage //TODO()
+                            onClickProfileImage //TODO(Not yet implemented)
                         }
                         .border(
                             color = MaterialTheme.colors.secondary,
@@ -252,7 +252,6 @@ fun DisplayCreateAccount(
                 ),
                 keyboardActions = KeyboardActions {
                     buttonOnClick()
-                    //keyboardController?.hide()
                 }
             )
 

@@ -8,7 +8,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.InputStream
 
 object CSVManager {
-
+    //Method to update the vocab repository on firebase
     fun importVocabCSV(context: Context) {
         val inputstr: InputStream = context.resources.openRawResource(R.raw.vocab_data)
         csvReader().open(inputstr) {

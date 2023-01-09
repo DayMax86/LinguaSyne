@@ -15,7 +15,7 @@ object LessonManager {
         if (FirebaseManager.currentUser != null && !activeLesson) {
 
             var tempList: List<Vocab> = emptyList()
-            var notYetUnlocked: List<Vocab> = emptyList()
+            var notYetUnlocked: List<Vocab>
 
             VocabRepository.filterByUserNotYetUnlocked().apply {
                 //get list of not-yet-unlocked items
@@ -27,8 +27,6 @@ object LessonManager {
                         it.unlockLevel == FirebaseManager.currentUser!!.level
                         //Null check surrounding method content so non-null asserted call is safe
                     }
-                    Log.d("LessonManager", "notYetUnlocked size = ${notYetUnlocked.size}")
-                    Log.d("LessonManager", "lesson size = ${LESSON_SIZE}")
                     //now take the first 5 items (or the full list if there are fewer than 5) of the list and create lesson
                     val max: Int = minOf(LESSON_SIZE, notYetUnlocked.size)
                     for (i: Int in 0 until max) {

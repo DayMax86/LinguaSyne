@@ -20,7 +20,7 @@ class VocabSearchViewModel(
 
     /*override fun showHelp() {
         helpText = "Help!"
-    } */ //TODO()
+    } */ //TODO(Not yet implemented)
 
     fun onSearchLaunch() {
         vocabList = VocabRepository.allVocab as MutableList<Vocab>

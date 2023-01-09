@@ -60,9 +60,7 @@ fun LoginScreen(navController: NavHostController) {
 }
 
 @Composable
-fun LoginDrawerContent(
-
-) {
+fun LoginDrawerContent() {
 
     Column(
         modifier = Modifier
@@ -231,9 +229,7 @@ fun DisplayLogin(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
 
-                Row(
-
-                ) {
+                Row {
                     ClickableText(
                         text = AnnotatedString(
                             text = stringResource(id = R.string.create_account_prompt),

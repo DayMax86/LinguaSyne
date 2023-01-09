@@ -49,7 +49,7 @@ object FirebaseManager {
             }
     }
 
-    fun addVocabToFirebase(term: Vocab) {
+    fun addVocabToFirebase(term: Vocab) { //For uploading vocab data from CSV
         FirebaseFirestore.getInstance()
             .collection("vocab")
             .add(term)
@@ -72,11 +72,11 @@ object FirebaseManager {
         return fetchedTerms
     }
 
-    fun getDefaultUserImageUri(): Uri {
+    fun getDefaultUserImageUri(): Uri { //Provide a default profile picture, stored on firestore
         return Uri.parse("https://firebasestorage.googleapis.com/v0/b/linguasyne.appspot.com/o/default%2Fdefault_profile_image.png?alt=media&token=92568d94-2835-4648-8128-672e998fe3de")
     }
 
-    suspend fun getUserDarkModePreference(): Boolean {
+    suspend fun getUserDarkModePreference(): Boolean { //User's choice stored in firebase
         var darkMode: Boolean
         try {
             coroutineScope {
@@ -93,7 +93,7 @@ object FirebaseManager {
         }
     }
 
-    suspend fun updateUserDarkModeChoice() {
+    suspend fun updateUserDarkModeChoice() { //Change the user's darkmode preference on firebase
         coroutineScope {
             Firebase.firestore.collection("users").document(currentUser!!.email)
                 .update("darkModeEnabled", currentUser!!.darkModeEnabled)
@@ -109,10 +109,9 @@ object FirebaseManager {
         FirebaseAuth.getInstance().signOut()
         currentUser = null
         Log.d("StartActivity", "User signed out")
-        Log.d("StartActivity", "Current user id: ${FirebaseAuth.getInstance().currentUser?.uid}")
     }
 
-    suspend fun checkReviewsDue(): Int {
+    suspend fun checkReviewsDue(): Int { //Find out how many terms the user has ready to review
         var termsDue = 0
         coroutineScope {
             getUserVocabUnlocks().onEach { vocab ->
@@ -124,7 +123,7 @@ object FirebaseManager {
         return termsDue
     }
 
-    suspend fun checkLessonsDue(): Int {
+    suspend fun checkLessonsDue(): Int { //Find out how many lessons the user has available
         var termsDue: Int
         coroutineScope {
             var userUnlocks: List<Vocab> = emptyList()
@@ -140,7 +139,7 @@ object FirebaseManager {
         return termsDue
     }
 
-    suspend fun increaseUserLevel() {
+    suspend fun increaseUserLevel() { // on firebase
         coroutineScope {
             Firebase.firestore.collection("users").document(currentUser!!.email)
                 .update("level", currentUser!!.level)

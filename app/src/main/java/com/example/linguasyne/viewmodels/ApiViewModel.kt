@@ -52,7 +52,7 @@ class ApiViewModel(
         .build()
         .create(NewsApi::class.java)
 
-    init { //TODO() Make sure this stops at the length of the news list
+    init { //Edge case of 95+ news items having invalid images will be caught by try-catch
         showLoadingAnim = true
         viewModelScope
             .launch {

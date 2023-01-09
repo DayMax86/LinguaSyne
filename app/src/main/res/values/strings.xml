@@ -87,4 +87,5 @@
     <string name="tutorial">Tutorial</string>
     <string name="feedback">Provide feedback/report a bug</string>
     <string name="linkedin">View my LinkedIn profile</string>
+    <string name="app_version_text">App version: %1$d</string>
 </resources>

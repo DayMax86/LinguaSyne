@@ -34,7 +34,6 @@ class Vocab(
 
     var answeredPerfectly: Boolean = true
 
-    var currentLevelTerm: Int = 0
     var nextReviewTime: Long = 0
     var nextReviewHours: Int = 0
 
@@ -44,9 +43,10 @@ class Vocab(
     }
 
     private fun assignGender(vocabGender: String) {
+        //Convert firebase string to custom enum structure
         when (vocabGender.lowercase()) {
-            "no" -> gender = Gender.NO
-            "mf" -> gender = Gender.MF
+            "no" -> gender = Gender.NO //Some terms have no gender
+            "mf" -> gender = Gender.MF //Some terms could potentially be both masculine and feminine depending on form
             "m" -> gender = Gender.M
             "f" -> gender = Gender.F
         }
@@ -54,6 +54,7 @@ class Vocab(
     }
 
     private fun assignTypes(vocabTypes: List<String>) {
+        //convert firebase string to custom enum structure
         vocabTypes.forEach {
             when (it.lowercase()) {
                 "n" -> this.types.add(TermTypes.NOUN)

@@ -3,6 +3,7 @@ package com.example.linguasyne.viewmodels
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -117,7 +118,8 @@ class ReviseTermViewModel(
             RevisionSession.AnswerTypes.ENG -> {
                 currentTermTitle = ctName
                 enableGenderSelection = true
-                flagEmoji = String(Character.toChars(0x1F1EC)) + String(Character.toChars(0x1F1E7))
+                flagEmoji =
+                    String(Character.toChars(0x1F1EC)) + String(Character.toChars(0x1F1E7)) //UK flag emoji
             }
             RevisionSession.AnswerTypes.TRANS -> {
                 currentTermTitle =
@@ -137,7 +139,8 @@ class ReviseTermViewModel(
                     }
                 //Disable gender selection for English words
                 enableGenderSelection = false
-                flagEmoji = String(Character.toChars(0x1F1EB)) + String(Character.toChars(0x1F1F7))
+                flagEmoji =
+                    String(Character.toChars(0x1F1EB)) + String(Character.toChars(0x1F1F7)) //FR flag emoji
             }
         }
 
@@ -221,7 +224,7 @@ class ReviseTermViewModel(
                 }
 
             } catch (e: Exception) {
-
+                Log.e("ReviseTermViewModel", "$e")
             }
         }
     }
@@ -293,7 +296,7 @@ class ReviseTermViewModel(
             return true
         }
 
-        //If the got the gender wrong...
+        //If they got the gender wrong...
         else if (selectedGender != t.gender) {
             when (selectedGender) {
                 Gender.M -> mascOutlineColour = TextFieldColours.WRONG

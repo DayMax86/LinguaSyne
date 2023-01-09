@@ -95,7 +95,6 @@ fun ShowTutorial(
 
                 Surface(
                     modifier = Modifier
-                        //.verticalScroll(scrollState) //This causes a nested scroll crash
                         .background(MaterialTheme.colors.background)
                         .border(2.dp, MaterialTheme.colors.primary, RoundedCornerShape(16.dp))
                         .clip(RoundedCornerShape(16.dp))
@@ -104,8 +103,6 @@ fun ShowTutorial(
                 )
                 {
                     tutorialPages[page].invoke()
-                    //TutorialCardOne(Modifier.wrapContentHeight())
-                    //----FOR TESTING----//
                 }
             }
 
@@ -172,8 +169,6 @@ fun DisplayHome(
             BottomHomeScreen(
                 user,
                 apiViewModel,
-                activeIndicatorColour,
-                inactiveIndicatorColour
             )
 
         }
@@ -250,7 +245,6 @@ private fun TopHomeScreen(
     Row(
         modifier = Modifier
             .fillMaxWidth(),
-        //.padding(top = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 
@@ -287,15 +281,11 @@ private fun TopHomeScreen(
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Row(
-
-                        ) {
+                        Row {
                             Text(stringResource(id = R.string.vocab))
                         }
 
-                        Row(
-
-                        ) {
+                        Row {
                             Text("$lessonsDue")
                         }
                     }
@@ -303,9 +293,7 @@ private fun TopHomeScreen(
                 },
             )
 
-            Column(
-
-            ) {
+            Column {
 
                 Text(
                     modifier = Modifier
@@ -335,15 +323,11 @@ private fun TopHomeScreen(
                                 .fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            Row(
-
-                            ) {
+                            Row {
                                 Text(stringResource(id = R.string.to_revise))
                             }
 
-                            Row(
-
-                            ) {
+                            Row {
                                 Text("$reviewsDue")
                             }
                         }
@@ -352,9 +336,7 @@ private fun TopHomeScreen(
                 )
             }
 
-            Row(
-
-            ) {
+            Row {
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
@@ -400,7 +382,7 @@ private fun TopHomeScreen(
                     color = MaterialTheme.colors.secondary
                 )
 
-            }*/ //TODO implement at a later date.
+            }*/ //TODO(Not yet implemented) daily streak for user, placeholder row ready for implementation.
 
         }
 
@@ -411,7 +393,6 @@ private fun TopHomeScreen(
             modifier = Modifier
                 .height(IntrinsicSize.Max)
                 .width(IntrinsicSize.Max),
-            //.padding(end = 10.dp),
             horizontalArrangement = Arrangement.Center
         ) {
 
@@ -464,8 +445,6 @@ private fun TopHomeScreen(
 private fun BottomHomeScreen(
     user: User,
     apiViewModel: ApiViewModel,
-    activeIndicatorColour: Color,
-    inactiveIndicatorColour: Color
 ) {
     Column(
         modifier = Modifier

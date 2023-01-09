@@ -25,19 +25,17 @@ object RevisionSessionManager {
 
     var currentSession: RevisionSession = RevisionSession()
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     fun createSession(userUnlocks: List<Vocab>) {
 
-        //Now go through and filter user unlocks by review time
+        //Go through and filter user unlocks by review time
         val tempList: MutableList<Vocab> = mutableListOf()
         for (i: Int in userUnlocks.indices) {
-            //Filter by review time
+            //Filter by if review is due
             if (userUnlocks[i].nextReviewHours == NOW || userUnlocks[i].reviewDue()) {
                 tempList.add(userUnlocks[i])
             }
         }
-
 
         //Sort the results (randomly by default but could be oldest first etc. etc.)
         //Set manager's current list
@@ -261,7 +259,7 @@ object RevisionSessionManager {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun sortSessionBy(
         session: MutableList<Vocab>,
-        order: SortOrder
+        order: SortOrder //Currently always  random but can be changed (perhaps a user setting in a later version)
     ): MutableList<Vocab> {
         when (order) {
             SortOrder.RANDOM -> {

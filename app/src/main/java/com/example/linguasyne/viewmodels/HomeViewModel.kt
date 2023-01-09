@@ -57,10 +57,6 @@ class HomeViewModel(
             if (displayTutorial) {blurAmount = 5}
         }
         loadUserImage()
-        //-----FOR TESTING-------//
-        /*displayTutorial = true
-        blurAmount = 5*/
-        //-----------------------//
     }
 
     fun toggleTutorial() {
@@ -80,7 +76,6 @@ class HomeViewModel(
     }
 
     fun onBackPressed() {
-        //Currently set to default behaviour so function is unused
         closeApp()
     }
 
@@ -90,7 +85,6 @@ class HomeViewModel(
                 val firebaseUser = FirebaseManager.currentUser
                 val firestoreRef =
                     Firebase.firestore.collection("users").document(firebaseUser!!.email)
-
                 firestoreRef
                     .get()
                     .await()
@@ -140,7 +134,7 @@ class HomeViewModel(
     }
 
     fun handleHelpClick() {
-        //Do something
+        //TODO(Not yet implemented)
     }
 
     fun handleVocabLessonClick() {

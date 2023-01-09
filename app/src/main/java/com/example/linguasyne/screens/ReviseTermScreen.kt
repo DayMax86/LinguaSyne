@@ -222,7 +222,7 @@ fun ViewTerm(
                     text = stringResource(id = R.string.select_gender),
                     color = selectGenderTextColour,
                     style = MaterialTheme.typography.body1,
-                    textDecoration = if (mascImage == R.drawable.alphamars || femImage == R.drawable.alphavenus) {
+                    textDecoration = if (mascImage == R.drawable.alphamars || femImage == R.drawable.alphavenus) { //Strikethrough if gender doesn't need to be selected (alpha images are always used in this case)
                         TextDecoration.LineThrough
                     } else {
                         null

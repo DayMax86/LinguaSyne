@@ -60,12 +60,12 @@ fun Summary(
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = (stringResource(R.string.total_correct) + " ${totalCorrect}"),
+            text = (stringResource(R.string.total_correct) + " $totalCorrect"),
             color = MaterialTheme.colors.secondary,
             style = MaterialTheme.typography.body1,
         )
         Text(
-            text = (stringResource(R.string.total_incorrect) + " ${totalIncorrect}"),
+            text = (stringResource(R.string.total_incorrect) + " $totalIncorrect"),
             color = MaterialTheme.colors.secondary,
             style = MaterialTheme.typography.body1,
         )

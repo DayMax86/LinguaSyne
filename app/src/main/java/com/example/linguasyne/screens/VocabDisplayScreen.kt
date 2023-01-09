@@ -131,6 +131,7 @@ fun MainDisplay(
                                         viewModel::handleTransTextPress,
                                         viewModel::handleMnemTextPress,
                                         viewModel::handleBackPress,
+                                        false,
                                         viewModel.progressBarValue,
                                         viewModel.showLoadingAnim,
                                     )
@@ -226,6 +227,7 @@ fun MainDisplay(
                     viewModel::handleTransTextPress,
                     viewModel::handleMnemTextPress,
                     viewModel::handleBackPress,
+                    true,
                     viewModel.progressBarValue,
                     viewModel.showLoadingAnim,
                 )
@@ -284,6 +286,7 @@ fun DisplayTerm(
     onAddTransPress: () -> Unit,
     onAddMnemPress: () -> Unit,
     backBehaviour: () -> Unit,
+    showProgress: Boolean,
     termProgress: Float,
     showAnim: Boolean,
 ) {
@@ -292,9 +295,7 @@ fun DisplayTerm(
         backBehaviour()
     }
 
-    Column(
-
-    ) {
+    Column {
 
         Column(
             modifier = Modifier
@@ -302,8 +303,6 @@ fun DisplayTerm(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
-            //------------------------------ FIRST ROW --------------------------------//
 
             AnimateLoading(
                 animate = showAnim,
@@ -348,12 +347,9 @@ fun DisplayTerm(
         }
 
 
-        //------------------------------ SECOND ROW --------------------------------//
-
         Spacer(modifier = Modifier.height(10.dp))
 
-        Column(
-        ) {
+        Column {
 
             Row(
                 modifier = Modifier
@@ -361,8 +357,7 @@ fun DisplayTerm(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
 
-                Row(
-                ) {
+                Row {
                     Image(
                         modifier = Modifier
                             .padding(1.dp)
@@ -383,8 +378,7 @@ fun DisplayTerm(
                     )
                 }
 
-                Row(
-                ) {
+                Row {
                     Image(
                         modifier = Modifier
                             .padding(1.dp)
@@ -408,8 +402,6 @@ fun DisplayTerm(
             }
 
         }
-
-        //---------------------- THIRD ROW ----------------------------//
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -476,8 +468,6 @@ fun DisplayTerm(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        //---------------------- FOURTH ROW ----------------------------//
-
         Column(
             modifier = Modifier
                 .wrapContentHeight()
@@ -541,65 +531,63 @@ fun DisplayTerm(
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-
-        //---------------------- FIFTH ROW ----------------------------//
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(all = 10.dp),
-                text = stringResource(id = R.string.your_progress),
-                style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.primary,
-            )
-
-            LinearProgressIndicator(
+        if (showProgress) {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp),
-                progress = termProgress
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Row(
+                Text(
                     modifier = Modifier
-                        .padding(10.dp),
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 5.dp),
-                        text = stringResource(id = R.string.unlocked),
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.secondary,
-                    )
-                }
+                        .align(Alignment.CenterHorizontally)
+                        .padding(all = 10.dp),
+                    text = stringResource(id = R.string.your_progress),
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.primary,
+                )
+
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
+                    progress = termProgress
+                )
 
                 Row(
                     modifier = Modifier
-                        .padding(10.dp),
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
+
+                    Row(
                         modifier = Modifier
-                            .padding(end = 5.dp),
-                        text = stringResource(id = R.string.memorised),
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.secondary,
-                    )
+                            .padding(10.dp),
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(start = 5.dp),
+                            text = stringResource(id = R.string.unlocked),
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.secondary,
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp),
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(end = 5.dp),
+                            text = stringResource(id = R.string.memorised),
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.secondary,
+                        )
+                    }
                 }
+
             }
-
         }
-
         Spacer(modifier = Modifier.height(10.dp))
 
     }
@@ -712,8 +700,5 @@ fun DisplayPopUpInput(
         }
     }
 }
-
-
-
 
 

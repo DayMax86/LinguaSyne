@@ -9,15 +9,15 @@ object VocabRepository {
 
     var currentVocab: List<Vocab> = emptyList()
 
-    fun filterByName(search_termName: String) {
+    fun filterByName(search_termName: String) { //Not currently used but may be in future versions
         currentVocab = allVocab
-            .filter { it.name.contains(search_termName.toLowerCase()) }
+            .filter { it.name.contains(search_termName.lowercase()) }
             .sortedBy { it.name }
     }
 
     fun filterById(searchTermId: String) {
         currentVocab = allVocab
-            .filter { it.id.contains(searchTermId.toLowerCase()) }
+            .filter { it.id.contains(searchTermId.lowercase()) }
             .sortedBy { it.id }
     }
 
@@ -31,7 +31,6 @@ object VocabRepository {
         var tempList: List<Vocab> = allVocab
         coroutineScope {
             FirebaseManager.getUserVocabUnlocks().apply {
-                //TODO() This is an inefficient algorithm - it may bottleneck with large lists
                 allVocab.forEach { av ->
                     this.forEach { uU ->
                         if (av.id == uU.id) {

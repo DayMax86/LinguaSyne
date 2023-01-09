@@ -57,7 +57,7 @@ fun DisplayEndSession(
             shape = RoundedCornerShape(size = 16.dp),
             backgroundColor = MaterialTheme.colors.onBackground,
 
-            onDismissRequest = { /*TODO*/ },
+            onDismissRequest = { /**/ },
             title = {
                 Text(
                     modifier = Modifier
@@ -94,7 +94,6 @@ fun DisplayEndSession(
             dismissButton = {
                 Column(
                     modifier = Modifier
-                        //.padding(bottom = 16.dp)
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
