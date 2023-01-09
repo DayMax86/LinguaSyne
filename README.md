@@ -1,10 +1,15 @@
 # LinguaSyne
-LinguaSyne is a WIP language-learning app that uses an SRS (Spaced Repetition System) and mnemonics to help users remember vocabulary and phrases. The app is being developed with French as the language to learn, but is designed in a way that other languages can be added in the future.
+LinguaSyne is a language-learning Android app that uses a spaced repetition system (SRS) and mnemonics to help users remember vocabulary. The app currently teaches and tests users on French terms. It is designed to help those with little-to-no knowledge of the French language pick up some basic vocabulary in a natural and intuitive way.
+
+If you would like to know more about LinguaSyne or my skills, please connect with me on LinkedIn: linkedin.com/in/daymax96/
 
 The app uses the following features of modern Android development:
-- Jetpack Compose (all visual elements are made using composable functions)
+- Full MVVM architecture with complete separation of visual and data elements
+- Jetpack Compose for all visual elements
 - API calls using Retrofit
-- Firebase integration for user accounts and language data
-- Full MVVM architecture
-- Unit testing
-- and more...
+- Firebase integration: storing user and language data on firestore database, account data using authentication, and images using storage
+- Material themes and string resources allowing for easy changes to appearance and language
+
+The entire code is available to view here on GitHub so please feel free to browse!
+
+Max.
