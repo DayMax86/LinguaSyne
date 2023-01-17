@@ -7,6 +7,7 @@ The app uses the following features of modern Android development:
 - Full MVVM architecture with complete separation of visual and data elements
 - Jetpack Compose for all visual elements
 - API calls using Retrofit
+- Coroutines for asynchronous server requests
 - Firebase integration: storing user and language data on firestore database, account data using authentication, and images using storage
 - Material themes and string resources allowing for easy changes to appearance and language
 
